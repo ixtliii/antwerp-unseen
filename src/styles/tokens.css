@@ -1,0 +1,23 @@
+:root {
+    --font-primary: 'Manrope', sans-serif;
+    --font-size-xs: 0.625rem;
+    --font-size-sm: 0.75rem;
+    --font-size-md: 0.875rem;
+    --font-size-lg: 1rem;
+
+    --color-bg: #f0f0f0;
+    --color-surface: #ffffff;
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #888888;
+    --color-border: #e0e0e0;
+
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 32px;
+
+    --perspective: 1200px;
+    --card-width: 500px;
+    --card-height: 340px;
+    --card-gap: 5px;
+}
