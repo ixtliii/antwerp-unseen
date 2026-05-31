@@ -1,0 +1,342 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap');
+
+/* ─── Base ─────────────────────────────────────────────── */
+
+.installation {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #080808;
+    font-family: 'DM Mono', monospace;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ─── Camera canvas ─────────────────────────────────────── */
+
+.installation__camera {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ─── Fallback dark bg ──────────────────────────────────── */
+
+.installation__bg {
+    position: absolute;
+    inset: 0;
+    background: #080808;
+}
+
+/* ─── Film grain ────────────────────────────────────────── */
+
+.installation__grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+    mix-blend-mode: overlay;
+}
+
+/* ─── Inactive state ────────────────────────────────────── */
+
+.installation__inactive {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: opacity 1.4s ease, filter 1.4s ease;
+    pointer-events: none;
+}
+
+.installation__inactive--hidden {
+    opacity: 0;
+    filter: blur(20px);
+    pointer-events: none;
+}
+
+.installation__label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 10vw, 5.5rem);
+    letter-spacing: 0.14em;
+    margin: 0;
+    line-height: 1;
+    text-align: center;
+    color: #fff;
+    font-weight: 400;
+}
+
+.installation__sublabel {
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(0.5rem, 1.8vw, 0.75rem);
+    letter-spacing: 0.4em;
+    color: rgba(255, 255, 255, 0.3);
+    margin: 0;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* ─── Active state ──────────────────────────────────────── */
+
+.installation__active {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+}
+
+.installation__active--visible {
+    opacity: 1;
+}
+
+/* ─── Prompt ────────────────────────────────────────────── */
+
+.installation__prompt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 30;
+    white-space: nowrap;
+}
+
+.installation__prompt p {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 5.5vw, 3.4rem);
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+    margin: 0;
+    color: #fff;
+}
+
+/* ─── QR ────────────────────────────────────────────────── */
+
+.installation__qr {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 30;
+}
+
+.installation__qr span {
+    font-size: clamp(0.45rem, 1.4vw, 0.6rem);
+    letter-spacing: 0.18em;
+    color: rgba(255, 255, 255, 0.28);
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 1.6;
+}
+
+/* ─── Floating contributions ────────────────────────────── */
+
+.installation__contribution {
+    position: absolute;
+    z-index: 25;
+    pointer-events: none;
+    /* CSS transition only for opacity fade-in — position is updated by JS every frame */
+    transition: opacity 0.9s ease;
+    will-change: transform, left, top;
+}
+
+.installation__contribution--featured {
+    z-index: 28;
+}
+
+/* Regular card */
+.contribution__card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(6px);
+    padding: 0.6rem 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    max-width: clamp(130px, 18vw, 190px);
+}
+
+.contribution__card--photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(30%) brightness(0.75);
+    margin-bottom: 0.2rem;
+}
+
+.contribution__text {
+    font-size: clamp(0.52rem, 1.4vw, 0.62rem);
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.45);
+    margin: 0;
+    font-style: italic;
+}
+
+.contribution__author {
+    font-size: clamp(0.44rem, 1.2vw, 0.52rem);
+    color: rgba(255, 255, 255, 0.22);
+    margin: 0;
+    letter-spacing: 0.04em;
+}
+
+.contribution__meta {
+    font-size: clamp(0.4rem, 1.1vw, 0.48rem);
+    color: rgba(255, 255, 255, 0.16);
+    margin: 0;
+    letter-spacing: 0.07em;
+}
+
+/* ─── Featured / highlighted card ──────────────────────── */
+
+.contribution__featured {
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(14px);
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    max-width: clamp(180px, 24vw, 260px);
+}
+
+.contribution__featured-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.contribution__now-playing {
+    font-size: clamp(0.38rem, 1vw, 0.44rem);
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.35);
+    white-space: nowrap;
+}
+
+.contribution__featured-text {
+    font-size: clamp(0.6rem, 1.6vw, 0.72rem);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.88);
+    margin: 0;
+    font-style: italic;
+}
+
+.contribution__featured-author {
+    font-size: clamp(0.48rem, 1.3vw, 0.56rem);
+    color: rgba(255, 255, 255, 0.38);
+    margin: 0;
+    letter-spacing: 0.04em;
+}
+
+.contribution__featured-meta {
+    font-size: clamp(0.4rem, 1.1vw, 0.48rem);
+    color: rgba(255, 255, 255, 0.2);
+    margin: 0;
+    letter-spacing: 0.07em;
+}
+
+/* ─── Live waveform animation ───────────────────────────── */
+
+.contribution__waveform-live {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+@keyframes wave-bar {
+    0%, 100% {
+        transform: scaleY(0.15);
+        opacity: 0.25;
+    }
+    50% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+.contribution__wave-bar {
+    display: block;
+    width: 2px;
+    height: 100%;
+    background: #fff;
+    transform-origin: center;
+    transform: scaleY(0.15);
+    animation: wave-bar 0.85s ease-in-out infinite;
+}
+
+/* ─── Dev controls ──────────────────────────────────────── */
+
+.installation__controls {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 100;
+    display: flex;
+    gap: 0.6rem;
+}
+
+.installation__btn {
+    padding: 0.45rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.installation__btn:hover {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.installation__btn--active {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* ─── Portrait constraint on desktop ───────────────────── */
+
+@media (min-aspect-ratio: 9/16) and (min-width: 600px) {
+    .installation {
+        background: #000;
+    }
+
+    .installation__camera,
+    .installation__inactive,
+    .installation__active,
+    .installation__bg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(100vh * 9/16, 100vw);
+        height: min(100vw * 16/9, 100vh);
+        aspect-ratio: 9/16;
+    }
+}
