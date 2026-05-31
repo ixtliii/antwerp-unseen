@@ -1,19 +1,20 @@
-type ISODateString = string;
+export type ISODateString = string;
 
 export interface Tag {
     name: string;
     count: number;
 }
 
-export interface Photo {
+export interface Contribution {
     id: number;
-    url:string;
-    whenCreated:ISODateString;
+    type: 'photo' | 'text' | 'voice';
+    content: string;
+    whenCreated: ISODateString;
     tags: Tag[];
 }
 
-export interface Cluster {
-    id:string;
-    whenHappened:ISODateString;
-    photos:Photo[];
+export interface Day {
+    date: ISODateString;
+    silhouetteUrl: string;
+    contributions: Contribution[];
 }

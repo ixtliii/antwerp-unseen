@@ -1,21 +1,39 @@
 .scene {
+    background-color: #0f0f0f;
+    position: relative;
     width: 100vw;
     height: 100vh;
-    perspective: var(--perspective);
     overflow: hidden;
-    background: var(--color-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.scene__world {
-    position: relative;
-    transform-style: preserve-3d;
-    transform: none;
-    width: 100vw;
-    height: 100vh;
+.custom-cursor-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+}
+
+.custom-cursor {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    transform: scale(0);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-left: -20px;
+    margin-top: -20px;
+}
+
+.custom-cursor.hovered {
+    transform: scale(1);
+}
+
+.scene-canvas {
+    width: 100vw !important;
+    height: 100vh !important;
 }
