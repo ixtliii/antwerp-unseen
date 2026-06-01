@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState, useCallback, type CSSProperties } from 'react';
-import type { ImageSegmenter } from '@mediapipe/tasks-vision';
 import './installation.css';
+
+// Typed locally to avoid requiring @mediapipe/tasks-vision as a static import
+// The actual class is loaded dynamically at runtime
+type ImageSegmenterInstance = {
+    segmentForVideo: (video: HTMLVideoElement, timestamp: number, callback: (result: {
+        confidenceMasks?: { getAsFloat32Array: () => Float32Array }[];
+    }) => void) => void;
+};
 
 // --- Types ---
 interface Contribution {
@@ -430,7 +437,7 @@ const Installation = () => {
     };
 
     // MediaPipe segmenter ref
-    const segmenterRef  = useRef<ImageSegmenter | null>(null);
+    const segmenterRef  = useRef<ImageSegmenterInstance | null>(null);
     const segResultRef  = useRef<Float32Array | null>(null);
     const frameCountRef = useRef(0);
     const particlesRef  = useRef<Particle[]>([]);
