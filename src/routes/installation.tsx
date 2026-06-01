@@ -712,7 +712,7 @@ const Installation = () => {
             analyserRef.current.fftSize = 256;
             dataArrayRef.current = new Uint8Array(analyserRef.current.frequencyBinCount) as Uint8Array<ArrayBuffer>;
 
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: true });
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
             const video  = videoRef.current!;
             video.srcObject = stream;
             await video.play();
