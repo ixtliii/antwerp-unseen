@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback, type CSSProperties } from 'react';
+import type { ImageSegmenter } from '@mediapipe/tasks-vision';
 import './installation.css';
 
 // --- Types ---
@@ -36,7 +37,42 @@ const MOCK_CONTRIBUTIONS: Contribution[] = [
 ];
 
 const HIGHLIGHTED_ID = 1;
-const VOICE_FILE = '/recording.mp3';
+const VOICE_FILE = '/New_Recording_44.mp3';
+
+// --- Visual settings (persisted to localStorage, toggled with Shift+D) ---
+type VisualMode = 'light-on-dark' | 'dark-on-light' | 'pixel-sort' | 'invert-smear';
+
+interface VisualSettings {
+    mode:      VisualMode;
+    decay:     number;   // trail fade speed  0.01–0.20
+    blur:      number;   // px blur on silhouette 0–20
+    threshold: number;   // motion detection sensitivity 5–80
+    grain:     number;   // grain opacity 0–0.20
+    sortStrength: number; // pixel sort intensity 0–1
+}
+
+const SETTINGS_KEY = 'antwerp-unseen-visual-settings';
+
+const DEFAULT_SETTINGS: VisualSettings = {
+    mode: 'light-on-dark',
+    decay: 0.035,
+    blur: 0,
+    threshold: 25,
+    grain: 0.04,
+    sortStrength: 0.5,
+};
+
+const loadSettings = (): VisualSettings => {
+    try {
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        if (raw) return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    } catch { /* ignore */ }
+    return { ...DEFAULT_SETTINGS };
+};
+
+const saveSettings = (s: VisualSettings) => {
+    try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch { /* ignore */ }
+};
 
 // --- Build reverb impulse response ---
 // duration: how long the reverb tail lasts in seconds
@@ -166,7 +202,6 @@ const Installation = () => {
     const processCanvasRef = useRef<HTMLCanvasElement>(null);
     const trailCanvasRef   = useRef<HTMLCanvasElement>(null);
     const bufferCanvasRef  = useRef<HTMLCanvasElement>(null);
-    const bgDataRef        = useRef<Float32Array | null>(null);
     const animFrameRef     = useRef<number>(0);
     const renderLoopRef    = useRef<() => void>(() => {});
     const audioCtxRef      = useRef<AudioContext | null>(null);
@@ -180,10 +215,28 @@ const Installation = () => {
     const voiceCtxRef      = useRef<AudioContext | null>(null);
     const voiceBufferRef   = useRef<AudioBuffer | null>(null);
     const voiceSourceRef   = useRef<AudioBufferSourceNode | null>(null);
+    const settingsRef      = useRef<VisualSettings>(loadSettings());
 
     const [started, setStarted]             = useState(false);
     const [isActive, setIsActive]           = useState(false);
     const [floatingItems, setFloatingItems] = useState<FloatingItem[]>([]);
+    const [showSettings, setShowSettings]   = useState(false);
+    const [settings, setSettings]           = useState<VisualSettings>(loadSettings);
+
+    // Persist settings whenever they change and keep ref in sync for renderLoop
+    useEffect(() => {
+        saveSettings(settings);
+        settingsRef.current = settings;
+    }, [settings]);
+
+    // Shift+D toggles the settings panel
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.shiftKey && e.key === 'D') setShowSettings(v => !v);
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, []);
 
     // --- Load + decode voice recording on mount ---
     useEffect(() => {
@@ -365,7 +418,34 @@ const Installation = () => {
         });
     };
 
-    // --- Render loop ---
+    // MediaPipe segmenter ref
+    const segmenterRef = useRef<ImageSegmenter | null>(null);
+    const segResultRef = useRef<Float32Array | null>(null);
+    const frameCountRef = useRef(0);
+
+    // --- Init MediaPipe segmenter ---
+    const initSegmenter = useCallback(async () => {
+        const { ImageSegmenter, FilesetResolver } = await import(
+            'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs'
+            ) as typeof import('@mediapipe/tasks-vision');
+
+        const vision = await FilesetResolver.forVisionTasks(
+            'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm'
+        );
+
+        segmenterRef.current = await ImageSegmenter.createFromOptions(vision, {
+            baseOptions: {
+                modelAssetPath:
+                    'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/latest/selfie_segmenter.tflite',
+                delegate: 'GPU',
+            },
+            runningMode: 'VIDEO',
+            outputCategoryMask: false,
+            outputConfidenceMasks: true,
+        });
+    }, []);
+
+    // --- Render loop with MediaPipe segmentation ---
     const renderLoop = useCallback(() => {
         const video         = videoRef.current;
         const displayCanvas = displayCanvasRef.current;
@@ -379,6 +459,10 @@ const Installation = () => {
             return;
         }
 
+        const s = settingsRef.current;
+        frameCountRef.current++;
+        const fc = frameCountRef.current;
+
         const displayCtx = displayCanvas.getContext('2d')!;
         const processCtx = processCanvas.getContext('2d', { willReadFrequently: true })!;
         const trailCtx   = trailCanvas.getContext('2d')!;
@@ -386,64 +470,160 @@ const Installation = () => {
         const w = displayCanvas.width;
         const h = displayCanvas.height;
 
-        let volumeFactor = 0;
-        if (analyserRef.current && dataArrayRef.current) {
-            analyserRef.current.getByteFrequencyData(dataArrayRef.current);
-            const vol = dataArrayRef.current.reduce((a: number, b: number) => a + b, 0) / dataArrayRef.current.length;
-            volumeFactor = vol / 255;
+        // --- Segmentation ---
+        if (segmenterRef.current) {
+            segmenterRef.current.segmentForVideo(video, performance.now(), (result) => {
+                if (result.confidenceMasks?.[0]) {
+                    segResultRef.current = result.confidenceMasks[0].getAsFloat32Array();
+                }
+            });
         }
+
+        const mask = segResultRef.current;
 
         processCtx.drawImage(video, 0, 0, w, h);
-        const currentFrame = processCtx.getImageData(0, 0, w, h);
-        const currentData  = currentFrame.data;
-
-        if (!bgDataRef.current) {
-            bgDataRef.current = new Float32Array(currentData.length);
-            for (let i = 0; i < currentData.length; i++) bgDataRef.current[i] = currentData[i];
-        }
-
-        const bg          = bgDataRef.current;
         const outputFrame = processCtx.createImageData(w, h);
         const outputData  = outputFrame.data;
+        const isDark = s.mode !== 'dark-on-light';
 
-        for (let i = 0; i < currentData.length; i += 4) {
-            bg[i]   = bg[i]   * 0.98 + currentData[i]   * 0.02;
-            bg[i+1] = bg[i+1] * 0.98 + currentData[i+1] * 0.02;
-            bg[i+2] = bg[i+2] * 0.98 + currentData[i+2] * 0.02;
-            const diff = Math.abs(currentData[i] - bg[i]) + Math.abs(currentData[i+1] - bg[i+1]) + Math.abs(currentData[i+2] - bg[i+2]);
-            if (diff > 25) {
-                outputData[i] = outputData[i+1] = outputData[i+2] = 255;
-                outputData[i+3] = 255;
-            } else {
-                outputData[i+3] = 0;
+        if (mask) {
+            for (let i = 0; i < mask.length; i++) {
+                const conf = mask[i];
+                const px   = i * 4;
+
+                if (conf > 0.35) {
+                    // Core silhouette — solid with confidence-scaled opacity
+                    const val     = isDark ? 255 : 0;
+                    const opacity = Math.min(220, conf * 255 * 1.15);
+                    outputData[px] = outputData[px+1] = outputData[px+2] = val;
+                    outputData[px+3] = opacity;
+                } else if (conf > 0.06) {
+                    // Edge zone — organic grain concentrated at boundary
+                    const edgeness = 1 - Math.abs(conf - 0.2) / 0.2; // peaks at conf=0.2
+                    if (Math.random() < edgeness * 0.22) {
+                        const gVal    = isDark
+                            ? Math.floor(140 + Math.random() * 115)
+                            : Math.floor(Math.random() * 90);
+                        const gOpacity = Math.floor(50 + Math.random() * 90);
+                        outputData[px] = outputData[px+1] = outputData[px+2] = gVal;
+                        outputData[px+3] = gOpacity;
+                    } else {
+                        outputData[px+3] = 0;
+                    }
+                } else {
+                    outputData[px+3] = 0;
+                }
             }
         }
 
         processCtx.putImageData(outputFrame, 0, 0);
+
+        // --- Trail accumulation with organic drift ---
         bufferCtx.clearRect(0, 0, w, h);
         bufferCtx.drawImage(trailCanvas, 0, 0);
 
+        // Slow Lissajous drift — the ghost breathes
+        const t     = fc / 180;
+        const driftX = Math.sin(t * 0.61) * 0.55;
+        const driftY = Math.cos(t * 0.43) * 0.38;
+
         trailCtx.clearRect(0, 0, w, h);
-        const scaleVal = 1.002 + volumeFactor * 0.04;
-        const upShift  = 1 + volumeFactor * 12;
         trailCtx.save();
-        trailCtx.translate(w / 2, h / 2);
-        trailCtx.scale(scaleVal, scaleVal);
-        trailCtx.translate(-w / 2, -h / 2 - upShift);
+        trailCtx.translate(driftX, driftY);
         trailCtx.drawImage(bufferCanvas, 0, 0);
         trailCtx.restore();
+
+        // Fade
         trailCtx.globalCompositeOperation = 'destination-out';
-        trailCtx.fillStyle = 'rgba(0,0,0,0.035)';
+        trailCtx.fillStyle = `rgba(0,0,0,${s.decay})`;
         trailCtx.fillRect(0, 0, w, h);
         trailCtx.globalCompositeOperation = 'source-over';
-        trailCtx.drawImage(processCanvas, 0, 0);
 
-        displayCtx.drawImage(video, 0, 0, w, h);
-        displayCtx.fillStyle = 'rgba(0,0,0,0.82)';
+        // INK BLEED: wide halo pass first (low opacity, heavy blur)
+        // — accumulates into a soft diffuse corona around the figure
+        const haloBlur = Math.max(s.blur * 2.8, 6);
+        trailCtx.filter = `blur(${haloBlur}px)`;
+        trailCtx.globalAlpha = 0.38;
+        trailCtx.drawImage(processCanvas, 0, 0);
+        trailCtx.globalAlpha = 1;
+
+        // Sharp core pass on top (normal blur)
+        trailCtx.filter = s.blur > 0 ? `blur(${s.blur}px)` : 'none';
+        trailCtx.drawImage(processCanvas, 0, 0);
+        trailCtx.filter = 'none';
+
+        // --- Composite to display ---
+        // Slightly warm off-white for paper feel, cool dark for void
+        displayCtx.fillStyle = s.mode === 'dark-on-light' ? '#e6e2dc' : '#060504';
         displayCtx.fillRect(0, 0, w, h);
-        displayCtx.globalCompositeOperation = 'screen';
+
+        displayCtx.globalCompositeOperation = s.mode === 'dark-on-light' ? 'multiply' : 'screen';
         displayCtx.drawImage(trailCanvas, 0, 0);
         displayCtx.globalCompositeOperation = 'source-over';
+
+        // Pixel sort pass
+        if (s.mode === 'pixel-sort' || s.mode === 'invert-smear') {
+            const imageData = displayCtx.getImageData(0, 0, w, h);
+            const pd = imageData.data;
+            const sortThresh = 180 - s.sortStrength * 120;
+            for (let x = 0; x < w; x++) {
+                let start = -1;
+                for (let y = 0; y <= h; y++) {
+                    const idx   = (y * w + x) * 4;
+                    const lum   = y < h ? pd[idx] * 0.299 + pd[idx+1] * 0.587 + pd[idx+2] * 0.114 : 0;
+                    const bright = lum > sortThresh;
+                    if (bright && start === -1) { start = y; }
+                    else if (!bright && start !== -1) {
+                        const seg: {r:number,g:number,b:number,a:number,lum:number}[] = [];
+                        for (let sy = start; sy < y; sy++) {
+                            const si = (sy * w + x) * 4;
+                            seg.push({ r: pd[si], g: pd[si+1], b: pd[si+2], a: pd[si+3], lum: pd[si]*0.299+pd[si+1]*0.587+pd[si+2]*0.114 });
+                        }
+                        seg.sort((a, b) => a.lum - b.lum);
+                        seg.forEach((p, si) => {
+                            const di = ((start + si) * w + x) * 4;
+                            pd[di] = p.r; pd[di+1] = p.g; pd[di+2] = p.b; pd[di+3] = p.a;
+                        });
+                        start = -1;
+                    }
+                }
+            }
+            if (s.mode === 'invert-smear') {
+                for (let j = 0; j < pd.length; j += 4) {
+                    pd[j] = 255 - pd[j]; pd[j+1] = 255 - pd[j+1]; pd[j+2] = 255 - pd[j+2];
+                }
+            }
+            displayCtx.putImageData(imageData, 0, 0);
+        }
+
+        // --- Film scratches (rare — ~0.8% of frames) ---
+        if (Math.random() < 0.008) {
+            displayCtx.save();
+            displayCtx.strokeStyle = s.mode === 'dark-on-light'
+                ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.10)';
+            displayCtx.lineWidth = 0.5 + Math.random() * 0.5;
+            displayCtx.beginPath();
+            const sy  = Math.random() * h;
+            const sx1 = Math.random() * w * 0.3;
+            const sx2 = sx1 + w * (0.15 + Math.random() * 0.45);
+            displayCtx.moveTo(sx1, sy + (Math.random() - 0.5) * 2);
+            displayCtx.lineTo(sx2, sy + (Math.random() - 0.5) * 2);
+            displayCtx.stroke();
+            displayCtx.restore();
+        }
+
+        // --- Vignette ---
+        const cx = w * 0.5, cy = h * 0.5;
+        const vignette = displayCtx.createRadialGradient(cx, cy, h * 0.18, cx, cy, h * 0.88);
+        if (s.mode === 'dark-on-light') {
+            vignette.addColorStop(0, 'rgba(200,195,188,0)');
+            vignette.addColorStop(1, 'rgba(30,25,20,0.42)');
+        } else {
+            vignette.addColorStop(0, 'rgba(0,0,0,0)');
+            vignette.addColorStop(1, 'rgba(0,0,0,0.72)');
+        }
+        displayCtx.fillStyle = vignette;
+        displayCtx.fillRect(0, 0, w, h);
 
         animFrameRef.current = requestAnimationFrame(renderLoopRef.current);
     }, []);
@@ -470,6 +650,7 @@ const Installation = () => {
             source.connect(analyserRef.current);
 
             setStarted(true);
+            void initSegmenter();
 
             const waitForVideo = () => {
                 if (video.readyState >= 2 && video.videoWidth > 0) {
@@ -533,6 +714,59 @@ const Installation = () => {
                     </div>
                 ))}
             </div>
+
+            {/* Settings panel — toggle with Shift+D, hidden from public */}
+            {showSettings && (
+                <div className="installation__settings">
+                    <div className="installation__settings-title">
+                        VISUAL SETTINGS <span style={{ opacity: 0.35 }}>Shift+D to close</span>
+                    </div>
+                    <div className="installation__settings-row">
+                        <label>MODE</label>
+                        <select value={settings.mode}
+                                onChange={e => setSettings(s => ({ ...s, mode: e.target.value as VisualMode }))}>
+                            <option value="light-on-dark">light on dark (glow)</option>
+                            <option value="dark-on-light">dark on light (shadow)</option>
+                            <option value="pixel-sort">pixel sort (smear)</option>
+                            <option value="invert-smear">invert + smear</option>
+                        </select>
+                    </div>
+                    <div className="installation__settings-row">
+                        <label>TRAIL DECAY <span>{settings.decay.toFixed(3)}</span></label>
+                        <input type="range" min="5" max="150" step="1"
+                               value={Math.round(settings.decay * 1000)}
+                               onChange={e => setSettings(s => ({ ...s, decay: parseInt(e.target.value) / 1000 }))} />
+                    </div>
+                    <div className="installation__settings-row">
+                        <label>BLUR <span>{settings.blur}px</span></label>
+                        <input type="range" min="0" max="20" step="1"
+                               value={settings.blur}
+                               onChange={e => setSettings(s => ({ ...s, blur: parseInt(e.target.value) }))} />
+                    </div>
+                    <div className="installation__settings-row">
+                        <label>THRESHOLD <span>{settings.threshold}</span></label>
+                        <input type="range" min="5" max="80" step="1"
+                               value={settings.threshold}
+                               onChange={e => setSettings(s => ({ ...s, threshold: parseInt(e.target.value) }))} />
+                    </div>
+                    <div className="installation__settings-row">
+                        <label>GRAIN <span>{settings.grain.toFixed(2)}</span></label>
+                        <input type="range" min="0" max="20" step="1"
+                               value={Math.round(settings.grain * 100)}
+                               onChange={e => setSettings(s => ({ ...s, grain: parseInt(e.target.value) / 100 }))} />
+                    </div>
+                    <div className="installation__settings-row">
+                        <label>SORT STRENGTH <span>{settings.sortStrength.toFixed(1)}</span></label>
+                        <input type="range" min="0" max="10" step="1"
+                               value={Math.round(settings.sortStrength * 10)}
+                               onChange={e => setSettings(s => ({ ...s, sortStrength: parseInt(e.target.value) / 10 }))} />
+                    </div>
+                    <button className="installation__settings-reset"
+                            onClick={() => setSettings({ ...DEFAULT_SETTINGS })}>
+                        RESET DEFAULTS
+                    </button>
+                </div>
+            )}
 
             <div className="installation__controls">
                 {!started && (

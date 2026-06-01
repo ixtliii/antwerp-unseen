@@ -320,7 +320,87 @@
     color: rgba(255, 255, 255, 0.85);
 }
 
-/* ─── Portrait constraint on desktop ───────────────────── */
+/* ─── Settings panel (Shift+D) ──────────────────────────── */
+
+.installation__settings {
+    position: absolute;
+    top: 50%;
+    left: 1.5rem;
+    transform: translateY(-50%);
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    padding: 1.2rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    min-width: 260px;
+}
+
+.installation__settings-title {
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.55);
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+}
+
+.installation__settings-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.installation__settings-row label {
+    font-size: 0.5rem;
+    letter-spacing: 0.18em;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+}
+
+.installation__settings-row label span {
+    color: rgba(255, 255, 255, 0.65);
+    font-variant-numeric: tabular-nums;
+}
+
+.installation__settings-row select {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+    width: 100%;
+}
+
+.installation__settings-row input[type="range"] {
+    width: 100%;
+    accent-color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+}
+
+.installation__settings-reset {
+    margin-top: 0.2rem;
+    padding: 0.4rem 0.8rem;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.35);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.installation__settings-reset:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.7);
+}
 
 @media (min-aspect-ratio: 9/16) and (min-width: 600px) {
     .installation {
