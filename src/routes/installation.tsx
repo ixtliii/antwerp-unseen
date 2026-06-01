@@ -437,9 +437,7 @@ const Installation = () => {
 
     // --- Init MediaPipe segmenter ---
     const initSegmenter = useCallback(async () => {
-        const { ImageSegmenter, FilesetResolver } = await import(
-            'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs'
-            ) as typeof import('@mediapipe/tasks-vision');
+        const { ImageSegmenter, FilesetResolver } = await import('@mediapipe/tasks-vision');
 
         const vision = await FilesetResolver.forVisionTasks(
             'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm'
