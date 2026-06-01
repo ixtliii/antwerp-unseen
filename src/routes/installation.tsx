@@ -25,6 +25,17 @@ interface FloatingItem {
     highlighted: boolean;
 }
 
+interface Particle {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    size: number;
+    opacity: number;
+    life: number;
+    maxLife: number;
+}
+
 // --- Mock contributions ---
 const MOCK_CONTRIBUTIONS: Contribution[] = [
     { id: 1, type: 'voice', text: '"I stood on this exact corner when I got the best news of my life..."', author: 'A local, Borgerhout', time: '09:30AM', date: '02/05/2026' },
@@ -54,9 +65,9 @@ interface VisualSettings {
 const SETTINGS_KEY = 'antwerp-unseen-visual-settings';
 
 const DEFAULT_SETTINGS: VisualSettings = {
-    mode: 'light-on-dark',
+    mode: 'dark-on-light',
     decay: 0.035,
-    blur: 0,
+    blur: 6,
     threshold: 25,
     grain: 0.04,
     sortStrength: 0.5,
@@ -419,13 +430,17 @@ const Installation = () => {
     };
 
     // MediaPipe segmenter ref
-    const segmenterRef = useRef<ImageSegmenter | null>(null);
-    const segResultRef = useRef<Float32Array | null>(null);
+    const segmenterRef  = useRef<ImageSegmenter | null>(null);
+    const segResultRef  = useRef<Float32Array | null>(null);
     const frameCountRef = useRef(0);
+    const particlesRef  = useRef<Particle[]>([]);
 
     // --- Init MediaPipe segmenter ---
     const initSegmenter = useCallback(async () => {
-        const { ImageSegmenter, FilesetResolver } = await import('@mediapipe/tasks-vision');
+        const { ImageSegmenter, FilesetResolver } = await import(
+            'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs'
+            ) as typeof import('@mediapipe/tasks-vision');
+
         const vision = await FilesetResolver.forVisionTasks(
             'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm'
         );
@@ -458,7 +473,8 @@ const Installation = () => {
 
         const s = settingsRef.current;
         frameCountRef.current++;
-        const fc = frameCountRef.current;
+        const fc    = frameCountRef.current;
+        const isDark = s.mode !== 'dark-on-light';
 
         const displayCtx = displayCanvas.getContext('2d')!;
         const processCtx = processCanvas.getContext('2d', { willReadFrequently: true })!;
@@ -478,51 +494,40 @@ const Installation = () => {
 
         const mask = segResultRef.current;
 
+        // --- Build person silhouette (anonymous, blurred) ---
         processCtx.drawImage(video, 0, 0, w, h);
         const outputFrame = processCtx.createImageData(w, h);
-        const outputData  = outputFrame.data;
-        const isDark = s.mode !== 'dark-on-light';
+        const od          = outputFrame.data;
 
         if (mask) {
             for (let i = 0; i < mask.length; i++) {
                 const conf = mask[i];
                 const px   = i * 4;
-
                 if (conf > 0.35) {
-                    // Core silhouette — solid with confidence-scaled opacity
                     const val     = isDark ? 255 : 0;
                     const opacity = Math.min(220, conf * 255 * 1.15);
-                    outputData[px] = outputData[px+1] = outputData[px+2] = val;
-                    outputData[px+3] = opacity;
+                    od[px] = od[px+1] = od[px+2] = val;
+                    od[px+3] = opacity;
                 } else if (conf > 0.06) {
-                    // Edge zone — organic grain concentrated at boundary
-                    const edgeness = 1 - Math.abs(conf - 0.2) / 0.2; // peaks at conf=0.2
+                    const edgeness = 1 - Math.abs(conf - 0.2) / 0.2;
                     if (Math.random() < edgeness * 0.22) {
-                        const gVal    = isDark
-                            ? Math.floor(140 + Math.random() * 115)
-                            : Math.floor(Math.random() * 90);
-                        const gOpacity = Math.floor(50 + Math.random() * 90);
-                        outputData[px] = outputData[px+1] = outputData[px+2] = gVal;
-                        outputData[px+3] = gOpacity;
-                    } else {
-                        outputData[px+3] = 0;
-                    }
-                } else {
-                    outputData[px+3] = 0;
-                }
+                        const gVal = isDark ? Math.floor(140 + Math.random() * 115) : Math.floor(Math.random() * 90);
+                        od[px] = od[px+1] = od[px+2] = gVal;
+                        od[px+3] = Math.floor(50 + Math.random() * 90);
+                    } else { od[px+3] = 0; }
+                } else { od[px+3] = 0; }
             }
         }
 
         processCtx.putImageData(outputFrame, 0, 0);
 
-        // --- Trail accumulation with organic drift ---
+        // --- Trail accumulation (ghost) ---
         bufferCtx.clearRect(0, 0, w, h);
         bufferCtx.drawImage(trailCanvas, 0, 0);
 
-        // Slow Lissajous drift — the ghost breathes
-        const t     = fc / 180;
-        const driftX = Math.sin(t * 0.61) * 0.55;
-        const driftY = Math.cos(t * 0.43) * 0.38;
+        const tSec  = fc / 180;
+        const driftX = Math.sin(tSec * 0.61) * 0.55;
+        const driftY = Math.cos(tSec * 0.43) * 0.38;
 
         trailCtx.clearRect(0, 0, w, h);
         trailCtx.save();
@@ -530,31 +535,97 @@ const Installation = () => {
         trailCtx.drawImage(bufferCanvas, 0, 0);
         trailCtx.restore();
 
-        // Fade
         trailCtx.globalCompositeOperation = 'destination-out';
         trailCtx.fillStyle = `rgba(0,0,0,${s.decay})`;
         trailCtx.fillRect(0, 0, w, h);
         trailCtx.globalCompositeOperation = 'source-over';
 
-        // INK BLEED: wide halo pass first (low opacity, heavy blur)
-        // — accumulates into a soft diffuse corona around the figure
+        // Ink bleed: wide halo first, sharp core on top
         const haloBlur = Math.max(s.blur * 2.8, 6);
         trailCtx.filter = `blur(${haloBlur}px)`;
         trailCtx.globalAlpha = 0.38;
         trailCtx.drawImage(processCanvas, 0, 0);
         trailCtx.globalAlpha = 1;
-
-        // Sharp core pass on top (normal blur)
         trailCtx.filter = s.blur > 0 ? `blur(${s.blur}px)` : 'none';
         trailCtx.drawImage(processCanvas, 0, 0);
         trailCtx.filter = 'none';
 
-        // --- Composite to display ---
-        // Slightly warm off-white for paper feel, cool dark for void
-        displayCtx.fillStyle = s.mode === 'dark-on-light' ? '#e6e2dc' : '#060504';
+        // === COMPOSITE FINAL IMAGE ===
+
+        // Layer 1: base fill
+        displayCtx.fillStyle = isDark ? '#060504' : '#e6e2dc';
         displayCtx.fillRect(0, 0, w, h);
 
-        displayCtx.globalCompositeOperation = s.mode === 'dark-on-light' ? 'multiply' : 'screen';
+        // Layer 2: washed camera feed — environment texture visible in background
+        // Person area will be covered by trail so we draw the full frame here
+        displayCtx.save();
+        if (isDark) {
+            displayCtx.filter = 'grayscale(1) brightness(0.28) contrast(1.6)';
+            displayCtx.globalAlpha = 0.55;
+        } else {
+            displayCtx.filter = 'grayscale(1) brightness(2.1) contrast(0.42)';
+            displayCtx.globalAlpha = 0.32;
+        }
+        displayCtx.drawImage(video, 0, 0, w, h);
+        displayCtx.filter = 'none';
+        displayCtx.globalAlpha = 1;
+        displayCtx.restore();
+
+        // Layer 3: particles — flow-field driven, react to environment
+        const particles = particlesRef.current;
+        const MAX_P = 160;
+
+        // Spawn
+        const spawnN = Math.floor(Math.random() * 3);
+        for (let si = 0; si < spawnN && particles.length < MAX_P; si++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                vx: (Math.random() - 0.5) * 0.15,
+                vy: (Math.random() - 0.5) * 0.10,
+                size: 0.4 + Math.random() * 1.8,
+                opacity: 0,
+                life: 0,
+                maxLife: 150 + Math.random() * 300,
+            });
+        }
+
+        displayCtx.save();
+        for (let pi = particles.length - 1; pi >= 0; pi--) {
+            const p = particles[pi];
+            p.life++;
+
+            // Flow field — sine/cosine of position + time creates organic currents
+            const angle = Math.sin(p.x * 0.009 + fc * 0.004) * Math.PI * 2
+                + Math.cos(p.y * 0.007 + fc * 0.003) * Math.PI;
+            p.x += Math.cos(angle) * 0.22 + p.vx;
+            p.y += Math.sin(angle) * 0.18 + p.vy;
+
+            // Wrap edges
+            if (p.x < 0) p.x += w;
+            if (p.x > w) p.x -= w;
+            if (p.y < 0) p.y += h;
+            if (p.y > h) p.y -= h;
+
+            // Fade in / out
+            const lt = p.life / p.maxLife;
+            p.opacity = lt < 0.08 ? lt / 0.08 : lt > 0.85 ? (1 - lt) / 0.15 : 1;
+
+            if (p.life >= p.maxLife) { particles.splice(pi, 1); continue; }
+
+            const alpha = p.opacity * (isDark ? 0.35 : 0.28);
+            displayCtx.fillStyle = isDark
+                ? `rgba(220,215,205,${alpha})`
+                : `rgba(20,15,10,${alpha})`;
+            displayCtx.beginPath();
+            displayCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            displayCtx.fill();
+        }
+        displayCtx.restore();
+        particlesRef.current = particles;
+
+        // Layer 4: person trail — dark, blurred, anonymous — covers person area
+        displayCtx.globalCompositeOperation = isDark ? 'screen' : 'multiply';
         displayCtx.drawImage(trailCanvas, 0, 0);
         displayCtx.globalCompositeOperation = 'source-over';
 
@@ -573,13 +644,13 @@ const Installation = () => {
                     else if (!bright && start !== -1) {
                         const seg: {r:number,g:number,b:number,a:number,lum:number}[] = [];
                         for (let sy = start; sy < y; sy++) {
-                            const si = (sy * w + x) * 4;
-                            seg.push({ r: pd[si], g: pd[si+1], b: pd[si+2], a: pd[si+3], lum: pd[si]*0.299+pd[si+1]*0.587+pd[si+2]*0.114 });
+                            const ssi = (sy * w + x) * 4;
+                            seg.push({ r: pd[ssi], g: pd[ssi+1], b: pd[ssi+2], a: pd[ssi+3], lum: pd[ssi]*0.299+pd[ssi+1]*0.587+pd[ssi+2]*0.114 });
                         }
                         seg.sort((a, b) => a.lum - b.lum);
-                        seg.forEach((p, si) => {
-                            const di = ((start + si) * w + x) * 4;
-                            pd[di] = p.r; pd[di+1] = p.g; pd[di+2] = p.b; pd[di+3] = p.a;
+                        seg.forEach((sp, spi) => {
+                            const di = ((start + spi) * w + x) * 4;
+                            pd[di] = sp.r; pd[di+1] = sp.g; pd[di+2] = sp.b; pd[di+3] = sp.a;
                         });
                         start = -1;
                     }
@@ -593,11 +664,10 @@ const Installation = () => {
             displayCtx.putImageData(imageData, 0, 0);
         }
 
-        // --- Film scratches (rare — ~0.8% of frames) ---
+        // Film scratches
         if (Math.random() < 0.008) {
             displayCtx.save();
-            displayCtx.strokeStyle = s.mode === 'dark-on-light'
-                ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.10)';
+            displayCtx.strokeStyle = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.12)';
             displayCtx.lineWidth = 0.5 + Math.random() * 0.5;
             displayCtx.beginPath();
             const sy  = Math.random() * h;
@@ -609,22 +679,21 @@ const Installation = () => {
             displayCtx.restore();
         }
 
-        // --- Vignette ---
-        const cx = w * 0.5, cy = h * 0.5;
-        const vignette = displayCtx.createRadialGradient(cx, cy, h * 0.18, cx, cy, h * 0.88);
-        if (s.mode === 'dark-on-light') {
-            vignette.addColorStop(0, 'rgba(200,195,188,0)');
-            vignette.addColorStop(1, 'rgba(30,25,20,0.42)');
-        } else {
+        // Vignette
+        const vcx = w * 0.5, vcy = h * 0.5;
+        const vignette = displayCtx.createRadialGradient(vcx, vcy, h * 0.18, vcx, vcy, h * 0.88);
+        if (isDark) {
             vignette.addColorStop(0, 'rgba(0,0,0,0)');
             vignette.addColorStop(1, 'rgba(0,0,0,0.72)');
+        } else {
+            vignette.addColorStop(0, 'rgba(200,195,188,0)');
+            vignette.addColorStop(1, 'rgba(30,25,20,0.42)');
         }
         displayCtx.fillStyle = vignette;
         displayCtx.fillRect(0, 0, w, h);
 
         animFrameRef.current = requestAnimationFrame(renderLoopRef.current);
     }, []);
-
     useEffect(() => { renderLoopRef.current = renderLoop; }, [renderLoop]);
 
     // --- Start camera ---
@@ -638,7 +707,7 @@ const Installation = () => {
             analyserRef.current.fftSize = 256;
             dataArrayRef.current = new Uint8Array(analyserRef.current.frequencyBinCount) as Uint8Array<ArrayBuffer>;
 
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: true });
             const video  = videoRef.current!;
             video.srcObject = stream;
             await video.play();
