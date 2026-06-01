@@ -6,6 +6,7 @@ const Home = () => {
         <div className="home">
             <h1>every : second</h1>
             <button onClick={() => navigate("/explore")}>explore</button>
+            <button onClick={() => navigate("/installation")}>explore</button>
         </div>
     );
 };
