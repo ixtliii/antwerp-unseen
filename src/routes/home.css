@@ -1,0 +1,10 @@
+.home-page {
+    min-height: 100vh;
+    background: #080808;
+    color: #f0ede8;
+}
+
+/* Pad main content below fixed navbar */
+.home-page main {
+    padding-top: 0; /* hero is full-viewport so starts at top */
+}
