@@ -1,9 +1,8 @@
-import { Link } from 'react-router-dom';
 import { useLanguage } from '../../../context/LanguageContext';
-import useParallax from '../../../hooks/useParallax';
-import BlurText from '../../atoms/BlurText/BlurText';
-import CameraFeed from '../../molecules/CameraFeed/CameraFeed';
 import './heroSection.css';
+
+// Current active screen location — comes from API in production
+const CURRENT_LOCATION = 'Lange Leemstraat';
 
 interface HeroSectionProps {
     streamUrl?:   string;
@@ -11,49 +10,41 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ streamUrl, fallbackSrc }: HeroSectionProps) => {
-    const { t }      = useLanguage();
-    const contentRef = useParallax(0.022);
+    const { t } = useLanguage();
 
     return (
-        <section className="hero" aria-label="Hero">
-            {/* Background camera feed */}
-            <div className="hero__bg" aria-hidden>
-                <CameraFeed src={streamUrl} fallbackSrc={fallbackSrc} />
-                <div className="hero__overlay" />
+        <section className="hero" aria-label="Live camera feed">
+            {/* Camera / fallback image fills the section */}
+            <div className="hero__media">
+                {streamUrl ? (
+                    <video
+                        className="hero__video"
+                        src={streamUrl}
+                        autoPlay muted loop playsInline
+                        aria-label="Live feed from Antwerp"
+                    />
+                ) : fallbackSrc ? (
+                    <img
+                        className="hero__img"
+                        src={fallbackSrc}
+                        alt="Antwerp street view"
+                    />
+                ) : null}
             </div>
 
-            {/* Parallax content */}
-            <div className="hero__content" ref={contentRef}>
-                <p className="hero__eyebrow">
-                    <BlurText delay={0}>{t.hero.eyebrow}</BlurText>
-                </p>
+            {/* Halftone corner decorations */}
+            <div className="hero__dots hero__dots--tl" aria-hidden />
+            <div className="hero__dots hero__dots--tr" aria-hidden />
+            <div className="hero__dots hero__dots--bl" aria-hidden />
+            <div className="hero__dots hero__dots--br" aria-hidden />
 
-                <h1 className="hero__title">
-                    {t.hero.title.split('\n').map((line, i) => (
-                        <span key={i} className="hero__title-line">
-                            <BlurText delay={i * 160 + 80}>{line}</BlurText>
-                        </span>
-                    ))}
-                </h1>
-
-                <p className="hero__concept">
-                    <BlurText delay={500} duration={1400}>{t.hero.concept}</BlurText>
-                </p>
-
-                <div className="hero__cta">
-                    <BlurText delay={800}>
-                        <Link to="/explore" className="hero__cta-link">
-                            {t.hero.cta}
-                            <span className="hero__cta-arrow" aria-hidden>→</span>
-                        </Link>
-                    </BlurText>
-                </div>
+            {/* Location label — centered */}
+            <div className="hero__location" aria-label={`Currently showing: ${CURRENT_LOCATION}`}>
+                {CURRENT_LOCATION}
             </div>
 
-            {/* Scroll indicator */}
-            <div className="hero__scroll" aria-hidden>
-                <div className="hero__scroll-line" />
-            </div>
+            {/* Eyebrow — top right */}
+            <p className="hero__eyebrow">{t.hero.eyebrow}</p>
         </section>
     );
 };

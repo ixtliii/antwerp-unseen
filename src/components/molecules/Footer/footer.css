@@ -1,36 +1,156 @@
 .footer {
-    padding: 3.5rem clamp(1.25rem, 4vw, 2.5rem);
-    border-top: 1px solid rgba(255,255,255,0.055);
+    background: #f4f1ec;
+    padding: max(3.5rem, 5vh) clamp(1.5rem, 6vw, 4rem) 0;
+    border-top: 1px solid rgba(17,16,16,0.1);
+    color: #111010;
+}
+.footer--light { background: #f4f1ec; } /* same — kept for clarity */
+
+/* ─── Top: columns ───────────────────────────────────────── */
+.footer__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 3.5rem;
+}
+
+.footer__col-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #111010;
+    margin: 0 0 1rem;
+}
+
+.footer__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 0.55rem;
-    text-align: center;
 }
 
-.footer__tagline {
+.footer__link {
     font-family: 'DM Mono', monospace;
-    font-size: 0.58rem;
-    letter-spacing: 0.14em;
-    color: rgba(255,255,255,0.28);
-    margin: 0;
-    font-style: italic;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: rgba(17,16,16,0.55);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    transition: color 0.2s;
+}
+.footer__link:hover { color: #111010; }
+
+.footer__link-icon {
+    font-size: 0.7rem;
+    opacity: 0.6;
 }
 
-.footer__contact {
+.footer__link--social {
+    justify-content: space-between;
+    width: 160px;
+}
+
+.footer__link-arrow {
+    font-size: 0.75rem;
+    opacity: 0.4;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.footer__link--social:hover .footer__link-arrow {
+    opacity: 1;
+    transform: translate(2px, -2px);
+}
+
+/* ─── Newsletter ─────────────────────────────────────────── */
+.footer__newsletter {
+    border-top: 1px solid rgba(17,16,16,0.1);
+    padding-top: 2rem;
+    margin-bottom: 0;
+}
+
+.footer__newsletter-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #111010;
+    margin: 0 0 1rem;
+}
+
+.footer__newsletter-form {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    max-width: 320px;
+    border-bottom: 1px solid rgba(17,16,16,0.3);
+}
+
+.footer__newsletter-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
     font-family: 'DM Mono', monospace;
     font-size: 0.6rem;
     letter-spacing: 0.12em;
-    color: rgba(255,255,255,0.45);
-    text-decoration: none;
-    transition: color 0.2s;
+    color: #111010;
+    padding: 0.4rem 0;
 }
-.footer__contact:hover { color: rgba(255,255,255,0.85); }
+.footer__newsletter-input::placeholder {
+    color: rgba(17,16,16,0.3);
+}
 
-.footer__rights {
+.footer__newsletter-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: rgba(17,16,16,0.5);
+    padding: 0.3rem 0.3rem 0.3rem 0.6rem;
+    transition: color 0.2s, transform 0.2s;
+}
+.footer__newsletter-btn:hover {
+    color: #111010;
+    transform: translate(2px, -2px);
+}
+
+/* ─── Big stamp ──────────────────────────────────────────── */
+.footer__stamp {
+    margin-top: 2.5rem;
+    padding-bottom: 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    position: relative;
+}
+
+.footer__stamp-bold {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 12vw, 8rem);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    color: #111010;
+}
+
+.footer__stamp-italic {
     font-family: 'DM Mono', monospace;
-    font-size: 0.5rem;
+    font-size: clamp(2.2rem, 9vw, 6rem);
+    font-style: italic;
+    line-height: 1;
+    color: #111010;
+    letter-spacing: -0.01em;
+}
+
+.footer__stamp-year {
+    position: absolute;
+    bottom: 1.2rem;
+    right: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.52rem;
     letter-spacing: 0.1em;
-    color: rgba(255,255,255,0.16);
-    margin: 0;
+    color: rgba(17,16,16,0.3);
 }

@@ -4,16 +4,23 @@ import Footer from '../components/molecules/Footer/Footer';
 
 interface PageLayoutProps {
     children:    ReactNode;
-    showFooter?: boolean;  // installation page doesn't need a footer
+    showFooter?: boolean;
+    navLight?:   boolean;   // pass true on light-themed pages
+    noPadding?:  boolean;   // skip the 64px top padding (hero full-bleed)
 }
 
-const PageLayout = ({ children, showFooter = true }: PageLayoutProps) => (
+const PageLayout = ({
+                        children,
+                        showFooter = true,
+                        navLight   = false,
+                        noPadding  = false,
+                    }: PageLayoutProps) => (
     <>
-        <NavBar />
-        <main style={{ paddingTop: '52px' }}>
+        <NavBar light={navLight} />
+        <main style={noPadding ? undefined : { paddingTop: '64px' }}>
             {children}
         </main>
-        {showFooter && <Footer />}
+        {showFooter && <Footer light={navLight} />}
     </>
 );
 
