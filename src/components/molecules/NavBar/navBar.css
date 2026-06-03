@@ -1,0 +1,129 @@
+/* ─── Base ─────────────────────────────────────────────── */
+.navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 300;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.1rem clamp(1.25rem, 4vw, 2.5rem);
+    background: rgba(8, 8, 8, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.055);
+    height: 64px;
+    box-sizing: border-box;
+}
+
+/* ─── Light variant ─────────────────────────────────────── */
+.navbar--light {
+    background: rgba(244, 241, 236, 0.92);
+    border-bottom-color: rgba(17,16,16,0.08);
+}
+
+/* ─── Logo ──────────────────────────────────────────────── */
+.navbar__logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+}
+.navbar--light .navbar__logo { color: #111010; }
+
+/* ─── Nav links ─────────────────────────────────────────── */
+.navbar__links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 2.2rem;
+    align-items: center;
+    height: 100%;
+}
+
+.navbar__link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    text-transform: lowercase;
+    text-decoration: none;
+    color: rgba(255,255,255,0.38);
+    transition: color 0.2s;
+    position: relative;
+    padding-bottom: 4px;
+}
+.navbar__link:hover { color: rgba(255,255,255,0.78); }
+.navbar__link--active {
+    color: rgba(255,255,255,0.9);
+}
+.navbar__link--active::after {
+    content: '·';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+}
+
+.navbar--light .navbar__link             { color: rgba(17,16,16,0.38); }
+.navbar--light .navbar__link:hover       { color: rgba(17,16,16,0.75); }
+.navbar--light .navbar__link--active     { color: #111010; }
+.navbar--light .navbar__link--active::after { color: rgba(17,16,16,0.5); }
+
+/* ─── Right side ─────────────────────────────────────────── */
+.navbar__right {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+}
+
+.navbar__subscribe {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    text-transform: lowercase;
+    text-decoration: none;
+    color: rgba(255,255,255,0.5);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s, gap 0.2s;
+}
+.navbar__subscribe:hover { color: rgba(255,255,255,0.9); gap: 0.75rem; }
+.navbar--light .navbar__subscribe       { color: rgba(17,16,16,0.5); }
+.navbar--light .navbar__subscribe:hover { color: #111010; }
+
+.navbar__subscribe-arrow {
+    font-size: 0.7rem;
+    letter-spacing: -0.05em;
+    transition: transform 0.2s;
+}
+.navbar__subscribe:hover .navbar__subscribe-arrow { transform: translateX(4px); }
+
+/* ─── Lang ──────────────────────────────────────────────── */
+.navbar__lang {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+}
+.navbar__lang-opt        { color: rgba(255,255,255,0.25); transition: color 0.2s; }
+.navbar__lang-opt--active { color: rgba(255,255,255,0.85); }
+.navbar__lang-sep        { color: rgba(255,255,255,0.15); }
+.navbar--light .navbar__lang-opt         { color: rgba(17,16,16,0.28); }
+.navbar--light .navbar__lang-opt--active { color: #111010; }
+.navbar--light .navbar__lang-sep         { color: rgba(17,16,16,0.15); }
+
+/* ─── Mobile ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .navbar__links, .navbar__subscribe { display: none; }
+}

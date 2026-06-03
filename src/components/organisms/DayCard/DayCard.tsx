@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { useTexture, Text } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import { useFrame } from '@react-three/fiber';
-import type { Day } from '../../types';
+import type { Day } from '../../../types';
 
 interface DayCardProps {
     day: Day;

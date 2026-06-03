@@ -1,0 +1,64 @@
+.hero {
+    position: relative;
+    width: 100%;
+    height: calc(100svh - 64px); /* full viewport minus navbar */
+    min-height: 480px;
+    background: #f4f1ec;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Camera / image — dark-on-light treatment */
+.hero__video,
+.hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Invert + high contrast to give the dark-silhouette-on-light look */
+    filter: grayscale(1) invert(1) brightness(0.82) contrast(1.4);
+    mix-blend-mode: multiply;
+}
+
+/* ─── Halftone dot corners ───────────────────────────────── */
+/* Each corner is a radial gradient fading from the corner */
+.hero__dots {
+    position: absolute;
+    width: 45%;
+    height: 65%;
+    pointer-events: none;
+    background-image: radial-gradient(circle, rgba(17,16,16,0.18) 1px, transparent 1px);
+    background-size: 12px 12px;
+}
+
+.hero__dots--tl { top: 0;    left: 0;   mask-image: radial-gradient(ellipse 80% 80% at 0% 0%,   black 30%, transparent 70%); }
+.hero__dots--tr { top: 0;    right: 0;  mask-image: radial-gradient(ellipse 80% 80% at 100% 0%, black 30%, transparent 70%); }
+.hero__dots--bl { bottom: 0; left: 0;   mask-image: radial-gradient(ellipse 80% 80% at 0% 100%, black 30%, transparent 70%); }
+.hero__dots--br { bottom: 0; right: 0;  mask-image: radial-gradient(ellipse 80% 80% at 100% 100%, black 30%, transparent 70%); }
+
+/* ─── Location label ─────────────────────────────────────── */
+.hero__location {
+    position: relative;
+    z-index: 2;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: rgba(17,16,16,0.45);
+    text-align: center;
+}
+
+/* ─── Eyebrow ────────────────────────────────────────────── */
+.hero__eyebrow {
+    position: absolute;
+    top: 1.5rem;
+    right: clamp(1.25rem, 4vw, 2.5rem);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(17,16,16,0.3);
+    margin: 0;
+}

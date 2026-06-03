@@ -1,0 +1,105 @@
+.artworks {
+    padding: max(6rem, 8vh) clamp(1.5rem, 6vw, 5rem);
+    border-top: 1px solid rgba(255,255,255,0.055);
+    overflow: hidden;
+}
+
+.artworks__header { margin-bottom: 4rem; }
+
+.artworks__eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.32em;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    margin: 0 0 0.8rem;
+}
+
+.artworks__title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    letter-spacing: 0.05em;
+    line-height: 0.92;
+    color: #fff;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+.artworks__title-line { display: block; }
+
+/* Stage */
+.artworks__stage {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+/* Cards arranged in a circle */
+.artworks__card {
+    position: absolute;
+    width: 200px;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: border-color 0.3s, opacity 0.3s, transform 0.3s;
+    opacity: 0.4;
+    transform:
+        rotate(var(--deg))
+        translateX(var(--radius))
+        rotate(calc(-1 * var(--deg)));
+}
+
+.artworks__card--active {
+    opacity: 1;
+    border-color: rgba(255,255,255,0.35);
+    z-index: 2;
+}
+
+.artworks__card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(0.3);
+    transition: filter 0.3s;
+}
+.artworks__card--active img { filter: grayscale(0); }
+
+.artworks__card-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0.5rem 0.65rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.artworks__card--active .artworks__card-label { opacity: 1; }
+
+.artworks__card-label span,
+.artworks__card-label time {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.48rem;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.7);
+}
+.artworks__card-label time { color: rgba(255,255,255,0.35); }
+
+.artworks__cta {
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 640px) {
+    .artworks__stage { height: 320px; }
+    .artworks__card {
+        width: 140px;
+        --radius: 200px !important;
+    }
+}

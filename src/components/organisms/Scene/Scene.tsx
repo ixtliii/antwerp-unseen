@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useSpring } from '@react-spring/three';
-import type { Day } from '../../types';
-import DayCard from '../DayCard/DayCard';
+import type { Day } from '../../../types';
+import DayCard from '../DayCard/DayCard.tsx';
 import './scene.css';
 
 interface SceneProps {
