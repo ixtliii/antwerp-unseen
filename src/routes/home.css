@@ -1,7 +1,7 @@
 .home-page {
     min-height: 100vh;
-    background: #080808;
-    color: #f0ede8;
+    background: var(--bg-dark);
+    color: var(--text-dark);
 }
 
 /* Pad main content below fixed navbar */

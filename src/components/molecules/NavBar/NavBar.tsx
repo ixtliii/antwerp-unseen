@@ -22,6 +22,7 @@ const NavBar = ({ light = false }: NavBarProps) => {
                 <ul className="navbar__links">
                     <li><NavLink to="/"             className={linkClass} end>{t.nav.home}</NavLink></li>
                     <li><NavLink to="/explore"      className={linkClass}>{t.nav.archive}</NavLink></li>
+                    <li><NavLink to="/artists" className={linkClass}>{t.nav.artists}</NavLink></li>
                     <li><NavLink to="/installation" className={linkClass}>{t.nav.installation}</NavLink></li>
                 </ul>
             </nav>

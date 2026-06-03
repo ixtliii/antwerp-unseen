@@ -18,3 +18,16 @@ export interface Day {
     silhouetteUrl: string;
     contributions: Contribution[];
 }
+
+export interface Artwork {
+    id: string;
+    title: string;
+    date: ISODateString;
+    imageUrl: string;
+}
+
+export interface Artist {
+    id: string;
+    name: string;
+    artworks: Artwork[];
+}

@@ -3,7 +3,7 @@
     width: 100%;
     height: calc(100svh - 64px); /* full viewport minus navbar */
     min-height: 480px;
-    background: #f4f1ec;
+    background: var(--bg-light);
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -43,7 +43,7 @@
 .hero__location {
     position: relative;
     z-index: 2;
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.65rem;
     letter-spacing: 0.2em;
     color: rgba(17,16,16,0.45);
@@ -55,7 +55,7 @@
     position: absolute;
     top: 1.5rem;
     right: clamp(1.25rem, 4vw, 2.5rem);
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.52rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;

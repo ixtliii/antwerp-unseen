@@ -2,6 +2,7 @@ const en = {
     nav: {
         home:         'Home',
         archive:      'Archive',
+        artists: "Artists",
         installation: 'Installation',
         submit:       'Share',
     },

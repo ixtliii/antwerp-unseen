@@ -7,9 +7,9 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: #080808;
-    font-family: 'DM Mono', monospace;
-    color: #fff;
+    background: var(--bg-dark);
+    font-family: var(--font-mono);
+    color: var(--primitive-white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,7 +30,7 @@
 .installation__bg {
     position: absolute;
     inset: 0;
-    background: #080808;
+    background: var(--bg-dark);
 }
 
 /* ─── Film grain ────────────────────────────────────────── */
@@ -56,7 +56,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
     transition: opacity 1.4s ease, filter 1.4s ease;
     pointer-events: none;
 }
@@ -68,18 +68,18 @@
 }
 
 .installation__label {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-display);
     font-size: clamp(2.5rem, 10vw, 5.5rem);
     letter-spacing: 0.14em;
     margin: 0;
     line-height: 1;
     text-align: center;
-    color: #fff;
-    font-weight: 400;
+    color: var(--primitive-white);
+    font-weight: var(--font-weight-regular);
 }
 
 .installation__sublabel {
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: clamp(0.5rem, 1.8vw, 0.75rem);
     letter-spacing: 0.4em;
     color: rgba(255, 255, 255, 0.3);
@@ -116,12 +116,12 @@
 }
 
 .installation__prompt p {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-display);
     font-size: clamp(1.8rem, 5.5vw, 3.4rem);
     letter-spacing: 0.06em;
     line-height: 1.2;
     margin: 0;
-    color: #fff;
+    color: var(--primitive-white);
 }
 
 /* ─── QR ────────────────────────────────────────────────── */
@@ -134,7 +134,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
     z-index: 30;
 }
 
@@ -221,7 +221,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: var(--space-2);
 }
 
 .contribution__now-playing {
@@ -278,7 +278,7 @@
     display: block;
     width: 2px;
     height: 100%;
-    background: #fff;
+    background: var(--primitive-white);
     transform-origin: center;
     transform: scaleY(0.15);
     animation: wave-bar 0.85s ease-in-out infinite;
@@ -300,7 +300,7 @@
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.14);
     color: rgba(255, 255, 255, 0.5);
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.6rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -370,7 +370,7 @@
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.12);
     color: rgba(255, 255, 255, 0.8);
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.6rem;
     padding: 0.3rem 0.5rem;
     cursor: pointer;
@@ -389,7 +389,7 @@
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: rgba(255, 255, 255, 0.35);
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.5rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -404,7 +404,7 @@
 
 @media (min-aspect-ratio: 9/16) and (min-width: 600px) {
     .installation {
-        background: #000;
+        background: var(--primitive-black);
     }
 
     .installation__camera,

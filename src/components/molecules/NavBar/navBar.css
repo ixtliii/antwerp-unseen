@@ -23,14 +23,14 @@
 
 /* ─── Logo ──────────────────────────────────────────────── */
 .navbar__logo {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-display);
     font-size: 1.05rem;
     letter-spacing: 0.06em;
     line-height: 1;
     color: rgba(255,255,255,0.9);
     text-decoration: none;
 }
-.navbar--light .navbar__logo { color: #111010; }
+.navbar--light .navbar__logo { color: var(--text-light); }
 
 /* ─── Nav links ─────────────────────────────────────────── */
 .navbar__links {
@@ -44,7 +44,7 @@
 }
 
 .navbar__link {
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.6rem;
     letter-spacing: 0.16em;
     text-transform: lowercase;
@@ -52,7 +52,7 @@
     color: rgba(255,255,255,0.38);
     transition: color 0.2s;
     position: relative;
-    padding-bottom: 4px;
+    padding-bottom: var(--space-1);
 }
 .navbar__link:hover { color: rgba(255,255,255,0.78); }
 .navbar__link--active {
@@ -70,7 +70,7 @@
 
 .navbar--light .navbar__link             { color: rgba(17,16,16,0.38); }
 .navbar--light .navbar__link:hover       { color: rgba(17,16,16,0.75); }
-.navbar--light .navbar__link--active     { color: #111010; }
+.navbar--light .navbar__link--active     { color: var(--text-light); }
 .navbar--light .navbar__link--active::after { color: rgba(17,16,16,0.5); }
 
 /* ─── Right side ─────────────────────────────────────────── */
@@ -81,7 +81,7 @@
 }
 
 .navbar__subscribe {
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.6rem;
     letter-spacing: 0.16em;
     text-transform: lowercase;
@@ -89,12 +89,12 @@
     color: rgba(255,255,255,0.5);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
     transition: color 0.2s, gap 0.2s;
 }
 .navbar__subscribe:hover { color: rgba(255,255,255,0.9); gap: 0.75rem; }
 .navbar--light .navbar__subscribe       { color: rgba(17,16,16,0.5); }
-.navbar--light .navbar__subscribe:hover { color: #111010; }
+.navbar--light .navbar__subscribe:hover { color: var(--text-light); }
 
 .navbar__subscribe-arrow {
     font-size: 0.7rem;
@@ -112,7 +112,7 @@
     border: none;
     cursor: pointer;
     padding: 0;
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.56rem;
     letter-spacing: 0.14em;
 }
@@ -120,7 +120,7 @@
 .navbar__lang-opt--active { color: rgba(255,255,255,0.85); }
 .navbar__lang-sep        { color: rgba(255,255,255,0.15); }
 .navbar--light .navbar__lang-opt         { color: rgba(17,16,16,0.28); }
-.navbar--light .navbar__lang-opt--active { color: #111010; }
+.navbar--light .navbar__lang-opt--active { color: var(--text-light); }
 .navbar--light .navbar__lang-sep         { color: rgba(17,16,16,0.15); }
 
 /* ─── Mobile ─────────────────────────────────────────────── */

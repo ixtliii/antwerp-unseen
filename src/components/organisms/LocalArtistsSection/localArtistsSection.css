@@ -1,7 +1,7 @@
 .artists {
     position: relative;
     min-height: 640px;
-    background: #f4f1ec;
+    background: var(--bg-light);
     border-top: 1px solid rgba(17,16,16,0.08);
     overflow: hidden;
     display: flex;
@@ -57,29 +57,29 @@
 }
 
 .artists__title {
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: clamp(1.1rem, 3vw, 1.6rem);
-    font-weight: 400;
+    font-weight: var(--font-weight-regular);
     letter-spacing: 0.06em;
-    color: #111010;
+    color: var(--text-light);
     margin: 0;
 }
 
 .artists__cta {
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.65rem;
     letter-spacing: 0.14em;
     padding: 0.75rem 1.8rem;
-    background: #111010;
-    color: #f4f1ec;
+    background: var(--text-light);
+    color: var(--bg-light);
     text-decoration: none;
-    border: 1px solid #111010;
+    border: 1px solid var(--text-light);
     transition: background 0.2s, color 0.2s;
     display: inline-block;
 }
 .artists__cta:hover {
     background: transparent;
-    color: #111010;
+    color: var(--text-light);
 }
 
 .artists__secondary {
@@ -90,7 +90,7 @@
 }
 
 .artists__secondary-label {
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.55rem;
     letter-spacing: 0.12em;
     color: rgba(17,16,16,0.38);
@@ -98,10 +98,10 @@
 }
 
 .artists__submit-link {
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.58rem;
     letter-spacing: 0.1em;
-    color: #111010;
+    color: var(--text-light);
     text-decoration: underline;
     text-underline-offset: 3px;
     transition: opacity 0.2s;

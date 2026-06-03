@@ -1,6 +1,6 @@
 .concept {
     padding: max(6rem, 10vh) clamp(2rem, 12vw, 10rem);
-    background: #f4f1ec;
+    background: var(--bg-light);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -8,13 +8,13 @@
 }
 
 .concept__quote {
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: clamp(1rem, 2.8vw, 1.55rem);
     line-height: 1.55;
-    color: #111010;
+    color: var(--text-light);
     text-align: center;
     margin: 0;
     font-style: normal;
     max-width: 640px;
-    font-weight: 400;
+    font-weight: var(--font-weight-regular);
 }

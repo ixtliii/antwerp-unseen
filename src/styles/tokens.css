@@ -1,23 +1,192 @@
+/* ============================================================
+   ANTWERP UNSEEN — Design Tokens
+   Structure: Primitives → Typography → Semantics
+   Auto-generated from Figma Variables
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   PRIMITIVES — Colors
+   ------------------------------------------------------------ */
 :root {
-    --font-primary: 'Manrope', sans-serif;
-    --font-size-xs: 0.625rem;
-    --font-size-sm: 0.75rem;
-    --font-size-md: 0.875rem;
-    --font-size-lg: 1rem;
+    /* primary */
+    --primitive-black:          #000000;
+    --primitive-black-50:       rgba(0, 0, 0, 0.5);
+    --primitive-white:          #FFFFFF;
+    --primitive-white-50:       rgba(255, 255, 255, 0.5);
 
-    --color-bg: #f0f0f0;
-    --color-surface: #ffffff;
-    --color-text-primary: #1a1a1a;
-    --color-text-secondary: #888888;
-    --color-border: #e0e0e0;
+    /* brand */
+    --primitive-brand-100:      #EDF1F7;
+    --primitive-brand-200:      #DBE3EE;
+    --primitive-brand-300:      #C8D4E6;
+    --primitive-brand-400:      #B6C6DD;
+    --primitive-brand-500:      #A4B8D5;
+    --primitive-brand-600:      #8393AA;
+    --primitive-brand-700:      #626E80;
+    --primitive-brand-800:      #424A55;
+    --primitive-brand-900:      #21252B;
 
-    --space-xs: 4px;
-    --space-sm: 8px;
-    --space-md: 16px;
-    --space-lg: 32px;
+    /* neutral */
+    --primitive-neutral-100:    #E9EAEC;
+    --primitive-neutral-200:    #D4D5DA;
+    --primitive-neutral-300:    #BEC1C7;
+    --primitive-neutral-400:    #A9ACB5;
+    --primitive-neutral-500:    #9397A2;
+    --primitive-neutral-600:    #767982;
+    --primitive-neutral-700:    #585B61;
+    --primitive-neutral-800:    #3B3C41;
+    --primitive-neutral-900:    #1D1E20;
 
-    --perspective: 1200px;
-    --card-width: 500px;
-    --card-height: 340px;
-    --card-gap: 5px;
+    /* grey */
+    --primitive-grey-100:       #FAFAFB;
+    --primitive-grey-200:       #F4F5F7;
+    --primitive-grey-300:       #EFF1F3;
+    --primitive-grey-400:       #E9ECEF;
+    --primitive-grey-500:       #E4E7EB;
+    --primitive-grey-600:       #B6B9BC;
+    --primitive-grey-700:       #898B8D;
+    --primitive-grey-800:       #5B5C5E;
+    --primitive-grey-900:       #2E2E2F;
+
+    /* dark */
+    --primitive-dark-100:       #D8D9DC;
+    --primitive-dark-200:       #B2B3B8;
+    --primitive-dark-300:       #8B8D95;
+    --primitive-dark-400:       #656771;
+    --primitive-dark-500:       #3E414E;
+    --primitive-dark-600:       #32343E;
+    --primitive-dark-700:       #25272F;
+    --primitive-dark-800:       #191A1F;
+    --primitive-dark-900:       #0C0D10;
+
+    /* orange */
+    --primitive-orange-100:     #F7E3D2;
+    --primitive-orange-200:     #EFC8A5;
+    --primitive-orange-300:     #E8AC78;
+    --primitive-orange-400:     #E0914B;
+    --primitive-orange-500:     #D8751E;
+    --primitive-orange-600:     #AD5E18;
+    --primitive-orange-700:     #824612;
+    --primitive-orange-800:     #562F0C;
+    --primitive-orange-900:     #2B1706;
+
+    /* red */
+    --primitive-red-100:        #F3DBDB;
+    --primitive-red-200:        #E7B7B7;
+    --primitive-red-300:        #DB9494;
+    --primitive-red-400:        #CF7070;
+    --primitive-red-500:        #C34C4C;
+    --primitive-red-600:        #9C3D3D;
+    --primitive-red-700:        #752E2E;
+    --primitive-red-800:        #4E1E1E;
+    --primitive-red-900:        #270F0F;
+
+    /* green */
+    --primitive-green-100:      #E2F3E1;
+    --primitive-green-200:      #C5E8C3;
+    --primitive-green-300:      #A7DCA4;
+    --primitive-green-400:      #8AD186;
+    --primitive-green-500:      #6DC568;
+    --primitive-green-600:      #579E53;
+    --primitive-green-700:      #41763E;
+    --primitive-green-800:      #2C4F2A;
+    --primitive-green-900:      #162715;
+}
+
+/* ------------------------------------------------------------
+   PRIMITIVES — Spacing
+   ------------------------------------------------------------ */
+:root {
+    --space-1:  4px;
+    --space-2:  8px;
+    --space-3:  12px;
+    --space-4:  16px;
+    --space-5:  20px;
+    --space-6:  24px;
+    --space-7:  36px;
+    --space-8:  48px;
+}
+
+/* ------------------------------------------------------------
+   TYPOGRAPHY
+   ------------------------------------------------------------ */
+:root {
+    /* font family */
+    --font-satoshi:         'Satoshi Variable', sans-serif;
+    /* kept from project brief */
+    --font-display:         'Bebas Neue', sans-serif;
+    --font-mono:            'DM Mono', monospace;
+
+    /* font size (px — use rem in practice: value / 16) */
+    --font-size-14:         0.875rem;   /* 14px */
+    --font-size-16:         1rem;       /* 16px */
+    --font-size-24:         1.5rem;     /* 24px */
+    --font-size-32:         2rem;       /* 32px */
+    --font-size-36:         2.25rem;    /* 36px */
+    --font-size-40:         2.5rem;     /* 40px */
+    --font-size-48:         3rem;       /* 48px */
+    --font-size-64:         4rem;       /* 64px */
+    --font-size-96:         6rem;       /* 96px */
+
+    /* font weight */
+    --font-weight-light:    300;
+    --font-weight-regular:  400;
+    --font-weight-medium:   500;
+    --font-weight-bold:     700;
+
+    /* letter spacing */
+    --letter-spacing-0:     0;
+
+    /* line height */
+    --line-height-140:      1.4;
+}
+
+/* ------------------------------------------------------------
+   SEMANTICS — resolved aliases
+   ------------------------------------------------------------ */
+:root {
+    /* background */
+    --color-bg-canvas:          var(--primitive-neutral-100);   /* neutral/100  → #E9EAEC */
+    --color-bg-surface:         var(--primitive-brand-100);     /* brand/100    → #EDF1F7 */
+    --color-bg-brand:           var(--primitive-brand-500);     /* brand/500    → #A4B8D5 */
+    --color-bg-brand-hover:     var(--primitive-brand-600);     /* brand/600    → #8393AA */
+    --color-bg-success:         var(--primitive-green-100);     /* green/100    → #E2F3E1 */
+    --color-bg-error:           var(--primitive-red-100);       /* red/100      → #F3DBDB */
+
+    /* text */
+    --color-text-primary:       var(--primitive-neutral-900);   /* neutral/900  → #1D1E20 */
+    --color-text-secondary:     var(--primitive-neutral-600);   /* neutral/600  → #767982 */
+    --color-text-muted:         var(--primitive-neutral-400);   /* neutral/400  → #A9ACB5 */
+    --color-text-success:       var(--primitive-green-700);     /* green/700    → #41763E */
+    --color-text-error:         var(--primitive-red-700);       /* red/700      → #752E2E */
+
+    /* border */
+    --color-border-default:     var(--primitive-brand-200);     /* brand/200    → #DBE3EE */
+
+    /* spacing aliases */
+    --space-gap-s:              var(--space-4);                 /* spacing/space-4 → 16px */
+    --space-gap-m:              var(--space-5);                 /* spacing/space-5 → 20px */
+
+    /* typography alias */
+    --font-label:               var(--font-size-16);            /* Font Size/16 */
+}
+
+/* ------------------------------------------------------------
+   LEGACY / PROJECT-SPECIFIC
+   kept for backwards compat with existing components
+   ------------------------------------------------------------ */
+:root {
+    /* 3D scene */
+    --perspective:      1200px;
+    --card-width:       500px;
+    --card-height:      340px;
+    --card-gap:         5px;
+
+    /* page backgrounds (from project brief) */
+    --bg-dark:          #080808;
+    --bg-light:         #f4f1ec;
+    --text-dark:        #f0ede8;
+    --text-light:       #111010;
+}
+html, body {
+    background: var(--bg-light);
 }

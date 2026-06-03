@@ -8,7 +8,7 @@
 }
 
 .share__eyebrow {
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.58rem;
     letter-spacing: 0.32em;
     color: rgba(255,255,255,0.3);
@@ -24,7 +24,7 @@
 
 .share__prompt-label {
     display: block;
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.5rem;
     letter-spacing: 0.22em;
     color: rgba(255,255,255,0.25);
@@ -33,7 +33,7 @@
 }
 
 .share__prompt {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-display);
     font-size: clamp(1.8rem, 5vw, 3.2rem);
     letter-spacing: 0.04em;
     line-height: 1.1;
@@ -45,11 +45,11 @@
 .share__actions {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-4);
 }
 
 .share__cta {
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.65rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -64,13 +64,13 @@
     align-self: flex-start;
 }
 .share__cta:hover {
-    color: #fff;
+    color: var(--primitive-white);
     border-color: rgba(255,255,255,0.5);
     gap: 0.9rem;
 }
 
 .share__note {
-    font-family: 'DM Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.52rem;
     letter-spacing: 0.1em;
     color: rgba(255,255,255,0.2);

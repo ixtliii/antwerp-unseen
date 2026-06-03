@@ -1,0 +1,124 @@
+.artists-explorer {
+    width: 100%;
+    min-height: 100vh;
+    padding: calc(var(--space-8) * 2) var(--space-6) var(--space-8);
+    background: var(--bg-light);
+    color: var(--color-text-primary);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 100rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.artists-explorer__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, var(--font-size-64));
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin: 0 0 var(--space-8);
+    color: var(--color-text-primary);
+}
+
+.artists-explorer__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+    align-items: center;
+}
+
+/* Left column ---------------------------------------------- */
+.artists-explorer__list-wrap {
+    position: relative;
+    display: flex;
+    gap: var(--space-6);
+    padding-left: var(--space-4);
+}
+
+.artists-explorer__rail {
+    width: 2px;
+    background: var(--primitive-brand-300);
+    align-self: stretch;
+    border-radius: 1px;
+    flex-shrink: 0;
+}
+
+.artists-explorer__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    flex: 1;
+}
+
+/* Right column --------------------------------------------- */
+.artists-explorer__artworks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-right: var(--space-2);
+    scroll-snap-type: y mandatory;
+    scrollbar-width: thin;
+}
+
+.artists-explorer__artwork {
+    margin: 0;
+    scroll-snap-align: start;
+}
+
+.artists-explorer__artwork img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 3 / 2;
+}
+
+.artists-explorer__artwork-caption {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-14);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Mobile --------------------------------------------------- */
+@media (max-width: 48em) {
+    .artists-explorer {
+        padding: calc(var(--space-7) * 2) var(--space-4) var(--space-6);
+    }
+
+    .artists-explorer__title {
+        margin-bottom: var(--space-6);
+    }
+
+    .artists-explorer__body {
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+    }
+
+    .artists-explorer__list-wrap {
+        padding-left: var(--space-2);
+        gap: var(--space-4);
+    }
+
+    .artists-explorer__list {
+        gap: var(--space-5);
+    }
+
+    .artists-explorer__artworks {
+        max-height: none;
+        overflow-y: visible;
+        scroll-snap-type: none;
+    }
+}

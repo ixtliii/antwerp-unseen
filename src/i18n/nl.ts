@@ -4,6 +4,7 @@ const nl: Translations = {
     nav: {
         home:         'Start',
         archive:      'Archief',
+        artists:       'Artisten',
         installation: 'Installatie',
         submit:       'Deel',
     },
