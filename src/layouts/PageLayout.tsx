@@ -3,17 +3,17 @@ import NavBar from '../components/molecules/NavBar/NavBar';
 import Footer from '../components/molecules/Footer/Footer';
 
 interface PageLayoutProps {
-    children:    ReactNode;
+    children: ReactNode;
     showFooter?: boolean;
-    navLight?:   boolean;   // pass true on light-themed pages
-    noPadding?:  boolean;   // skip the 64px top padding (hero full-bleed)
+    navLight?: boolean;
+    noPadding?: boolean;
 }
 
 const PageLayout = ({
                         children,
                         showFooter = true,
-                        navLight   = false,
-                        noPadding  = false,
+                        navLight = false,
+                        noPadding = false,
                     }: PageLayoutProps) => (
     <>
         <NavBar light={navLight} />

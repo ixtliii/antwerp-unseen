@@ -1,0 +1,45 @@
+body {
+    cursor: none;
+}
+
+a, button, [role="button"], input, select, textarea {
+    cursor: none;
+}
+
+.global-custom-cursor-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 99999;
+    mix-blend-mode: difference;
+    color: #ffffff;
+}
+
+.global-custom-cursor {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: currentColor;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: scale(0.2);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-left: -20px;
+    margin-top: -20px;
+}
+
+.global-custom-cursor.hovered {
+    transform: scale(1);
+}
+
+.global-custom-cursor svg {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    color: #000000;
+}
+
+.global-custom-cursor.hovered svg {
+    opacity: 1;
+}

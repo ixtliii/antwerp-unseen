@@ -7,19 +7,11 @@
     align-items: flex-start;
     justify-content: space-between;
     padding: 1.1rem clamp(1.25rem, 4vw, 2.5rem);
-    background: rgba(8, 8, 8, 0.82);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(255,255,255,0.055);
     height: 64px;
     box-sizing: border-box;
 }
 
 /* ─── Light variant ─────────────────────────────────────── */
-.navbar--light {
-    background: rgba(244, 241, 236, 0.92);
-    border-bottom-color: rgba(17,16,16,0.08);
-}
 
 /* ─── Logo ──────────────────────────────────────────────── */
 .navbar__logo {

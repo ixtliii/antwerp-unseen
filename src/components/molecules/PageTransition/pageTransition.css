@@ -1,0 +1,20 @@
+.page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    grid-template-columns: repeat(40, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+}
+
+.page-transition__pixel {
+    background-color: var(--bg-light);
+    width: 102%;
+    height: 102%;
+    opacity: 1;
+    transition: opacity 0s;
+}
+
+.page-transition__pixel--revealed {
+    opacity: 0;
+}

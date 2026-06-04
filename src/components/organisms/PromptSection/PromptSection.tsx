@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent } from 'react';
-import { useLanguage } from '../../../context/LanguageContext';
+import { useLanguage } from '../../../context/LanguageContext.tsx';
 import './promptSection.css';
 
 type MediaType = 'photo' | 'video' | 'voice' | 'text' | 'music';

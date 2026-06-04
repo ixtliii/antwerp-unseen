@@ -1,12 +1,7 @@
 .artists-explorer {
     width: 100%;
-    min-height: 100vh;
     padding: calc(var(--space-8) * 2) var(--space-6) var(--space-8);
-    background: var(--bg-light);
     color: var(--color-text-primary);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     max-width: 100rem;
     margin: 0 auto;
     box-sizing: border-box;
@@ -26,23 +21,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--space-8);
-    align-items: center;
-}
-
-/* Left column ---------------------------------------------- */
-.artists-explorer__list-wrap {
-    position: relative;
-    display: flex;
-    gap: var(--space-6);
-    padding-left: var(--space-4);
-}
-
-.artists-explorer__rail {
-    width: 2px;
-    background: var(--primitive-brand-300);
-    align-self: stretch;
-    border-radius: 1px;
-    flex-shrink: 0;
+    align-items: start;
 }
 
 .artists-explorer__list {
@@ -51,40 +30,75 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
-    flex: 1;
+    gap: var(--space-3);
+    position: sticky;
+    top: 25vh;
+    align-self: start;
 }
 
-/* Right column --------------------------------------------- */
+.artists-explorer__list-item {
+}
+
 .artists-explorer__artworks {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
-    max-height: 80vh;
-    overflow-y: auto;
-    padding-right: var(--space-2);
-    scroll-snap-type: y mandatory;
-    scrollbar-width: thin;
+    gap: 30vh;
+    padding-bottom: 20vh;
 }
 
 .artists-explorer__artwork {
     margin: 0;
-    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    perspective: 1200px;
 }
 
-.artists-explorer__artwork img {
+.artists-explorer__image-wrapper {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    position: relative;
+    border-radius: 4px;
+    transform-style: preserve-3d;
+}
+
+.artists-explorer__image-wrapper img {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: cover;
-    aspect-ratio: 3 / 2;
+    transform-origin: center;
+    will-change: transform;
+}
+
+.artists-explorer__pixel-overlay {
+    position: absolute;
+    inset: -2%;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(16, 1fr);
+    z-index: 2;
+    pointer-events: none;
+    transform: translateZ(10px);
+}
+
+.artists-explorer__pixel {
+    background-color: var(--bg-light);
+    width: 105%;
+    height: 105%;
+    opacity: 1;
+    transition: opacity 0s;
+}
+
+.artists-explorer__pixel--revealed {
+    opacity: 0;
 }
 
 .artists-explorer__artwork-caption {
     display: flex;
     justify-content: space-between;
     gap: var(--space-4);
-    margin-top: var(--space-2);
     font-family: var(--font-mono);
     font-size: var(--font-size-14);
     color: var(--color-text-muted);
@@ -92,7 +106,22 @@
     letter-spacing: 0.05em;
 }
 
-/* Mobile --------------------------------------------------- */
+.artists-explorer__caption-inner {
+    overflow: hidden;
+}
+
+.artists-explorer__caption-inner span {
+    display: inline-block;
+    transform: translateY(110%);
+    opacity: 0;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+}
+
+.artists-explorer__artwork--revealed .artists-explorer__caption-inner span {
+    transform: translateY(0);
+    opacity: 1;
+}
+
 @media (max-width: 48em) {
     .artists-explorer {
         padding: calc(var(--space-7) * 2) var(--space-4) var(--space-6);
@@ -107,18 +136,24 @@
         gap: var(--space-6);
     }
 
-    .artists-explorer__list-wrap {
-        padding-left: var(--space-2);
-        gap: var(--space-4);
-    }
-
     .artists-explorer__list {
-        gap: var(--space-5);
+        gap: var(--space-2);
+        position: relative;
+        top: 0;
+        margin-bottom: var(--space-8);
     }
 
     .artists-explorer__artworks {
-        max-height: none;
-        overflow-y: visible;
-        scroll-snap-type: none;
+        gap: 15vh;
+        padding-bottom: 5vh;
+    }
+
+    .artists-explorer__image-wrapper {
+        aspect-ratio: 1 / 1;
+    }
+
+    .artists-explorer__pixel-overlay {
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(12, 1fr);
     }
 }

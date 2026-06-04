@@ -183,10 +183,10 @@
 
     /* page backgrounds (from project brief) */
     --bg-dark:          #080808;
-    --bg-light:         #f4f1ec;
+    --bg-light:         var(--color-bg-canvas);
     --text-dark:        #f0ede8;
     --text-light:       #111010;
 }
 html, body {
-    background: var(--bg-light);
+    background: var(--color-bg-canvas);
 }
