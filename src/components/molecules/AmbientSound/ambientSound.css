@@ -1,0 +1,38 @@
+.ambient-toggle {
+    position: fixed;
+    bottom: var(--space-6);
+    right: var(--space-6);
+    z-index: 9000;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-12);
+    color: var(--color-text-primary);
+    padding: 0;
+    mix-blend-mode: difference;
+    color: #fff;
+}
+
+.ambient-toggle__indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: currentColor;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+}
+
+.ambient-toggle--playing .ambient-toggle__indicator {
+    opacity: 1;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(0.8); opacity: 0.5; }
+}

@@ -2,8 +2,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { mockDays } from '../data/mock';
 import Scene from '../components/organisms/Scene/Scene';
 import FilterMenu from '../components/molecules/FilterMenu/FilterMenu';
-import NavBar from '../components/molecules/NavBar/NavBar';
 import useFilterSound from '../hooks/useFilterSound';
+import PageLayout from "../layouts/PageLayout.tsx";
 
 const Explore = () => {
     const [activeFilter, setActiveFilter] = useState<string>('all');
@@ -49,21 +49,20 @@ const Explore = () => {
 
     return (
         // Fullscreen — NavBar floats over the scene, no PageLayout wrapper
-        <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#0f0f0f', overflow: 'hidden' }}>
-            <NavBar />
-            {filteredDays.length > 0 && (
-                <Scene
-                    days={filteredDays}
-                    activeDate={activeDate}
-                    onActiveChange={setActiveDate}
+            <PageLayout noPadding showFooter={false} >
+                {filteredDays.length > 0 && (
+                    <Scene
+                        days={filteredDays}
+                        activeDate={activeDate}
+                        onActiveChange={setActiveDate}
+                    />
+                )}
+                <FilterMenu
+                    filterCounts={filterCounts}
+                    activeFilter={activeFilter}
+                    onFilterChange={handleFilterChange}
                 />
-            )}
-            <FilterMenu
-                filterCounts={filterCounts}
-                activeFilter={activeFilter}
-                onFilterChange={handleFilterChange}
-            />
-        </div>
+            </PageLayout>
     );
 };
 
