@@ -4,19 +4,23 @@ import gsap from 'gsap';
 import { useLanguage } from '../../../context/LanguageContext';
 import { triggerPageTransition } from '../../globals/PixelTransition/triggerTransition';
 import './navBar.css';
+import NavItem from "../../atoms/NavItem/NavItem.tsx";
 
 interface NavNode {
-    labelKey: 'archive' | 'submit' | 'artists' | 'installation';
+    labelKey: string;
+    fallback: string;
     route: string;
     x: number;
     y: number;
 }
 
 const NODES: NavNode[] = [
-    { labelKey: 'archive',      route: '/explore',      x: -190, y: 36 },
-    { labelKey: 'artists',      route: '/artists',      x: -150, y: 96 },
-    { labelKey: 'submit',       route: '/submit',       x: -210, y: 156 },
-    { labelKey: 'installation', route: '/installation', x: -110, y: 210 },
+    { labelKey: 'window', fallback: 'WINDOWS', route: '/window', x: -190, y: 36 },
+    { labelKey: 'archive', fallback: 'ARCHIVE', route: '/explore', x: -150, y: 96 },
+    { labelKey: 'artist', fallback: 'LOCAL ARTISTS', route: '/artist', x: -210, y: 156 },
+    { labelKey: 'map', fallback: 'MAP', route: '/map', x: -110, y: 210 },
+    { labelKey: 'submit', fallback: 'ADD YOUR STORY', route: '/submit', x: -180, y: 270 },
+    { labelKey: 'installation', fallback: 'INSTALLATION', route: '/installation', x: -80, y: 320 },
 ];
 
 interface NavBarProps {
@@ -32,7 +36,6 @@ const NavBar = ({ light = false }: NavBarProps) => {
     const nodeRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const floatTweens = useRef<gsap.core.Tween[]>([]);
 
-    // open / close animation
     useEffect(() => {
         const nodes = nodeRefs.current.filter(Boolean) as HTMLButtonElement[];
 
@@ -88,7 +91,6 @@ const NavBar = ({ light = false }: NavBarProps) => {
         }
     }, [open]);
 
-    // close on Escape
     useEffect(() => {
         if (!open) return;
         const onKey = (e: KeyboardEvent) => {
@@ -110,7 +112,6 @@ const NavBar = ({ light = false }: NavBarProps) => {
 
     return (
         <>
-            {/* backdrop dim — click anywhere to close */}
             <div
                 className={`navbar__backdrop${open ? ' navbar__backdrop--visible' : ''}`}
                 onClick={() => setOpen(false)}
@@ -122,7 +123,7 @@ const NavBar = ({ light = false }: NavBarProps) => {
                     type="button"
                     className="navbar__logo"
                     onClick={handleLogoClick}
-                    aria-label="Antwerp Unseen — home"
+                    aria-label="Antwerp Unseen"
                 >
                     ANTWERP<br />UNSEEN.
                 </button>
@@ -131,7 +132,6 @@ const NavBar = ({ light = false }: NavBarProps) => {
                     type="button"
                     className="navbar__lang"
                     onClick={() => setLang(lang === 'en' ? 'nl' : 'en')}
-                    aria-label={t.a11y.langSwitch}
                 >
                     <span className={lang === 'en' ? 'navbar__lang-opt--active' : 'navbar__lang-opt'}>EN</span>
                     <span className="navbar__lang-sep" aria-hidden>/</span>
@@ -143,25 +143,24 @@ const NavBar = ({ light = false }: NavBarProps) => {
                         type="button"
                         className={`navbar__trigger${open ? ' navbar__trigger--active' : ''}`}
                         onClick={() => setOpen((o) => !o)}
-                        aria-label={open ? 'Close menu' : 'Open menu'}
                         aria-expanded={open}
-                    />
+                    >
+                        <span className="navbar__trigger-line"></span>
+                        <span className="navbar__trigger-line"></span>
+                        <span className="navbar__trigger-line"></span>
+                    </button>
 
                     {NODES.map((node, i) => (
-                        <button
-                            type="button"
+                        <NavItem
                             key={node.route}
                             ref={(el) => { nodeRefs.current[i] = el; }}
-                            data-x={node.x}
-                            data-y={node.y}
-                            className="navbar__node"
-                            onClick={() => handleNodeClick(node.route)}
-                        >
-                            <span className="navbar__node-index" aria-hidden>
-                                0{i + 1}
-                            </span>
-                            <span className="navbar__node-text">{t.nav[node.labelKey]}</span>
-                        </button>
+                            index={i}
+                            label={(t.nav && t.nav[node.labelKey]) || node.fallback}
+                            route={node.route}
+                            x={node.x}
+                            y={node.y}
+                            onClick={handleNodeClick}
+                        />
                     ))}
                 </div>
             </header>
