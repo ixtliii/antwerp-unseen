@@ -29,7 +29,7 @@ diagonal rail, grouped by moment in time.
 ## project structure
 src/
 ├── components/
-│   ├── Scene/          # R3F Canvas, camera, lighting, OrbitControls
+│   ├── Archive/          # R3F Canvas, camera, lighting, OrbitControls
 │   ├── TimeCluster/    # group of Card meshes at a point in time
 │   └── Card/           # individual photo mesh with texture (Billboard)
 ├── routes/

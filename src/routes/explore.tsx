@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { mockDays } from '../data/mock';
-import Scene from '../components/organisms/Scene/Scene';
+import Archive from '../components/organisms/Archive/Archive.tsx';
 import FilterMenu from '../components/molecules/FilterMenu/FilterMenu';
 import useFilterSound from '../hooks/useFilterSound';
 import PageLayout from "../layouts/PageLayout.tsx";
@@ -51,7 +51,7 @@ const Explore = () => {
         // Fullscreen — NavBar floats over the scene, no PageLayout wrapper
             <PageLayout noPadding showFooter={false} >
                 {filteredDays.length > 0 && (
-                    <Scene
+                    <Archive
                         days={filteredDays}
                         activeDate={activeDate}
                         onActiveChange={setActiveDate}
