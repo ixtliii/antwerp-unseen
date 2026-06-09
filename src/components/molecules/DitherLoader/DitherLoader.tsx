@@ -72,7 +72,7 @@ const fragmentShader = `
     }
 `;
 
-const DitherLoader = ({ src = '/loader.mp4', onComplete, duration = 3000 }: Props) => {
+const DitherLoader = ({ src = '/videos/loader.mp4', onComplete, duration = 3000 }: Props) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const progressRef = useRef(0);

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import './constellationNav.css';
 import PathText from '../../atoms/PathText/PathText';
+import DitherVideo from '../../atoms/DitherVideo/DitherVideo';
 import { triggerPageTransition } from '../../globals/PixelTransition/triggerTransition.ts';
 
 interface NodePosState {
@@ -16,21 +17,21 @@ interface CustomWindow extends Window {
 }
 
 const NODES = [
-    { id: 'window', label: 'WINDOW', type: 'link', x: 25, y: 25, pos: 'top', path: '/window' },
+    { id: 'window', label: 'WINDOWS', type: 'link', x: 25, y: 25, pos: 'top', path: '/window' },
     { id: 'archive', label: 'ARCHIVE', type: 'link', x: 75, y: 20, pos: 'top', path: '/explore' },
-    { id: 'artist', label: 'ARTIST', type: 'link', x: 20, y: 70, pos: 'bottom', path: '/artist' },
+    { id: 'artist', label: 'LOCAL ARTISTS', type: 'link', x: 20, y: 70, pos: 'bottom', path: '/artist' },
     { id: 'map', label: 'MAP', type: 'link', x: 80, y: 65, pos: 'bottom', path: '/map' },
     { id: 'joint1', label: '', type: 'joint', x: 55, y: 45, pos: 'top', path: '' },
-    { id: 'joint2', label: '', type: 'joint', x: 50, y: 85, pos: 'top', path: '' },
+    { id: 'add', label: 'ADD YOUR STORY', type: 'link', x: 50, y: 85, pos: 'bottom', path: '/submit' },
 ];
 
 const EDGES = [
     ['window', 'joint1'],
     ['joint1', 'archive'],
     ['joint1', 'artist'],
-    ['window', 'joint2'],
-    ['joint2', 'artist'],
-    ['joint2', 'map'],
+    ['window', 'add'],
+    ['add', 'artist'],
+    ['add', 'map'],
     ['archive', 'map'],
     ['window', 'artist'],
 ];
@@ -139,6 +140,11 @@ export default function ConstellationNav() {
         window.addEventListener('resize', handleResize);
 
         const ctx = gsap.context(() => {
+            gsap.fromTo('.const-bg-clouds',
+                { opacity: 0 },
+                { opacity: 1, duration: 2.5, ease: 'power2.out' }
+            );
+
             gsap.fromTo('.const-bg-word',
                 { opacity: 0, filter: 'blur(20px)', scale: 1.1, letterSpacing: '0.2em' },
                 { opacity: 1, filter: 'blur(0px)', scale: 1, letterSpacing: '0em', duration: 2.5, ease: 'power3.out' }
@@ -160,10 +166,7 @@ export default function ConstellationNav() {
                 opacity: 1,
                 duration: 1.8,
                 ease: 'power4.out',
-                stagger: {
-                    amount: 0.5,
-                    from: 'random'
-                },
+                stagger: { amount: 0.5, from: 'random' },
                 delay: 0.8
             });
 
@@ -282,6 +285,16 @@ export default function ConstellationNav() {
 
     return (
         <div className="const-wrapper" ref={containerRef}>
+            <DitherVideo
+                src="/videos/clouds.mp4"
+                pixelSize={7}
+                intensity={0.25}
+                cutout
+                playbackRate={0.35}
+                mouseReactive
+                className="const-bg-clouds"
+            />
+
             <PathText />
 
             <div className="const-bg-text">
