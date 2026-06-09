@@ -105,7 +105,11 @@
     --space-7:  36px;
     --space-8:  48px;
 }
-
+@font-face {
+    font-family: 'ArbanePixel';
+    src: url('/fonts/ArbanePixel-Regular_demo.otf') format('opentype');
+    font-display: swap;
+}
 /* ------------------------------------------------------------
    TYPOGRAPHY
    ------------------------------------------------------------ */
@@ -168,6 +172,8 @@
 
     /* typography alias */
     --font-label:               var(--font-size-16);            /* Font Size/16 */
+
+    --font-pixel: 'ArbanePixel', monospace;
 }
 
 /* ------------------------------------------------------------
