@@ -155,7 +155,7 @@ const NavBar = ({ light = false }: NavBarProps) => {
                             key={node.route}
                             ref={(el) => { nodeRefs.current[i] = el; }}
                             index={i}
-                            label={(t.nav && t.nav[node.labelKey]) || node.fallback}
+                            label={(t.nav && t.nav[node.labelKey as keyof typeof t.nav]) || node.fallback}
                             route={node.route}
                             x={node.x}
                             y={node.y}
