@@ -92,7 +92,6 @@ const DitherVideo = ({
     const videoRef = useRef<HTMLVideoElement>(null);
     const mouseRef = useRef({ x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 });
 
-    // apply playbackRate when the video loads
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
@@ -102,12 +101,11 @@ const DitherVideo = ({
         return () => video.removeEventListener('loadeddata', apply);
     }, [playbackRate]);
 
-    // mouse listener — store normalized 0..1 coords
     useEffect(() => {
         if (!mouseReactive) return;
         const onMove = (e: MouseEvent) => {
             mouseRef.current.tx = e.clientX / window.innerWidth;
-            mouseRef.current.ty = 1 - e.clientY / window.innerHeight; // flip y for shader
+            mouseRef.current.ty = e.clientY / window.innerHeight;
         };
         window.addEventListener('mousemove', onMove);
         return () => window.removeEventListener('mousemove', onMove);
