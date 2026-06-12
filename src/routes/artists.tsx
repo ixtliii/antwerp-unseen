@@ -1,10 +1,10 @@
 import PageLayout from '../layouts/PageLayout';
-import ArtistsExplorer from '../components/organisms/ArtistsExplorer/ArtistsExplorer';
+import ArtistArchive from "../components/organisms/ArtistsArchive/ArtistsArchive.tsx";
 
 const Artists = () => {
     return (
-        <PageLayout navLight noPadding>
-            <ArtistsExplorer />
+        <PageLayout noPadding showFooter={false}>
+            <ArtistArchive />
         </PageLayout>
     );
 };
