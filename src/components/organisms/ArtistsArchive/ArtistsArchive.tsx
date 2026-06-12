@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import type { Artwork } from '../../../types';
 import DitherVideo from '../../atoms/DitherVideo/DitherVideo';
 import ArtistCard from "../../molecules/ArtistCard/ArtistCard.tsx";
+import SearchBar from "../../molecules/SearchBar/SearchBar.tsx";
 import { supabase } from '../../../lib/supabaseClient';
 import './artistsArchive.css';
 
@@ -16,16 +17,22 @@ const splitIntoColumns = <T,>(items: T[], count: number): T[][] => {
 const ArtistsArchive = () => {
     const [search, setSearch] = useState('');
     const [artworks, setArtworks] = useState<Artwork[]>([]);
+    const [colCount, setColCount] = useState(3);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const colRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
     const rafRef = useRef(0);
     const scrollY = useRef(0);
-    const lastScrollY = useRef(0);
-    const smoothVelocity = useRef(0);
 
     const setColRef = useCallback((el: HTMLDivElement | null, idx: number) => {
         colRefs.current[idx] = el;
+    }, []);
+
+    useEffect(() => {
+        const checkMobile = () => setColCount(window.matchMedia('(max-width: 48em)').matches ? 2 : 3);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
     useEffect(() => {
@@ -39,31 +46,33 @@ const ArtistsArchive = () => {
                     )
                 `);
 
-            if (error) {
-                return;
-            }
+            if (error) return;
 
             if (data) {
-                const formattedArtworks = data.map((item: any) => {
-                    let artistName = 'Unknown Artist';
+                const uniqueMap = new Map();
 
-                    if (item.artist) {
-                        if (Array.isArray(item.artist) && item.artist.length > 0) {
-                            artistName = item.artist[0].name;
-                        } else if (typeof item.artist === 'object' && item.artist.name) {
-                            artistName = item.artist.name;
+                data.forEach((item: any) => {
+                    if (!uniqueMap.has(item.id)) {
+                        let artistName = 'Unknown Artist';
+
+                        if (item.artist) {
+                            if (Array.isArray(item.artist) && item.artist.length > 0) {
+                                artistName = item.artist[0].name;
+                            } else if (typeof item.artist === 'object' && item.artist.name) {
+                                artistName = item.artist.name;
+                            }
                         }
+
+                        uniqueMap.set(item.id, {
+                            ...item,
+                            artist: {
+                                name: artistName
+                            }
+                        });
                     }
-
-                    return {
-                        ...item,
-                        artist: {
-                            name: artistName
-                        }
-                    };
                 });
 
-                setArtworks(formattedArtworks as Artwork[]);
+                setArtworks(Array.from(uniqueMap.values()) as Artwork[]);
             }
         };
 
@@ -80,23 +89,16 @@ const ArtistsArchive = () => {
 
     useEffect(() => {
         const COL_SPEEDS = [0.28, -0.45, 0.36];
-        const COL_ROTATIONS = [0.006, 0, 0.005];
-        const COL_SKEWS = [0.03, 0, 0.025];
 
         const tick = () => {
             const y = scrollY.current;
-            const rawVelocity = y - lastScrollY.current;
-            lastScrollY.current = y;
-            smoothVelocity.current += (rawVelocity - smoothVelocity.current) * 0.1;
 
             for (let i = 0; i < 3; i++) {
                 const col = colRefs.current[i];
                 if (!col) continue;
+
                 const translateY = COL_SPEEDS[i] * y;
-                const rotate = COL_ROTATIONS[i] * smoothVelocity.current;
-                const skew = COL_SKEWS[i] * smoothVelocity.current;
-                col.style.transform =
-                    `translateY(${translateY}px) rotate(${rotate}deg) skewY(${skew}deg)`;
+                col.style.transform = `translateY(${translateY}px)`;
             }
 
             rafRef.current = requestAnimationFrame(tick);
@@ -107,6 +109,7 @@ const ArtistsArchive = () => {
         return () => cancelAnimationFrame(rafRef.current);
     }, []);
 
+    // Filter based on search query
     const filtered = artworks.filter((a) => {
         const artworkName = a.name?.toLowerCase() || '';
         const artistName = a.artist?.name?.toLowerCase() || '';
@@ -115,9 +118,49 @@ const ArtistsArchive = () => {
         return artworkName.includes(searchString) || artistName.includes(searchString);
     });
 
-    const artworksWithKey: ArtworkWithKey[] = filtered.map((a, j) => ({ ...a, _key: `${a.id || j}` }));
+    // Derive auto-suggestions
+    const getSuggestions = () => {
+        const suggestionsSet = new Set<string>();
 
-    const columns = splitIntoColumns<ArtworkWithKey>(artworksWithKey, 3);
+        if (!search.trim()) {
+            for (const a of artworks) {
+                if (a.artist?.name && a.artist.name !== 'Unknown Artist') {
+                    suggestionsSet.add(a.artist.name);
+                }
+                if (suggestionsSet.size >= 5) break;
+            }
+            if (suggestionsSet.size < 5) {
+                for (const a of artworks) {
+                    if (a.name) suggestionsSet.add(a.name);
+                    if (suggestionsSet.size >= 5) break;
+                }
+            }
+            return Array.from(suggestionsSet);
+        }
+
+        const searchLower = search.toLowerCase();
+
+        artworks.forEach((a) => {
+            if (a.name?.toLowerCase().includes(searchLower)) suggestionsSet.add(a.name);
+            if (a.artist?.name?.toLowerCase().includes(searchLower)) suggestionsSet.add(a.artist.name);
+        });
+
+        suggestionsSet.delete(search);
+        return Array.from(suggestionsSet).slice(0, 5);
+    };
+
+    const suggestions = getSuggestions();
+    const isSearching = search.trim().length > 0;
+    const itemsToShow = isSearching
+        ? filtered
+        : Array.from({ length: 12 }).flatMap(() => filtered);
+
+    const artworksWithKey: ArtworkWithKey[] = itemsToShow.map((a, j) => ({
+        ...a,
+        _key: `${a.id || 'unknown'}-${j}`
+    }));
+
+    const columns = splitIntoColumns<ArtworkWithKey>(artworksWithKey, colCount);
 
     return (
         <div className="artists-layout">
@@ -134,16 +177,12 @@ const ArtistsArchive = () => {
             <aside className="artists-sidebar">
                 <div className="artists-sidebar__inner">
                     <div className="artists-sidebar__top">
-                        <div className="artists-sidebar__search">
-                            <span className="artists-sidebar__search-icon">⌕</span>
-                            <input
-                                type="text"
-                                placeholder="Search"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="artists-sidebar__search-input"
-                            />
-                        </div>
+                        <SearchBar
+                            search={search}
+                            setSearch={setSearch}
+                            suggestions={suggestions}
+                            placeholder="Search"
+                        />
                     </div>
 
                     <div className="artists-sidebar__bottom">
@@ -176,14 +215,12 @@ const ArtistsArchive = () => {
             </div>
 
             <div className="artists-mobile-search">
-                <span className="artists-sidebar__search-icon">⌕</span>
-                <input
-                    type="text"
+                <SearchBar
+                    search={search}
+                    setSearch={setSearch}
+                    suggestions={suggestions}
                     placeholder="Search artist or work..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="artists-sidebar__search-input"
-                    aria-label="Search artworks"
+                    transparentBackground={true}
                 />
             </div>
         </div>
