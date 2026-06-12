@@ -19,15 +19,18 @@ export interface Day {
     contributions: Contribution[];
 }
 
-export interface Artwork {
-    id: string;
-    title: string;
-    date: ISODateString;
-    imageUrl: string;
-}
-
 export interface Artist {
     id: string;
     name: string;
-    artworks: Artwork[];
+    kind: string;
+}
+
+export interface Artwork {
+    id: string;
+    artist_id: string;
+    name: string;
+    description: string;
+    year: number;
+    image_url: string;
+    artist: Artist;
 }

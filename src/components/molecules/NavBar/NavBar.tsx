@@ -17,7 +17,7 @@ interface NavNode {
 const NODES: NavNode[] = [
     { labelKey: 'window', fallback: 'WINDOWS', route: '/window', x: -190, y: 36 },
     { labelKey: 'archive', fallback: 'ARCHIVE', route: '/explore', x: -150, y: 96 },
-    { labelKey: 'artist', fallback: 'LOCAL ARTISTS', route: '/artist', x: -210, y: 156 },
+    { labelKey: 'artist', fallback: 'LOCAL ARTISTS', route: '/artists', x: -210, y: 156 },
     { labelKey: 'map', fallback: 'MAP', route: '/map', x: -110, y: 210 },
     { labelKey: 'submit', fallback: 'ADD YOUR STORY', route: '/submit', x: -180, y: 270 },
     { labelKey: 'installation', fallback: 'INSTALLATION', route: '/installation', x: -80, y: 320 },
