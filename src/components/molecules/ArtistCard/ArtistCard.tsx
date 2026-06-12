@@ -1,4 +1,5 @@
 import type { Artwork } from '../../../types';
+import './artistCard.css'; // New CSS file import
 
 type Props = {
     artwork: Artwork;

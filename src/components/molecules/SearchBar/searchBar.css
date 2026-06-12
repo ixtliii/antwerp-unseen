@@ -1,0 +1,103 @@
+@keyframes dropdownFadeSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dropdownFadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.artists-sidebar__search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.artists-sidebar__search {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--primitive-white, #f0ede8);
+    padding: 0.75rem 1rem;
+    transition: transform 0.3s ease;
+}
+
+.artists-sidebar__search-icon {
+    font-size: 1.1rem;
+    color: rgba(0, 0, 0, 0.5);
+    line-height: 1;
+}
+
+.artists-sidebar__search-input {
+    background: none;
+    border: none;
+    outline: none;
+    color: #000;
+    font-family: var(--font-mono, sans-serif);
+    font-size: 0.85rem;
+    width: 100%;
+}
+
+.artists-sidebar__search-input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.artists-sidebar__suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--primitive-white, #f0ede8);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: dropdownFadeSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform-origin: top center;
+}
+
+.artists-sidebar__suggestions li {
+    padding: 0.75rem 1rem;
+    font-family: var(--font-mono, sans-serif);
+    font-size: 0.85rem;
+    color: #000;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.artists-sidebar__suggestions li:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Specific styling target for when the dropdown is inside the mobile search bar */
+.artists-mobile-search .artists-sidebar__suggestions {
+    top: auto;
+    bottom: calc(100% + 1rem);
+    border-top: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    animation: dropdownFadeSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform-origin: bottom center;
+}
+
+.artists-mobile-search .artists-sidebar__search-input {
+    color: var(--bg-dark, #040404);
+}
+
+.artists-mobile-search .artists-sidebar__search-input::placeholder {
+    color: rgba(0, 0, 0, 0.3);
+}
