@@ -3,6 +3,13 @@
     transition: opacity 0.4s ease, filter 0.4s ease;
     background: var(--primitive-white, #f0ede8);
     padding: 0.5rem;
+    border: none;
+    outline: none;
+    text-align: left;
+    width: 100%;
+    display: block;
+    font: inherit;
+    color: inherit;
 }
 
 .artists-grid:has(.artists-card:hover) .artists-card:not(:hover) {
