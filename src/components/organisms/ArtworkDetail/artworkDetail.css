@@ -1,0 +1,183 @@
+.artwork-detail-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    color: var(--primitive-white, #f0ede8);
+}
+
+.artwork-detail__top-bar {
+    padding: 5rem 2.5rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* RESTORED: Back Button Styling */
+.artwork-detail__back-btn {
+    background: none;
+    border: none;
+    color: var(--primitive-white, #f0ede8);
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s ease;
+}
+
+.artwork-detail__back-btn:hover {
+    transform: translateX(-5px);
+}
+
+.artwork-detail__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 2rem 4rem 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.artwork-detail__header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.artwork-detail__artist-name {
+    font-family: var(--font-display, sans-serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.5rem 0;
+}
+
+.artwork-detail__artist-role {
+    font-family: var(--font-mono, sans-serif);
+    color: rgba(240, 237, 232, 0.6);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.artwork-detail__hero {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: center;
+}
+
+.artwork-detail__image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: 60vh;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    /* Essential for Framer Motion to not distort the image while traveling */
+    border-radius: 0;
+}
+
+.artwork-detail__accent-square {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #00e676;
+    z-index: -1; /* Ensures it stays slightly behind the image if they overlap */
+}
+
+.square-top-right {
+    top: -30px;
+    right: -40px;
+}
+
+.square-bottom-left {
+    bottom: -20px;
+    left: -40px;
+}
+
+.artwork-detail__info {
+    width: 100%;
+    max-width: 800px;
+}
+
+.artwork-detail__title-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.artwork-detail__title {
+    font-family: var(--font-display, sans-serif);
+    font-size: 1.25rem;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.artwork-detail__line {
+    flex: 1;
+    height: 1px;
+    background-color: rgba(240, 237, 232, 0.3);
+}
+
+.artwork-detail__year {
+    font-family: var(--font-mono, sans-serif);
+    font-size: 0.9rem;
+    color: rgba(240, 237, 232, 0.8);
+}
+
+.artwork-detail__description {
+    font-family: var(--font-mono, sans-serif);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(240, 237, 232, 0.8);
+    max-width: 600px;
+    margin-bottom: 3rem;
+}
+
+.artwork-detail__socials {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.artwork-detail__socials-label {
+    font-family: var(--font-mono, sans-serif);
+    font-size: 0.75rem;
+    color: rgba(240, 237, 232, 0.5);
+    letter-spacing: 0.05em;
+}
+
+.artwork-detail__socials-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.artwork-detail__socials-links a {
+    color: var(--primitive-white, #f0ede8);
+    text-decoration: none;
+    font-family: var(--font-mono, sans-serif);
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(240, 237, 232, 0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.2s ease;
+}
+
+.artwork-detail__socials-links a:hover {
+    border-color: #00e676;
+}
+
+@media (max-width: 48em) {
+    .artwork-detail__top-bar {
+        padding: 1rem;
+    }
+    .artwork-detail__content {
+        padding: 0 1rem 2rem 1rem;
+    }
+    .artwork-detail__accent-square {
+        display: none;
+    }
+}

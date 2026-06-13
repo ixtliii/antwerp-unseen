@@ -1,32 +1,54 @@
+import { motion } from 'framer-motion';
 import type { Artwork } from '../../../types';
-import './artistCard.css'; // New CSS file import
+import './artistCard.css';
 
 type Props = {
-    artwork: Artwork;
+    artwork: Artwork & { _key?: string };
+    onClick: () => void;
 };
 
-const ArtistCard = ({ artwork }: Props) => {
+const transitionSpring = {
+    type: "spring",
+    damping: 25,
+    stiffness: 120,
+    mass: 0.8
+};
+
+const ArtistCard = ({ artwork, onClick }: Props) => {
+    const uniqueId = artwork._key || artwork.id;
+
     return (
-        <div className="artists-card">
+        <motion.button
+            className="artists-card"
+            onClick={onClick}
+        >
             <div className="artists-card__frame">
                 <div className="artists-card__header">
                     <div className="artists-card__title-row">
                         <span className="artists-card__dot" aria-hidden />
-                        <span className="artists-card__title">{artwork.name}</span>
+                        <motion.span
+                            className="artists-card__title"
+                            layoutId={`title-${uniqueId}`}
+                            transition={transitionSpring}
+                        >
+                            {artwork.name}
+                        </motion.span>
                     </div>
                     <p className="artists-card__artist">
                         {artwork.artist.name}
                     </p>
                 </div>
                 <div className="artists-card__img-wrap">
-                    <img
+                    <motion.img
                         src={artwork.image_url}
                         alt={artwork.name}
                         loading="lazy"
+                        layoutId={`artwork-image-${uniqueId}`}
+                        transition={transitionSpring}
                     />
                 </div>
             </div>
-        </div>
+        </motion.button>
     );
 };
 

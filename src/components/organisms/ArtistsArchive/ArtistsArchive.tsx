@@ -3,8 +3,10 @@ import type { Artwork } from '../../../types';
 import DitherVideo from '../../atoms/DitherVideo/DitherVideo';
 import ArtistCard from "../../molecules/ArtistCard/ArtistCard.tsx";
 import SearchBar from "../../molecules/SearchBar/SearchBar.tsx";
+import ArtworkDetail from "../../organisms/ArtworkDetail/ArtworkDetail.tsx";
 import { supabase } from '../../../lib/supabaseClient';
 import './artistsArchive.css';
+import { AnimatePresence } from 'framer-motion';
 
 type ArtworkWithKey = Artwork & { _key: string };
 
@@ -18,6 +20,7 @@ const ArtistsArchive = () => {
     const [search, setSearch] = useState('');
     const [artworks, setArtworks] = useState<Artwork[]>([]);
     const [colCount, setColCount] = useState(3);
+    const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const colRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
@@ -109,7 +112,6 @@ const ArtistsArchive = () => {
         return () => cancelAnimationFrame(rafRef.current);
     }, []);
 
-    // Filter based on search query
     const filtered = artworks.filter((a) => {
         const artworkName = a.name?.toLowerCase() || '';
         const artistName = a.artist?.name?.toLowerCase() || '';
@@ -118,7 +120,6 @@ const ArtistsArchive = () => {
         return artworkName.includes(searchString) || artistName.includes(searchString);
     });
 
-    // Derive auto-suggestions
     const getSuggestions = () => {
         const suggestionsSet = new Set<string>();
 
@@ -150,6 +151,7 @@ const ArtistsArchive = () => {
     };
 
     const suggestions = getSuggestions();
+
     const isSearching = search.trim().length > 0;
     const itemsToShow = isSearching
         ? filtered
@@ -167,7 +169,7 @@ const ArtistsArchive = () => {
             <DitherVideo
                 src="/videos/archive1.mp4"
                 pixelSize={7}
-                intensity={0.25}
+                intensity={0.35}
                 cutout
                 playbackRate={0.4}
                 mouseReactive
@@ -207,7 +209,11 @@ const ArtistsArchive = () => {
                             ref={(el) => setColRef(el, colIdx)}
                         >
                             {col.map((artwork) => (
-                                <ArtistCard key={artwork._key} artwork={artwork} />
+                                <ArtistCard
+                                    key={artwork._key}
+                                    artwork={artwork}
+                                    onClick={() => setSelectedArtwork(artwork)}
+                                />
                             ))}
                         </div>
                     ))}
@@ -223,6 +229,14 @@ const ArtistsArchive = () => {
                     transparentBackground={true}
                 />
             </div>
+            <AnimatePresence >
+                {selectedArtwork && (
+                    <ArtworkDetail
+                        artwork={selectedArtwork}
+                        onClose={() => setSelectedArtwork(null)}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 };
