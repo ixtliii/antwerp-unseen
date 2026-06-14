@@ -1,0 +1,19 @@
+.view-toggle {
+    position: fixed;
+    bottom: clamp(1.5rem, 4vh, 2.5rem);
+    left: clamp(1.5rem, 4vw, 2.5rem);
+    z-index: 40;
+    display: flex;
+    gap: var(--space-3);
+}
+
+.view-toggle__btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: rgba(240, 237, 232, 0.35);
+    transition: color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.view-toggle__btn:hover { color: rgba(240, 237, 232, 0.7); transform: translateY(-2px); }
+.view-toggle__btn.is-active { color: #5aff6e; }

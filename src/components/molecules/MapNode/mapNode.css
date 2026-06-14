@@ -1,0 +1,23 @@
+.map-node { position: absolute; inset: 0; pointer-events: none; }
+
+.map-node__layer-wrap {
+    position: absolute;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    pointer-events: auto;
+    will-change: transform;
+}
+
+.map-node__layer {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+    transition: filter 0.3s ease;
+}
+.map-node__layer-wrap:hover .map-node__layer {
+    filter: drop-shadow(0 0 18px rgba(2, 215, 123, 0.35)) drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+}
