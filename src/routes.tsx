@@ -4,7 +4,8 @@ import Explore from './routes/explore';
 import Installation from './routes/installation';
 import Submit from './routes/submit';
 import Artists from "./routes/artists.tsx";
-import Constellation from "./routes/constellation.tsx"; // Import the new route component
+import Constellation from "./routes/constellation.tsx";
+import MapPage from "./routes/map.tsx";
 
 const AppRoutes = () => (
     <Routes>
@@ -14,6 +15,7 @@ const AppRoutes = () => (
         <Route path="/installation" element={<Installation />} />
         <Route path="/submit" element={<Submit />} />
         <Route path="/artists" element={<Artists />} />
+        <Route path="/map" element={<MapPage />} />
     </Routes>
 );
 
