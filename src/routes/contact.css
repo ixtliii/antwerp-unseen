@@ -1,0 +1,84 @@
+.contact-page {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        'contact  socials'
+        'news     news'
+        'wordmark wordmark';
+    gap: clamp(1.5rem, 4vh, 3rem) clamp(1.5rem, 5vw, 4rem);
+    padding: clamp(6rem, 14vh, 9rem) clamp(1.5rem, 5vw, 3rem) clamp(1.5rem, 4vh, 2.5rem);
+    box-sizing: border-box;
+}
+
+.contact-page__contact { grid-area: contact; }
+.contact-page__socials { grid-area: socials; }
+.contact-page__news    { grid-area: news; align-self: end; }
+.contact-page__wordmark { grid-area: wordmark; align-self: end; }
+
+.contact-page__heading {
+    font-family: var(--font-display, 'Bebas Neue', sans-serif);
+    font-size: clamp(1.1rem, 2.2vw, 1.9rem);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--primitive-white, #f0ede8);
+    margin-bottom: clamp(1rem, 2.5vh, 2rem);
+}
+
+/* socials stack */
+.contact-page__socials {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: start;
+}
+
+/* newsletter block */
+.contact-page__news {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 2.5vh, 2rem);
+    max-width: 640px;
+}
+
+/* wordmark — one line, only A + N pixelated */
+.contact-page__wordmark {
+    font-family: var(--font-display, 'Bebas Neue', sans-serif);
+    font-size: clamp(3.5rem, 15vw, 14rem);
+    line-height: 0.78;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--primitive-white, #f0ede8);
+    margin: 0;
+}
+.contact-page__wordmark-pixel {
+    font-family: var(--font-pixel, 'ArbanePixel', monospace);
+    text-transform: none;
+}
+.contact-page__wordmark-dot { margin-left: 0.02em; }
+
+/* year pinned corner — only fixed element, per the rule */
+.contact-page__year {
+    position: fixed;
+    bottom: clamp(1rem, 3vh, 1.5rem);
+    right: clamp(1.5rem, 5vw, 2rem);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    color: rgba(240, 237, 232, 0.5);
+}
+
+@media (max-width: 48em) {
+    .contact-page {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr auto;
+        grid-template-areas:
+            'contact'
+            'socials'
+            'news'
+            'wordmark';
+        padding-top: 6rem;
+    }
+    .contact-page__wordmark { font-size: clamp(2.25rem, 14vw, 5rem); white-space: nowrap; }
+}

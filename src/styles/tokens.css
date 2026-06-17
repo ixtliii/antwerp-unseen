@@ -194,5 +194,5 @@
     --text-light:       #111010;
 }
 html, body {
-    background: var(--color-bg-canvas);
+    background: var(--bg-dark);
 }

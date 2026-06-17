@@ -1,6 +1,6 @@
 .home-hero {
     position: relative;
-    min-height: 100vh;
+    height: 100vh;
     width: 100%;
     background: var(--bg-dark, #080808);
     color: var(--primitive-white, #f0ede8);
@@ -62,12 +62,10 @@
 .home-hero__lang span { color: rgba(240, 237, 232, 0.3); transition: color 0.3s; }
 .home-hero__lang span.is-active { color: rgba(240, 237, 232, 0.95); }
 .home-hero__lang-sep { color: rgba(240, 237, 232, 0.2) !important; }
-
-/* center → becomes an asymmetric grid --------------------- */
 .home-hero__center {
     position: relative;
     z-index: 10;
-    min-height: 100vh;
+    height: 100%;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(12, 1fr);
@@ -75,7 +73,6 @@
     box-sizing: border-box;
 }
 
-/* title — anchored lower-left, NOT centered --------------- */
 .home-hero__title {
     grid-column: 1 / 11;
     grid-row: 7 / 10;
@@ -89,7 +86,6 @@
     color: var(--primitive-white, #f0ede8);
 }
 .home-hero__title-line { display: block; overflow: hidden; }
-/* second line indented — broken baseline, brutalist */
 .home-hero__title-line:nth-child(2) { padding-left: 0.18em; }
 
 .home-hero__title-pixel {
@@ -98,7 +94,6 @@
 }
 .home-hero__title-dot { margin-left: 0.02em; }
 
-/* lede — top-right, narrow column, small ------------------ */
 .home-hero__lede {
     grid-column: 8 / 12;
     grid-row: 2 / 5;
@@ -112,7 +107,6 @@
     text-align: left;
 }
 
-/* CTA — bottom-right corner, small, mono ------------------ */
 .home-hero__cta {
     grid-column: 10 / 13;
     grid-row: 11 / 12;
@@ -149,7 +143,6 @@
 }
 .home-hero__cursor { margin-left: 0.4rem; }
 
-/* whisper — mid-left, italic, like a caption -------------- */
 .home-hero__whisper {
     position: absolute;
     left: clamp(1.5rem, 4vw, 3rem);
@@ -182,23 +175,19 @@
     to   { opacity: 0.6; clip-path: inset(0 0 0 0); }
 }
 
-/* mobile -------------------------------------------------- */
 @media (max-width: 48em) {
     .home-hero__center {
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        gap: 1.5rem;
-        padding: 6rem 1.5rem 2rem;
+        gap: clamp(1rem, 3vh, 1.5rem);   /* was fixed 1.5rem */
+        padding: 5rem 1.5rem 1.5rem;     /* trimmed so it fits the fold */
     }
     .home-hero__title { font-size: clamp(2.75rem, 16vw, 5rem); }
     .home-hero__title-line:nth-child(2) { padding-left: 0; }
     .home-hero__lede { order: -1; }
     .home-hero__cta { align-self: flex-start; justify-self: flex-start; }
-    .home-hero__whisper {
-        position: static;
-        max-width: 100%;
-    }
+    .home-hero__whisper { position: static; max-width: 100%; }
     .home-hero__meta-item:first-child { display: none; }
 }
 
