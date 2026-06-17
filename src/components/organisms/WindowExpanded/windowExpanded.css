@@ -1,0 +1,54 @@
+.window-expanded { position: fixed; inset: 0; z-index: 40; background: #040404; }
+.window-expanded__media { position: absolute; inset: 0; }
+.window-expanded__video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.window-expanded__top {
+    position: fixed;
+    top: clamp(1.5rem, 4vh, 2.5rem);
+    left: clamp(1.5rem, 4vw, 2.5rem);
+    right: clamp(1.5rem, 4vw, 2.5rem);
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    background-color: var(--bg-dark);
+}
+.window-expanded__back {
+    pointer-events: auto;          /* re-enable clicks — this is the fix */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.1rem;
+    background: var(--bg-dark, #080808);
+    border: none;
+    color: var(--primitive-white, #f0ede8);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+.window-expanded__back:hover {
+    background: var(--primitive-green, #02d77b);
+    color: #000;
+}
+.window-expanded__loc { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(240,237,232,0.7); }
+
+.window-expanded__fx { position: fixed; bottom: clamp(1.5rem, 4vh, 2.5rem); left: clamp(1.5rem, 4vw, 2.5rem); z-index: 50; }
+
+.window-expanded__nav { position: fixed; bottom: clamp(1.5rem, 4vh, 2.5rem); right: clamp(1.5rem, 4vw, 2.5rem); z-index: 50; display: flex; gap: 6px; }
+.window-expanded__nav button {
+    width: 64px; height: 54px; border: none; cursor: pointer;
+    font-family: var(--font-mono); font-size: 1.25rem;
+    display: flex; align-items: center; justify-content: center;
+}
+.window-expanded__prev { background: var(--bg-dark, #080808); color: var(--primitive-white, #f0ede8); border: 1px solid #333; }
+.window-expanded__next { background: var(--primitive-green, #02d77b); color: #000; }
+
+@media (max-width: 48em) {
+    .window-expanded__loc { display: none; }
+    .window-expanded__nav button { width: 52px; height: 46px; }
+    /* toggle and nav share the bottom row; stack toggle above nav if cramped */
+    .window-expanded__fx { bottom: calc(clamp(1.5rem, 4vh, 2.5rem) + 58px); }
+}

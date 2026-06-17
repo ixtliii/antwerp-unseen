@@ -17,7 +17,7 @@ interface CustomWindow extends Window {
 }
 
 const NODES = [
-    { id: 'window', label: 'WINDOWS', type: 'link', x: 25, y: 25, pos: 'top', path: '/window' },
+    { id: 'window', label: 'WINDOWS', type: 'link', x: 25, y: 25, pos: 'top', path: '/windows' },
     { id: 'archive', label: 'ARCHIVE', type: 'link', x: 75, y: 20, pos: 'top', path: '/explore' },
     { id: 'artist', label: 'LOCAL ARTISTS', type: 'link', x: 20, y: 70, pos: 'bottom', path: '/artists' },
     { id: 'map', label: 'MAP', type: 'link', x: 80, y: 65, pos: 'bottom', path: '/map' },

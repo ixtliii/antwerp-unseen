@@ -1,0 +1,19 @@
+.effect-toggle { display: flex; align-items: center; gap: var(--space-3); }
+.effect-toggle__label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(240, 237, 232, 0.55);
+}
+.effect-toggle__switch {
+    position: relative; width: 54px; height: 26px;
+    background: var(--bg-dark, #080808); border: 1px solid #444;
+    cursor: pointer; padding: 0; transition: border-color 0.3s ease; flex-shrink: 0;
+}
+.effect-toggle__switch.is-on { border-color: var(--primitive-green, #02d77b); }
+.effect-toggle__knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: #555; }
+.effect-toggle__switch.is-mounted .effect-toggle__knob { transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s ease; }
+.effect-toggle__switch.is-on .effect-toggle__knob { transform: translateX(28px); background: var(--primitive-green, #02d77b); }
+
+@media (max-width: 48em) {
+    .effect-toggle__label { font-size: 0.62rem; }
+}

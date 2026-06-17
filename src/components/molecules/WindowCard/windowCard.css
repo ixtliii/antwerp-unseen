@@ -1,0 +1,23 @@
+.window-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: min(44vh, 420px);
+    height: min(64vh, 620px);
+    margin: 0; padding: 0; background: none; border: none; cursor: pointer;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform, opacity;
+
+}
+.window-card__inner {
+    position: absolute; inset: 0; overflow: hidden;
+    background: #1a1a1a;
+    display: block;
+}
+.window-card__media { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+@media (max-width: 48em) {
+    .window-card { width: min(70vw, 320px); height: min(56vh, 480px); }
+}
