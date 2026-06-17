@@ -1,0 +1,56 @@
+.map-pin-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -150%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.7rem;
+    background: rgba(6, 6, 8, 0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: none;
+    cursor: pointer;
+    pointer-events: auto;
+    will-change: transform, opacity;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+.map-pin-label:hover {
+    border-color: rgba(2, 215, 123, 0.7);
+    background: rgba(6, 6, 8, 0.85);
+}
+
+.map-pin-label__dot {
+    width: 8px;
+    height: 8px;
+    background: var(--primitive-green, #02d77b);
+    flex-shrink: 0;
+}
+
+.map-pin-label__text { display: flex; flex-direction: column; gap: 1px; text-align: left; }
+
+.map-pin-label__name {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: var(--primitive-white, #f0ede8);
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+}
+.map-pin-label:hover .map-pin-label__name { color: var(--primitive-green, #02d77b); }
+
+.map-pin-label__coord {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: rgba(2, 215, 123, 0.75);
+    white-space: nowrap;
+}
+
+@media (max-width: 48em) {
+    .map-pin-label { padding: 0.4rem 0.55rem; }
+    .map-pin-label__name { font-size: 0.7rem; }
+    .map-pin-label__coord { display: none; }
+}
