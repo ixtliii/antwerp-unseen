@@ -21,7 +21,7 @@ const NODES = [
     { id: 'archive', label: 'ARCHIVE', type: 'link', x: 75, y: 20, pos: 'top', path: '/explore' },
     { id: 'artist', label: 'LOCAL ARTISTS', type: 'link', x: 20, y: 70, pos: 'bottom', path: '/artists' },
     { id: 'map', label: 'MAP', type: 'link', x: 80, y: 65, pos: 'bottom', path: '/map' },
-    { id: 'joint1', label: '', type: 'joint', x: 55, y: 45, pos: 'top', path: '' },
+    { id: 'joint1', label: 'CONTACT US', type: 'joint', x: 55, y: 45, pos: 'top', path: '/contact' },
     { id: 'add', label: 'ADD YOUR STORY', type: 'link', x: 50, y: 85, pos: 'bottom', path: '/submit' },
 ];
 
