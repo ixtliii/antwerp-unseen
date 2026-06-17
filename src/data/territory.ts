@@ -17,7 +17,7 @@ export const OUTLINE: [number, number][] = [
 
 export const PINS: MapPin[] = [
     { slug:'het-steen-gardens', name:'Het Steen Gardens', coord:'51.2233°N 4.3975°E', lat:51.2233, lng:4.3975,
-        description:'A medieval fortress on the Scheldt, its gardens hold quiet corners the city forgot.', image:'/locations/het-steen-gardens/castle.png', x:-1.6, z:0.4 },
+        description:'A medieval fortress on the Scheldt, its gardens hold quiet corners the city forgot.', image:'/locations/het-steen-gardens.png', x:-1.6, z:0.4 },
     { slug:'vlaaikensgang', name:'Vlaaikensgang', coord:'51.2202°N 4.4012°E', lat:51.2202, lng:4.4012,
         description:'A hidden 16th-century alley, cobblestones worn smooth by centuries of footsteps.', image:'/locations/vlaaikensgang.png', x:-0.2, z:-1.4 },
     { slug:'borgerhout-backstreets', name:'Borgerhout Backstreets', coord:'51.2122°N 4.4380°E', lat:51.2122, lng:4.4380,
