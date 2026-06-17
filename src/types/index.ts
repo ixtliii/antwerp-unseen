@@ -34,3 +34,9 @@ export interface Artwork {
     image_url: string;
     artist: Artist;
 }
+export interface WindowMemory {
+    slug: string;
+    location: string;
+    videoSrc: string;
+    poster?: string;
+}
