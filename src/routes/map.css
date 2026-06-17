@@ -1,0 +1,27 @@
+.map-page { position: fixed; inset: 0; background: #070708; overflow: hidden; }
+
+.map-page__head {
+    position: fixed; top: 5.5rem; left: 50%; transform: translateX(-50%); z-index: 10;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.4em;
+    text-transform: uppercase; color: rgba(240, 237, 232, 0.45); margin: 0;
+}
+.map-page__corner {
+    position: fixed; z-index: 10;
+    font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.28em; color: #4a4a4a;
+}
+.map-page__corner--bl { bottom: 1.6rem; left: 2rem; }
+.map-page__corner--tr { top: 5.5rem; right: 2rem; }
+
+.map-page__hint {
+    position: fixed; bottom: 1.6rem; left: 50%; transform: translateX(-50%); z-index: 10;
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(240, 237, 232, 0.4);
+    transition: color 0.3s ease; margin: 0;
+}
+.map-page__hint.is-focused { color: rgba(2, 215, 123, 0.8); }
+
+@media (max-width: 48em) {
+    .map-page__head { top: 4.5rem; font-size: 0.55rem; }
+    .map-page__corner--tr { top: 4.5rem; }
+    .map-page__corner--bl { bottom: 6.5rem; }
+}
