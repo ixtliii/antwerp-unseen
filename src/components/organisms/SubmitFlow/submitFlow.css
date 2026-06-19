@@ -79,7 +79,6 @@
     gap: var(--space-5);
 }
 
-/* ── prompt cards ───────────────────────────────── */
 .submit-flow__prompts {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -142,7 +141,6 @@
 }
 .prompt-card:hover .prompt-card__corner { opacity: 1; }
 
-/* ── format step ────────────────────────────────── */
 .format-step__prompt {
     position: relative;
     width: 100%;
@@ -208,7 +206,6 @@
     background: #5aff6e;
 }
 
-/* ── text step ──────────────────────────────────── */
 .text-step__area {
     width: 100%;
     background: #f0ede0;
@@ -225,7 +222,6 @@
 }
 .text-step__area::placeholder { color: #c4a882; }
 
-/* ── voice step ─────────────────────────────────── */
 .voice-step {
     display: flex;
     flex-direction: column;
@@ -295,9 +291,7 @@
     color: #5aff6e;
     margin: 0;
 }
-/* ── Append these to your existing voiceStep.css ── */
 
-/* Playback panel shown after recording completes */
 .voice-step__playback {
     display: flex;
     flex-direction: column;
@@ -316,7 +310,6 @@
     align-self: flex-start;
 }
 
-/* Native audio: invert to match dark palette */
 .voice-step__audio {
     width: 100%;
     filter: invert(1) brightness(0.85);
@@ -340,7 +333,6 @@
     opacity: 0.9;
 }
 
-/* Visual cue while recording is active */
 .voice-step__record--stop {
     color: var(--primitive-green);
     border-color: var(--primitive-green);

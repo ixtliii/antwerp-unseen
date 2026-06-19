@@ -6,7 +6,7 @@ export interface Tag {
 }
 
 export interface Contribution {
-    id: number;
+    id: string;                          // uuid from Supabase
     type: 'photo' | 'text' | 'voice';
     content: string;
     whenCreated: ISODateString;
@@ -17,6 +17,19 @@ export interface Day {
     date: ISODateString;
     silhouetteUrl: string;
     contributions: Contribution[];
+}
+
+export interface Submission {
+    id: string;
+    created_at: string;
+    location: string | null;
+    prompt_id: number;
+    prompt_text: string;
+    format: 'text' | 'voice' | 'image' | 'video';
+    user_type: 'local' | 'tourist';
+    content_text: string | null;
+    file_url: string | null;
+    file_name: string | null;
 }
 
 export interface Artist {
@@ -34,6 +47,7 @@ export interface Artwork {
     image_url: string;
     artist: Artist;
 }
+
 export interface WindowMemory {
     slug: string;
     location: string;
