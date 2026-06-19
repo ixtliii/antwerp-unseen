@@ -1,4 +1,9 @@
-/* FilterMenu — co-located BEM styles */
+/* FilterMenu — right-side vertical panel */
+/* Hidden on mobile (<48em) — FilterBottomSheet handles that breakpoint */
+
+@media (max-width: 48em) {
+    .filter-menu { display: none !important; }
+}
 
 .filter-menu {
     position: fixed;
@@ -18,9 +23,7 @@
     -webkit-overflow-scrolling: touch;
 }
 
-.filter-menu::-webkit-scrollbar {
-    display: none;
-}
+.filter-menu::-webkit-scrollbar { display: none; }
 
 /* ── "all" row ── */
 .filter-menu__all {
@@ -38,9 +41,7 @@
     transition: color 0.2s;
 }
 
-.filter-menu__all:hover {
-    color: rgba(240, 237, 232, 0.7);
-}
+.filter-menu__all:hover { color: rgba(240, 237, 232, 0.7); }
 
 .filter-menu__all.is-active,
 .filter-menu__all.is-active .filter-menu__count {
@@ -48,9 +49,7 @@
     opacity: 1;
 }
 
-.filter-menu__all-label {
-    font-size: 0.875rem;
-}
+.filter-menu__all-label { font-size: 0.875rem; }
 
 /* ── Category group ── */
 .filter-menu__group {
@@ -60,7 +59,6 @@
     gap: var(--space-2);
 }
 
-/* Category header row */
 .filter-menu__category {
     display: flex;
     align-items: baseline;
@@ -73,7 +71,6 @@
     letter-spacing: 0.02em;
 }
 
-/* Count shared between all/category */
 .filter-menu__count {
     font-size: 0.68rem;
     color: var(--primitive-white);
@@ -102,29 +99,5 @@
     transition: color 0.2s;
 }
 
-.filter-menu__item:hover {
-    color: rgba(240, 237, 232, 0.65);
-}
-
-.filter-menu__item.is-active {
-    color: var(--primitive-white);
-}
-@media (max-width: 48em) {
-    .filter-menu {
-        top: auto;
-        right: 1rem;
-        bottom: 5rem;
-        transform: none;
-        max-height: 55vh;
-        gap: var(--space-2);
-    }
-
-    .filter-menu__cat-label,
-    .filter-menu__all-label {
-        font-size: 0.75rem;
-    }
-
-    .filter-menu__item {
-        font-size: 0.68rem;
-    }
-}
+.filter-menu__item:hover   { color: rgba(240, 237, 232, 0.65); }
+.filter-menu__item.is-active { color: var(--primitive-white); }

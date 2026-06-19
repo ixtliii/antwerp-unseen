@@ -1,7 +1,9 @@
 import { useState, useMemo, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import Archive from '../components/organisms/Archive/Archive.tsx';
+import Archive from '../components/organisms/Archive/Archive';
+import SubmissionDetail from '../components/organisms/SubmissionDetail/SubmissionDetail';
 import FilterMenu from '../components/molecules/FilterMenu/FilterMenu';
+import FilterBottomSheet from '../components/molecules/FilterBottomSheet/FilterBottomSheet';
 import useFilterSound from '../hooks/useFilterSound';
 import PageLayout from '../layouts/PageLayout.tsx';
 import type { Submission } from '../types';
@@ -16,35 +18,32 @@ const isThisMonth = (d: Date) => {
     const n = new Date();
     return d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear();
 };
-const isThisYear  = (d: Date) => d.getFullYear() === new Date().getFullYear();
+const isThisYear = (d: Date) => d.getFullYear() === new Date().getFullYear();
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 const Explore = () => {
-    const [submissions,   setSubmissions]   = useState<Submission[]>([]);
-    const [loading,       setLoading]       = useState(true);
-    const [activeFilter,  setActiveFilter]  = useState<string>('all');
-    const [activeId,      setActiveId]      = useState<string>('');
+    const [submissions,  setSubmissions]  = useState<Submission[]>([]);
+    const [loading,      setLoading]      = useState(true);
+    const [activeFilter, setActiveFilter] = useState<string>('all');
+    const [activeId,     setActiveId]     = useState<string>('');
+    const [expandedId,   setExpandedId]   = useState<string | null>(null);
     const playFilterSound = useFilterSound();
 
-    // Fetch all submissions once on mount
     useEffect(() => {
         const fetchSubmissions = async () => {
             const { data, error } = await supabase
                 .from('submissions')
                 .select('*')
                 .order('created_at', { ascending: false });
-
             if (!error && data) setSubmissions(data as Submission[]);
             setLoading(false);
         };
         void fetchSubmissions();
     }, []);
 
-    // Filter submissions by active filter
     const filteredSubmissions = useMemo((): Submission[] => {
         if (activeFilter === 'all') return submissions;
-
         const timeFns: Record<string, (d: Date) => boolean> = {
             'today':      isToday,
             'this-week':  isThisWeek,
@@ -55,45 +54,39 @@ const Explore = () => {
             const fn = timeFns[activeFilter];
             return submissions.filter(s => fn(new Date(s.created_at)));
         }
-
-        if (['text', 'voice', 'image', 'video'].includes(activeFilter)) {
+        if (['text', 'voice', 'image', 'video'].includes(activeFilter))
             return submissions.filter(s => s.format === activeFilter);
-        }
-
-        if (activeFilter === 'local' || activeFilter === 'tourist') {
+        if (activeFilter === 'local' || activeFilter === 'tourist')
             return submissions.filter(s => s.user_type === activeFilter);
-        }
-
         return submissions;
     }, [submissions, activeFilter]);
 
-    // Set initial activeId once data arrives
     useEffect(() => {
-        if (filteredSubmissions.length > 0 && !activeId) {
+        if (filteredSubmissions.length > 0 && !activeId)
             setActiveId(filteredSubmissions[0].id);
-        }
     }, [filteredSubmissions, activeId]);
 
-    // Reset activeId if it disappears after filtering
     useEffect(() => {
-        if (
-            filteredSubmissions.length > 0 &&
-            !filteredSubmissions.find(s => s.id === activeId)
-        ) {
+        if (filteredSubmissions.length > 0 && !filteredSubmissions.find(s => s.id === activeId))
             setActiveId(filteredSubmissions[0].id);
-        }
     }, [filteredSubmissions, activeId]);
 
-    // Compute filter panel data from ALL submissions (counts stay stable while browsing)
+    const expandedIndex      = expandedId ? filteredSubmissions.findIndex(s => s.id === expandedId) : -1;
+    const expandedSubmission = expandedIndex >= 0 ? filteredSubmissions[expandedIndex] : null;
+
+    const handlePrev = () => {
+        if (expandedIndex > 0) setExpandedId(filteredSubmissions[expandedIndex - 1].id);
+    };
+    const handleNext = () => {
+        if (expandedIndex < filteredSubmissions.length - 1)
+            setExpandedId(filteredSubmissions[expandedIndex + 1].id);
+    };
+
     const { categories, totalCount } = useMemo(() => {
         const uniqueDates = new Set(submissions.map(s => s.created_at.split('T')[0])).size;
         const fmt = { text: 0, voice: 0, image: 0, video: 0 };
         const usr = { local: 0, tourist: 0 };
-
-        submissions.forEach(s => {
-            fmt[s.format]++;
-            usr[s.user_type]++;
-        });
+        submissions.forEach(s => { fmt[s.format]++; usr[s.user_type]++; });
 
         const cats: FilterCategory[] = [
             {
@@ -122,7 +115,6 @@ const Explore = () => {
                 ],
             },
         ];
-
         return { categories: cats, totalCount: submissions.length };
     }, [submissions]);
 
@@ -139,14 +131,39 @@ const Explore = () => {
                     submissions={filteredSubmissions}
                     activeId={activeId}
                     onActiveChange={setActiveId}
+                    onOpenDetail={setExpandedId}
                 />
             )}
+
+            {/* Desktop: original right-side panel — hidden on mobile via filterMenu.css */}
             {!loading && (
                 <FilterMenu
                     categories={categories}
                     totalCount={totalCount}
                     activeFilter={activeFilter}
                     onFilterChange={handleFilterChange}
+                />
+            )}
+
+            {/* Mobile: bottom sheet — hidden on desktop via filterBottomSheet.css */}
+            {!loading && (
+                <FilterBottomSheet
+                    categories={categories}
+                    totalCount={totalCount}
+                    activeFilter={activeFilter}
+                    onFilterChange={handleFilterChange}
+                    filteredCount={filteredSubmissions.length}
+                />
+            )}
+
+            {expandedSubmission && (
+                <SubmissionDetail
+                    submission={expandedSubmission}
+                    onClose={() => setExpandedId(null)}
+                    onPrev={handlePrev}
+                    onNext={handleNext}
+                    hasPrev={expandedIndex > 0}
+                    hasNext={expandedIndex < filteredSubmissions.length - 1}
                 />
             )}
         </PageLayout>

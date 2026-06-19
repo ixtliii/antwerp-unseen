@@ -6,12 +6,14 @@ import { useSpring } from '@react-spring/three';
 import type { Submission } from '../../../types';
 import SubmissionCard from '../SubmissionCard/SubmissionCard';
 import DitherVideo from '../../atoms/DitherVideo/DitherVideo';
+import { triggerPageTransition } from '../../globals/PixelTransition/triggerTransition';
 import './archive.css';
 
 interface SceneProps {
     submissions: Submission[];
     activeId: string;
     onActiveChange: (id: string) => void;
+    onOpenDetail: (id: string) => void;
 }
 
 const DAY_SPACING  = 0.8;
@@ -34,11 +36,11 @@ interface RailProps {
     activeId: string;
     offsetRef: React.MutableRefObject<number>;
     onActiveChange: (id: string) => void;
-    navigate: (path: string) => void;
+    onOpenDetail: (id: string) => void;
     setHovered: (hovered: boolean) => void;
 }
 
-const Rail = ({ submissions, activeId, offsetRef, onActiveChange, navigate, setHovered }: RailProps) => {
+const Rail = ({ submissions, activeId, offsetRef, onActiveChange, onOpenDetail, setHovered }: RailProps) => {
     const activeIndex = submissions.findIndex(s => s.id === activeId);
 
     const { animatedActiveIndex } = useSpring({
@@ -53,14 +55,9 @@ const Rail = ({ submissions, activeId, offsetRef, onActiveChange, navigate, setH
     useFrame((_, delta) => {
         if (!groupRef.current) return;
 
-        const ai = animatedActiveIndex.get();
-
+        const ai         = animatedActiveIndex.get();
         const prevOffset = lerpedOffsetRef.current;
-        lerpedOffsetRef.current = THREE.MathUtils.lerp(
-            lerpedOffsetRef.current,
-            offsetRef.current,
-            delta * 12
-        );
+        lerpedOffsetRef.current = THREE.MathUtils.lerp(lerpedOffsetRef.current, offsetRef.current, delta * 12);
         const currentOffset = lerpedOffsetRef.current;
 
         const rawVelocity = (currentOffset - prevOffset) * 40;
@@ -73,11 +70,9 @@ const Rail = ({ submissions, activeId, offsetRef, onActiveChange, navigate, setH
                 group.position.x = currentPos - currentOffset;
                 group.position.z = 0;
             }
-
             const factor1      = Math.max(0, 1 - Math.abs(index - ai));
             const factor2      = Math.max(0, 1 - Math.abs(index - (ai - 1)));
             const activeFactor = Math.min(1, factor1 + factor2);
-
             currentPos += DAY_SPACING + ACTIVE_EXTRA * activeFactor;
         });
     });
@@ -92,8 +87,10 @@ const Rail = ({ submissions, activeId, offsetRef, onActiveChange, navigate, setH
                     isActive={submission.id === activeId}
                     onClick={() => {
                         if (submission.id === activeId) {
-                            navigate(`/explore/${submission.id}`);
+                            // Second click on active card → open detail view
+                            onOpenDetail(submission.id);
                         } else {
+                            // First click → activate card
                             onActiveChange(submission.id);
                         }
                     }}
@@ -105,7 +102,7 @@ const Rail = ({ submissions, activeId, offsetRef, onActiveChange, navigate, setH
     );
 };
 
-const Archive = ({ submissions, activeId, onActiveChange }: SceneProps) => {
+const Archive = ({ submissions, activeId, onActiveChange, onOpenDetail }: SceneProps) => {
     const navigate    = useNavigate();
     const [isHovered, setIsHovered] = useState(false);
     const isDragging  = useRef(false);
@@ -115,9 +112,7 @@ const Archive = ({ submissions, activeId, onActiveChange }: SceneProps) => {
     const cursorRef   = useRef<HTMLDivElement>(null);
     const audioCtxRef = useRef<AudioContext | null>(null);
 
-    useEffect(() => {
-        activeIdRef.current = activeId;
-    }, [activeId]);
+    useEffect(() => { activeIdRef.current = activeId; }, [activeId]);
 
     useEffect(() => {
         const initAudio = () => {
@@ -126,25 +121,17 @@ const Archive = ({ submissions, activeId, onActiveChange }: SceneProps) => {
                     (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
                 audioCtxRef.current = new AC();
             }
-            if (audioCtxRef.current.state === 'suspended') {
-                audioCtxRef.current.resume();
-            }
+            if (audioCtxRef.current.state === 'suspended') audioCtxRef.current.resume();
         };
 
         const playTick = (index: number) => {
             if (!audioCtxRef.current) return;
-            const ctx = audioCtxRef.current;
-            const scales = [
-                130.81, 146.83, 164.81, 196.00, 220.00, 261.63,
-                293.66, 329.63, 392.00, 440.00, 523.25, 587.33,
-                659.25, 783.99, 880.00,
-            ];
-            const freq = scales[index % scales.length];
-            const osc  = ctx.createOscillator();
-            const gain = ctx.createGain();
-
+            const ctx    = audioCtxRef.current;
+            const scales = [130.81, 146.83, 164.81, 196, 220, 261.63, 293.66, 329.63, 392, 440, 523.25, 587.33, 659.25, 783.99, 880];
+            const osc    = ctx.createOscillator();
+            const gain   = ctx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+            osc.frequency.setValueAtTime(scales[index % scales.length], ctx.currentTime);
             gain.gain.setValueAtTime(0, ctx.currentTime);
             gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.01);
             gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
@@ -159,23 +146,22 @@ const Archive = ({ submissions, activeId, onActiveChange }: SceneProps) => {
             return getPosition(submissions.length - 1, activeIdx);
         };
 
+        const advance = (clamped: number) => {
+            const idx = Math.max(0, Math.min(Math.round(clamped / DAY_SPACING), submissions.length - 1));
+            const id  = submissions[idx]?.id;
+            if (id && id !== activeIdRef.current) {
+                activeIdRef.current = id;
+                playTick(idx);
+                onActiveChange(id);
+            }
+        };
+
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
             initAudio();
-            const newOffset = offsetRef.current + e.deltaY * 0.01;
-            const clamped   = Math.max(0, Math.min(newOffset, getTotal()));
+            const clamped = Math.max(0, Math.min(offsetRef.current + e.deltaY * 0.01, getTotal()));
             offsetRef.current = clamped;
-
-            const clampedIndex = Math.max(
-                0,
-                Math.min(Math.round(clamped / DAY_SPACING), submissions.length - 1)
-            );
-            const newActiveId = submissions[clampedIndex]?.id;
-            if (newActiveId && newActiveId !== activeIdRef.current) {
-                activeIdRef.current = newActiveId;
-                playTick(clampedIndex);
-                onActiveChange(newActiveId);
-            }
+            advance(clamped);
         };
 
         const handleMouseDown = (e: MouseEvent) => {
@@ -186,25 +172,14 @@ const Archive = ({ submissions, activeId, onActiveChange }: SceneProps) => {
 
         const handleMouseMove = (e: MouseEvent) => {
             if (cursorRef.current) {
-                cursorRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+                cursorRef.current.style.transform = `translate3d(${e.clientX}px,${e.clientY}px,0)`;
             }
             if (!isDragging.current) return;
-            const delta = (e.clientX - lastX.current) * 0.008;
+            const delta   = (e.clientX - lastX.current) * 0.008;
             lastX.current = e.clientX;
-            const newOffset = offsetRef.current - delta;
-            const clamped   = Math.max(0, Math.min(newOffset, getTotal()));
+            const clamped = Math.max(0, Math.min(offsetRef.current - delta, getTotal()));
             offsetRef.current = clamped;
-
-            const clampedIndex = Math.max(
-                0,
-                Math.min(Math.round(clamped / DAY_SPACING), submissions.length - 1)
-            );
-            const newActiveId = submissions[clampedIndex]?.id;
-            if (newActiveId && newActiveId !== activeIdRef.current) {
-                activeIdRef.current = newActiveId;
-                playTick(clampedIndex);
-                onActiveChange(newActiveId);
-            }
+            advance(clamped);
         };
 
         const handleMouseUp = () => { isDragging.current = false; };
@@ -236,11 +211,7 @@ const Archive = ({ submissions, activeId, onActiveChange }: SceneProps) => {
 
             <div ref={cursorRef} className="custom-cursor-wrapper">
                 <div className={`custom-cursor ${isHovered ? 'hovered' : ''}`}>
-                    <svg
-                        width="20" height="20" viewBox="0 0 24 24"
-                        fill="none" stroke="black"
-                        strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="miter"
-                    >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="miter">
                         <line x1="7" y1="17" x2="17" y2="7" />
                         <polyline points="7 7 17 7 17 17" />
                     </svg>
@@ -249,11 +220,7 @@ const Archive = ({ submissions, activeId, onActiveChange }: SceneProps) => {
 
             <Canvas
                 className="scene-canvas"
-                camera={{
-                    position: [-5.47, 7.02, 6.76],
-                    rotation: [-0.80, -0.51, -0.47],
-                    fov: 50,
-                }}
+                camera={{ position: [-5.47, 7.02, 6.76], rotation: [-0.80, -0.51, -0.47], fov: 50 }}
             >
                 <ambientLight intensity={1} />
                 <Rail
@@ -261,10 +228,19 @@ const Archive = ({ submissions, activeId, onActiveChange }: SceneProps) => {
                     activeId={activeId}
                     offsetRef={offsetRef}
                     onActiveChange={onActiveChange}
-                    navigate={navigate}
+                    onOpenDetail={onOpenDetail}
                     setHovered={setIsHovered}
                 />
             </Canvas>
+
+            {/* ADD YOUR STORY — fixed above filter tab */}
+            <button
+                className="archive__add-story"
+                onClick={() => triggerPageTransition(() => navigate('/submit'))}
+                type="button"
+            >
+                ADD YOUR STORY
+            </button>
         </div>
     );
 };
