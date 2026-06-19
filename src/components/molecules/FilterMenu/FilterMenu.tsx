@@ -1,27 +1,61 @@
 import './filterMenu.css';
 
+export interface FilterItem {
+    id: string;
+    label: string;
+    count?: number;
+}
+
+export interface FilterCategory {
+    id: string;
+    label: string;
+    count: number;
+    items: FilterItem[];
+}
+
 interface FilterMenuProps {
-    filterCounts: Record<string, number>;
+    categories: FilterCategory[];
+    totalCount: number;
     activeFilter: string;
     onFilterChange: (filter: string) => void;
 }
 
-const FilterMenu = ({ filterCounts, activeFilter, onFilterChange }: FilterMenuProps) => {
+const FilterMenu = ({ categories, totalCount, activeFilter, onFilterChange }: FilterMenuProps) => {
     return (
-        <div className="filter-menu-container">
-            {Object.entries(filterCounts)
-                .sort((a, b) => b[1] - a[1])
-                .map(([key, count]) => (
-                    <div
-                        key={key}
-                        onClick={() => onFilterChange(key)}
-                        className={`filter-menu-item ${activeFilter === key ? 'active' : ''}`}
-                    >
-                        <span>{key}</span>
-                        <span className="filter-menu-count">{count}</span>
+        <nav className="filter-menu" aria-label="Archive filters">
+            <button
+                type="button"
+                className={`filter-menu__all ${activeFilter === 'all' ? 'is-active' : ''}`}
+                onClick={() => onFilterChange('all')}
+            >
+                <span className="filter-menu__all-label">all</span>
+                <span className="filter-menu__count">
+                    ({totalCount > 999 ? '999+' : totalCount})
+                </span>
+            </button>
+
+            {categories.map((cat) => (
+                <div key={cat.id} className="filter-menu__group">
+                    <div className="filter-menu__category">
+                        <span className="filter-menu__cat-label">{cat.label}</span>
+                        <span className="filter-menu__count">({cat.count})</span>
                     </div>
-                ))}
-        </div>
+
+                    <div className="filter-menu__items">
+                        {cat.items.map((item) => (
+                            <button
+                                key={item.id}
+                                type="button"
+                                className={`filter-menu__item ${activeFilter === item.id ? 'is-active' : ''}`}
+                                onClick={() => onFilterChange(item.id)}
+                            >
+                                {item.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            ))}
+        </nav>
     );
 };
 
