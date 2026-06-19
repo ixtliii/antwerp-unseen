@@ -295,7 +295,56 @@
     color: #5aff6e;
     margin: 0;
 }
+/* ── Append these to your existing voiceStep.css ── */
 
+/* Playback panel shown after recording completes */
+.voice-step__playback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    max-width: 28rem;
+    margin-top: var(--space-4);
+}
+
+.voice-step__duration {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--primitive-green);
+    letter-spacing: 0.12em;
+    align-self: flex-start;
+}
+
+/* Native audio: invert to match dark palette */
+.voice-step__audio {
+    width: 100%;
+    filter: invert(1) brightness(0.85);
+}
+
+.voice-step__rerecord {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--primitive-white);
+    opacity: 0.45;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    align-self: flex-start;
+    transition: opacity 0.2s;
+}
+
+.voice-step__rerecord:hover {
+    opacity: 0.9;
+}
+
+/* Visual cue while recording is active */
+.voice-step__record--stop {
+    color: var(--primitive-green);
+    border-color: var(--primitive-green);
+}
 /* ── media step ─────────────────────────────────── */
 .media-step__input { display: none; }
 .media-step__zone {

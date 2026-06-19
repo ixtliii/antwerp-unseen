@@ -1,4 +1,4 @@
-export type Step = 'prompt' | 'format' | 'input' | 'success';
+export type Step = 'prompt' | 'format' | 'input' | 'confirm' | 'success';
 export type Format = 'text' | 'voice' | 'image' | 'video';
 export type UserType = 'local' | 'tourist';
 
