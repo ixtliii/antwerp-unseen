@@ -15,9 +15,34 @@ interface VoiceStepProps {
 
 const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSubmit, submitting }: VoiceStepProps) => {
     const rootRef = useRef<HTMLDivElement>(null);
+    const audioRef = useRef<HTMLAudioElement>(null);
     const recorderRef = useRef<MediaRecorder | null>(null);
     const chunksRef = useRef<Blob[]>([]);
+    // Tracks the object URL we own so we can revoke it on change / unmount
+    const ownedUrlRef = useRef<string | null>(null);
+
     const [isRecording, setIsRecording] = useState(false);
+    const [audioUrl, setAudioUrl] = useState<string | null>(null);
+    const [audioDuration, setAudioDuration] = useState(0);
+
+    // If we're returning from the confirm step the parent file is already set but
+    // we have no local audioUrl — recreate it from the file so playback works.
+    useEffect(() => {
+        if (file && !audioUrl) {
+            const url = URL.createObjectURL(file);
+            ownedUrlRef.current = url;
+            setAudioUrl(url);
+        }
+        // Intentionally only on mount — ESLint disable is correct here.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Clean up any owned blob URL when the component unmounts.
+    useEffect(() => {
+        return () => {
+            if (ownedUrlRef.current) URL.revokeObjectURL(ownedUrlRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -39,18 +64,29 @@ const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSu
         return () => ctx.revert();
     }, []);
 
+    const setNewUrl = (url: string | null) => {
+        if (ownedUrlRef.current) URL.revokeObjectURL(ownedUrlRef.current);
+        ownedUrlRef.current = url;
+        setAudioUrl(url);
+    };
+
     const startRecording = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const recorder = new MediaRecorder(stream);
             recorderRef.current = recorder;
             chunksRef.current = [];
+
             recorder.ondataavailable = (e) => chunksRef.current.push(e.data);
             recorder.onstop = () => {
                 const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+                const url = URL.createObjectURL(blob);
+                setNewUrl(url);
+                setAudioDuration(0); // will be set by onLoadedMetadata
                 onFileReady(new File([blob], 'voice-memo.webm', { type: 'audio/webm' }));
                 stream.getTracks().forEach((t) => t.stop());
             };
+
             recorder.start();
             setIsRecording(true);
         } catch {
@@ -61,6 +97,19 @@ const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSu
     const stopRecording = () => {
         recorderRef.current?.stop();
         setIsRecording(false);
+    };
+
+    const handleReRecord = () => {
+        setNewUrl(null);
+        setAudioDuration(0);
+        // Parent `file` stays stale until a new recording completes —
+        // that's fine because the submit footer only appears when audioUrl is set.
+    };
+
+    const formatDuration = (secs: number) => {
+        const m = Math.floor(secs / 60).toString().padStart(2, '0');
+        const s = (secs % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
     };
 
     return (
@@ -81,9 +130,41 @@ const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSu
                     </div>
                 </div>
 
-                {file ? (
-                    <div className="voice-step__done">
-                        <p className="voice-step__done-label">Recording saved</p>
+                {/* Idle: no recording yet */}
+                {!audioUrl && !isRecording && (
+                    <button type="button" className="voice-step__record" onClick={startRecording}>
+                        START RECORDING
+                    </button>
+                )}
+
+                {/* Active recording */}
+                {isRecording && (
+                    <button type="button" className="voice-step__record voice-step__record--stop" onClick={stopRecording}>
+                        STOP RECORDING
+                    </button>
+                )}
+
+                {/* Playback after recording */}
+                {audioUrl && !isRecording && (
+                    <div className="voice-step__playback">
+                        {audioDuration > 0 && (
+                            <span className="voice-step__duration">{formatDuration(audioDuration)}</span>
+                        )}
+                        <audio
+                            ref={audioRef}
+                            className="voice-step__audio"
+                            src={audioUrl}
+                            controls
+                            preload="metadata"
+                            onLoadedMetadata={() => {
+                                if (audioRef.current && isFinite(audioRef.current.duration)) {
+                                    setAudioDuration(Math.round(audioRef.current.duration));
+                                }
+                            }}
+                        />
+                        <button type="button" className="voice-step__rerecord" onClick={handleReRecord}>
+                            ↺ Re-record
+                        </button>
                         <SubmitFooter
                             userType={userType}
                             onUserTypeChange={onUserTypeChange}
@@ -92,14 +173,6 @@ const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSu
                             fullWidth
                         />
                     </div>
-                ) : (
-                    <button
-                        type="button"
-                        className="voice-step__record"
-                        onClick={isRecording ? stopRecording : startRecording}
-                    >
-                        {isRecording ? 'STOP RECORDING' : 'START RECORDING'}
-                    </button>
                 )}
             </div>
         </div>
