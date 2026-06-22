@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import gsap from 'gsap';
 import { OUTLINE, PINS, ROUTE_ORDER, type MapPin } from '../../../data/territory';
 import MapPinLabel from '../../atoms/MapPinLabel/MapPinLabel';
 import './territoryMap.css';

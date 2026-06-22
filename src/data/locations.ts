@@ -14,7 +14,7 @@ export interface MapImageLayer {
     left: number;
     top: number;
     width: number;
-    height: number;
+    height?: number;   // optional — layers without it auto-scale from aspect ratio
     depth: number;
     flipX?: boolean;
 }
