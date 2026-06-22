@@ -11,22 +11,45 @@ import MediaStep from './steps/MediaStep';
 import ConfirmStep from './steps/ConfirmStep';
 import SuccessStep from './steps/SuccessStep';
 import type { Step, Format, UserType, Prompt } from './submitFlow.types';
+import { PROMPTS } from './submitFlow.types';
 import './submitFlow.css';
 
 const SubmitFlow = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
-    const [step, setStep] = useState<Step>('prompt');
-    const [prompt, setPrompt] = useState<Prompt | null>(null);
-    const [format, setFormat] = useState<Format | null>(null);
-    const [text, setText] = useState('');
+    const locationParam = searchParams.get('location');
+    const promptParam   = searchParams.get('prompt');
+
+    // Arriving from an installation QR (?prompt=N): resolve the prompt once,
+    // before first render, so we start on the right step with no flicker and
+    // no setState-in-effect cascade.
+    const seededPrompt = promptParam
+        ? PROMPTS.find((p) => p.id === Number(promptParam)) ?? null
+        : null;
+
+    const [step, setStep]         = useState<Step>(seededPrompt ? 'format' : 'prompt');
+    const [prompt, setPrompt]     = useState<Prompt | null>(seededPrompt);
+    const [format, setFormat]     = useState<Format | null>(null);
+    const [text, setText]         = useState('');
     const [userType, setUserType] = useState<UserType>('local');
-    const [file, setFile] = useState<File | null>(null);
-    const [submitting, setSubmitting] = useState(false);
+    const [file, setFile]         = useState<File | null>(null);
+    const [submitting, setSubmitting]   = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
 
-    const locationParam = searchParams.get('location');
+    // ── Clear any entered content (used when switching format) ───────────────
+    const clearInput = () => {
+        setFile(null);
+        setText('');
+        setSubmitError(null);
+    };
+
+    // Switch format in place on the input step — discards what was entered.
+    const switchFormat = (next: Format) => {
+        if (next === format) return;
+        clearInput();
+        setFormat(next);
+    };
 
     // ── Navigation ──────────────────────────────────────────────────────────
 
@@ -34,8 +57,7 @@ const SubmitFlow = () => {
         if (step === 'confirm') {
             setStep('input');
         } else if (step === 'input') {
-            setFile(null);
-            setText('');
+            clearInput();
             setFormat(null);
             setStep('format');
         } else if (step === 'format') {
@@ -58,13 +80,11 @@ const SubmitFlow = () => {
 
     // ── Submit flow ──────────────────────────────────────────────────────────
 
-    // Step 1: called by all input step footers — no Supabase yet, just go to confirm.
     const handleGoToConfirm = () => {
         setSubmitError(null);
         setStep('confirm');
     };
 
-    // Step 2: called by ConfirmStep — actually uploads + inserts.
     const handleConfirm = async () => {
         if (!prompt || !format) return;
 
@@ -75,10 +95,8 @@ const SubmitFlow = () => {
             let fileUrl: string | null = null;
             let fileName: string | null = null;
 
-            // Upload file to Supabase Storage for voice / image / video formats.
             if (file && (format === 'voice' || format === 'image' || format === 'video')) {
                 const ext = file.name.split('.').pop() ?? 'bin';
-                // Randomise path so concurrent submissions never collide.
                 const path = `${format}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
                 const { error: uploadError } = await supabase.storage
@@ -95,7 +113,6 @@ const SubmitFlow = () => {
                 fileName = file.name;
             }
 
-            // Insert the row.
             const { error: insertError } = await supabase.from('submissions').insert({
                 location: locationParam,
                 prompt_id: prompt.id,
@@ -149,6 +166,8 @@ const SubmitFlow = () => {
                     onUserTypeChange={setUserType}
                     onSubmit={handleGoToConfirm}
                     submitting={false}
+                    activeFormat={format}
+                    onSwitchFormat={switchFormat}
                 />
             )}
 
@@ -161,6 +180,8 @@ const SubmitFlow = () => {
                     onUserTypeChange={setUserType}
                     onSubmit={handleGoToConfirm}
                     submitting={false}
+                    activeFormat={format}
+                    onSwitchFormat={switchFormat}
                 />
             )}
 
@@ -174,6 +195,8 @@ const SubmitFlow = () => {
                     onUserTypeChange={setUserType}
                     onSubmit={handleGoToConfirm}
                     submitting={false}
+                    activeFormat={format}
+                    onSwitchFormat={switchFormat}
                 />
             )}
 

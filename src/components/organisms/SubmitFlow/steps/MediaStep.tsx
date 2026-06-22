@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import type { Prompt, UserType } from '../submitFlow.types';
+import type { Format, Prompt, UserType } from '../submitFlow.types';
 import SubmitFooter from '../../../molecules/SubmitFooter/SubmitFooter';
+import FormatSwitcher from './FormatSwitcher';
 
 interface MediaStepProps {
     prompt: Prompt;
@@ -12,6 +13,8 @@ interface MediaStepProps {
     onUserTypeChange: (type: UserType) => void;
     onSubmit: () => void;
     submitting: boolean;
+    activeFormat: Format;
+    onSwitchFormat: (format: Format) => void;
 }
 
 const formatFileSize = (bytes: number) => {
@@ -19,7 +22,7 @@ const formatFileSize = (bytes: number) => {
     return `${(bytes / (1024 * 1024)).toFixed(0)}MB`;
 };
 
-const MediaStep = ({ prompt, kind, file, onFileChange, userType, onUserTypeChange, onSubmit, submitting }: MediaStepProps) => {
+const MediaStep = ({ prompt, kind, file, onFileChange, userType, onUserTypeChange, onSubmit, submitting, activeFormat, onSwitchFormat }: MediaStepProps) => {
     const rootRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -28,7 +31,8 @@ const MediaStep = ({ prompt, kind, file, onFileChange, userType, onUserTypeChang
             const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
             tl.fromTo('.submit-flow__title', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 })
                 .fromTo('.submit-flow__prompt-echo', { opacity: 0 }, { opacity: 1, duration: 0.4 }, '-=0.3')
-                .fromTo('.media-step__zone', { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out' }, '-=0.2');
+                .fromTo('.format-switcher', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, '-=0.2')
+                .fromTo('.media-step__zone', { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out' }, '-=0.1');
         }, rootRef);
         return () => ctx.revert();
     }, []);
@@ -50,6 +54,8 @@ const MediaStep = ({ prompt, kind, file, onFileChange, userType, onUserTypeChang
         <div className="submit-flow__screen" ref={rootRef}>
             <h1 className="submit-flow__title">ADD YOUR STORY</h1>
             <p className="submit-flow__prompt-echo">"{prompt.text}"</p>
+
+            <FormatSwitcher active={activeFormat} onSwitch={onSwitchFormat} />
 
             <div className="submit-flow__input-area">
                 <input
