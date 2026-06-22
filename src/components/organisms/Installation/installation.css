@@ -138,14 +138,6 @@
     z-index: 30;
 }
 
-.installation__qr span {
-    font-size: clamp(0.45rem, 1.4vw, 0.6rem);
-    letter-spacing: 0.18em;
-    color: rgba(255, 255, 255, 0.28);
-    text-align: center;
-    text-transform: uppercase;
-    line-height: 1.6;
-}
 
 /* ─── Floating contributions ────────────────────────────── */
 
@@ -401,7 +393,67 @@
     border-color: rgba(255, 255, 255, 0.35);
     color: rgba(255, 255, 255, 0.7);
 }
+/* ── Append to installation.css — contribution card legibility ──────────── */
+/* The dithered figure is bright, so cards need a solid dark backing + scrim   */
+/* to stay readable as they drift across it.                                   */
 
+/* Soft radial scrim behind the whole active layer — sits under the cards,
+   above the effect, darkening the bright silhouette just enough for text. */
+.installation__active::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+            radial-gradient(ellipse at 50% 60%, rgba(8,8,8,0.0) 35%, rgba(8,8,8,0.45) 100%);
+}
+
+/* Make sure prompt + cards sit above the scrim */
+.installation__prompt,
+.installation__qr,
+.installation__contribution {
+    z-index: 30;
+}
+
+/* Regular card — stronger dark glass backing */
+.contribution__card {
+    background: rgba(8, 8, 8, 0.62);
+    border: 1px solid rgba(240, 237, 232, 0.14);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.contribution__text {
+    color: rgba(240, 237, 232, 0.78);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.contribution__author { color: rgba(240, 237, 232, 0.5); }
+.contribution__meta   { color: rgba(240, 237, 232, 0.38); }
+
+/* Featured card — even more presence */
+.contribution__featured {
+    background: rgba(8, 8, 8, 0.72);
+    border: 1px solid rgba(240, 237, 232, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.5);
+}
+
+.contribution__featured-text {
+    color: rgba(240, 237, 232, 0.95);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+.contribution__featured-author { color: rgba(240, 237, 232, 0.55); }
+.contribution__featured-meta   { color: rgba(240, 237, 232, 0.4); }
+
+/* Photo card backing too */
+.contribution__card--photo {
+    background: rgba(8, 8, 8, 0.62);
+}
 @media (min-aspect-ratio: 9/16) and (min-width: 600px) {
     .installation {
         background: var(--primitive-black);

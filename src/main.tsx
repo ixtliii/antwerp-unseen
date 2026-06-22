@@ -5,7 +5,7 @@ import App from './App.tsx';
 import './styles/reset.css';
 import './styles/tokens.css';
 
-const allowed = ['/', '/submit'];
+const allowed = ['/', '/submit', '/installation'];
 if (!allowed.includes(window.location.pathname)) {
     window.history.replaceState(null, '', '/');
 }

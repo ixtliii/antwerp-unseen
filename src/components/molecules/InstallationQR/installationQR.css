@@ -1,0 +1,73 @@
+/* ── Append to installation.css — refined QR presentation ──────────────── */
+/* Replaces the bare placeholder with a framed, scanning, corner-marked QR.   */
+
+.installation__qr-frame {
+    position: relative;
+    padding: 0.9rem;
+    background: rgba(8, 8, 8, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(240, 237, 232, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    /* Reveal animation when the screen becomes active */
+    animation: qr-reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes qr-reveal {
+    from { opacity: 0; transform: scale(0.86); clip-path: inset(0 0 100% 0); }
+    to   { opacity: 1; transform: scale(1);    clip-path: inset(0 0 0% 0); }
+}
+
+/* Sweeping scan line over the QR — subtle "it's live" cue */
+.installation__qr-scanline {
+    position: absolute;
+    left: 0.9rem;
+    right: 0.9rem;
+    height: 2px;
+    background: linear-gradient(
+            90deg,
+            transparent,
+            var(--primitive-green, #02d77b),
+            transparent
+    );
+    opacity: 0.7;
+    filter: blur(0.5px);
+    animation: qr-scan 2.8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes qr-scan {
+    0%, 100% { top: 0.9rem;  opacity: 0; }
+    10%       { opacity: 0.7; }
+    50%       { top: calc(100% - 0.9rem - 2px); opacity: 0.7; }
+    60%       { opacity: 0; }
+}
+
+/* Corner brackets — viewfinder framing */
+.installation__qr-corner {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid var(--primitive-green, #02d77b);
+    pointer-events: none;
+}
+
+.installation__qr-corner--tl { top: 4px;    left: 4px;    border-right: none; border-bottom: none; }
+.installation__qr-corner--tr { top: 4px;    right: 4px;   border-left: none;  border-bottom: none; }
+.installation__qr-corner--bl { bottom: 4px; left: 4px;    border-right: none; border-top: none; }
+.installation__qr-corner--br { bottom: 4px; right: 4px;   border-left: none;  border-top: none; }
+
+.installation__qr-label {
+    display: block;
+    margin-top: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(240, 237, 232, 0.55);
+    text-align: center;
+    line-height: 1.5;
+}
