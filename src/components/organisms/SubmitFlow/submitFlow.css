@@ -410,7 +410,52 @@
     max-width: 28rem;
 }
 .success-step__return:hover { border-color: rgba(240, 237, 232, 0.9); }
+/* ── Append to submitFlow.css — in-place format switcher ────────────────── */
 
+.format-switcher {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: center;
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.format-switcher__btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.5em 0.9em;
+    background: transparent;
+    border: 1px solid rgba(240, 237, 232, 0.18);
+    color: rgba(240, 237, 232, 0.4);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.format-switcher__btn:hover {
+    color: rgba(240, 237, 232, 0.75);
+    border-color: rgba(240, 237, 232, 0.4);
+}
+
+.format-switcher__btn.is-active {
+    color: var(--primitive-green);
+    border-color: var(--primitive-green);
+}
+
+.format-switcher__icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+@media (max-width: 30em) {
+    .format-switcher__label { display: none; }
+    .format-switcher__btn { padding: 0.55em; }
+}
 @media (max-width: 48em) {
     .submit-flow__prompts { grid-template-columns: 1fr; gap: var(--space-3); }
     .prompt-card { min-height: 10rem; }

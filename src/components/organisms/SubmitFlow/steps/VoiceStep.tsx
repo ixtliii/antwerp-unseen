@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import type { Prompt, UserType } from '../submitFlow.types';
+import type { Format, Prompt, UserType } from '../submitFlow.types';
 import SubmitFooter from '../../../molecules/SubmitFooter/SubmitFooter';
+import FormatSwitcher from './FormatSwitcher';
 
 interface VoiceStepProps {
     prompt: Prompt;
@@ -11,33 +12,30 @@ interface VoiceStepProps {
     onUserTypeChange: (type: UserType) => void;
     onSubmit: () => void;
     submitting: boolean;
+    activeFormat: Format;
+    onSwitchFormat: (format: Format) => void;
 }
 
-const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSubmit, submitting }: VoiceStepProps) => {
+const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSubmit, submitting, activeFormat, onSwitchFormat }: VoiceStepProps) => {
     const rootRef = useRef<HTMLDivElement>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
     const recorderRef = useRef<MediaRecorder | null>(null);
     const chunksRef = useRef<Blob[]>([]);
-    // Tracks the object URL we own so we can revoke it on change / unmount
     const ownedUrlRef = useRef<string | null>(null);
 
     const [isRecording, setIsRecording] = useState(false);
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [audioDuration, setAudioDuration] = useState(0);
 
-    // If we're returning from the confirm step the parent file is already set but
-    // we have no local audioUrl — recreate it from the file so playback works.
     useEffect(() => {
         if (file && !audioUrl) {
             const url = URL.createObjectURL(file);
             ownedUrlRef.current = url;
             setAudioUrl(url);
         }
-        // Intentionally only on mount — ESLint disable is correct here.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Clean up any owned blob URL when the component unmounts.
     useEffect(() => {
         return () => {
             if (ownedUrlRef.current) URL.revokeObjectURL(ownedUrlRef.current);
@@ -49,7 +47,8 @@ const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSu
             const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
             tl.fromTo('.submit-flow__title', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 })
                 .fromTo('.submit-flow__prompt-echo', { opacity: 0 }, { opacity: 1, duration: 0.4 }, '-=0.3')
-                .fromTo('.voice-step__ring', { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.6)' }, '-=0.2')
+                .fromTo('.format-switcher', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, '-=0.2')
+                .fromTo('.voice-step__ring', { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.6)' }, '-=0.1')
                 .fromTo('.voice-step__record', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, '-=0.3');
 
             gsap.to('.voice-step__ring-outer', {
@@ -82,7 +81,7 @@ const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSu
                 const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
                 const url = URL.createObjectURL(blob);
                 setNewUrl(url);
-                setAudioDuration(0); // will be set by onLoadedMetadata
+                setAudioDuration(0);
                 onFileReady(new File([blob], 'voice-memo.webm', { type: 'audio/webm' }));
                 stream.getTracks().forEach((t) => t.stop());
             };
@@ -102,8 +101,6 @@ const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSu
     const handleReRecord = () => {
         setNewUrl(null);
         setAudioDuration(0);
-        // Parent `file` stays stale until a new recording completes —
-        // that's fine because the submit footer only appears when audioUrl is set.
     };
 
     const formatDuration = (secs: number) => {
@@ -116,6 +113,8 @@ const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSu
         <div className="submit-flow__screen" ref={rootRef}>
             <h1 className="submit-flow__title">ADD YOUR STORY</h1>
             <p className="submit-flow__prompt-echo">"{prompt.text}"</p>
+
+            <FormatSwitcher active={activeFormat} onSwitch={onSwitchFormat} />
 
             <div className="voice-step">
                 <div className={`voice-step__ring ${isRecording ? 'is-recording' : ''}`}>
@@ -130,21 +129,18 @@ const VoiceStep = ({ prompt, file, onFileReady, userType, onUserTypeChange, onSu
                     </div>
                 </div>
 
-                {/* Idle: no recording yet */}
                 {!audioUrl && !isRecording && (
                     <button type="button" className="voice-step__record" onClick={startRecording}>
                         START RECORDING
                     </button>
                 )}
 
-                {/* Active recording */}
                 {isRecording && (
                     <button type="button" className="voice-step__record voice-step__record--stop" onClick={stopRecording}>
                         STOP RECORDING
                     </button>
                 )}
 
-                {/* Playback after recording */}
                 {audioUrl && !isRecording && (
                     <div className="voice-step__playback">
                         {audioDuration > 0 && (
