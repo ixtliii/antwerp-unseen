@@ -46,7 +46,14 @@ const en = {
         langSwitch: 'Switch language',
         closeDetail: 'Close location detail',
     },
-} as const;
+};
 
-export type Translations = typeof en;
+// Recursively widen literal types to `string` so other language files can
+// supply their own translations while still being checked for completeness
+// (every key must exist, structure must match).
+type DeepWiden<T> = {
+    [K in keyof T]: T[K] extends string ? string : DeepWiden<T[K]>;
+};
+
+export type Translations = DeepWiden<typeof en>;
 export default en;
