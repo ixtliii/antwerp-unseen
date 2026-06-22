@@ -20,7 +20,7 @@ const NODES: NavNode[] = [
     { labelKey: 'artist', fallback: 'LOCAL ARTISTS', route: '/artists', x: -210, y: 156 },
     { labelKey: 'map', fallback: 'MAP', route: '/map', x: -110, y: 210 },
     { labelKey: 'submit', fallback: 'ADD YOUR STORY', route: '/submit', x: -180, y: 270 },
-    { labelKey: 'contact us', fallback: 'CONTACT US', route: '/contact', x: -80, y: 320 },
+    { labelKey: 'contact us', fallback: 'CONTACT US', route: '/installation', x: -80, y: 320 },
 ];
 
 interface NavBarProps {
