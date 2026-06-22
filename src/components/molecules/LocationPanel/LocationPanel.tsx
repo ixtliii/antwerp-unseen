@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import type { MapPin } from '../../../data/territory';
 import { mapsUrl } from '../../../data/territory';
-import DitherVideo from '../../atoms/DitherVideo/DitherVideo';
 import './locationPanel.css';
 
 interface LocationPanelProps {
