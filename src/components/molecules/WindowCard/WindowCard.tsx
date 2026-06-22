@@ -9,8 +9,10 @@ interface WindowCardProps {
     onSelect: () => void;
 }
 
+// isCenter is part of the public props (the carousel passes it) but isn't used
+// for rendering yet — omitted from the destructure so the build stays clean.
 const WindowCard = forwardRef<HTMLButtonElement, WindowCardProps>(
-    ({ memory, isCenter, onSelect }, ref) => (
+    ({ memory, onSelect }, ref) => (
         <button ref={ref} type="button" className="window-card" onClick={onSelect} aria-label={memory.location}>
             <span className="window-card__inner">
                 <DitherVideo

@@ -8,7 +8,7 @@ type Props = {
 };
 
 const transitionSpring = {
-    type: "spring",
+    type: "spring" as const,
     damping: 25,
     stiffness: 120,
     mass: 0.8
