@@ -17,7 +17,8 @@
     display: block;
 }
 .window-card__media { width: 100%; height: 100%; object-fit: cover; display: block; }
+.window-card__placeholder { position: absolute; inset: 0; display: block; background: var(--dark-800, #0c0d10); }
 
 @media (max-width: 48em) {
-    .window-card { width: min(70vw, 320px); height: min(56vh, 480px); }
+    .window-card { width: min(52vw, 230px); height: min(46vh, 360px); }
 }

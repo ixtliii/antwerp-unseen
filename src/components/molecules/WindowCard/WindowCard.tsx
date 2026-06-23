@@ -7,6 +7,7 @@ import './windowCard.css';
 interface WindowCardProps {
     memory: WindowMemory;
     isCenter: boolean;
+    active: boolean;
     onSelect: () => void;
 }
 

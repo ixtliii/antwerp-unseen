@@ -24,8 +24,9 @@ const WindowCarousel = ({ current, onGoTo, onOpen }: WindowCarouselProps) => {
     useEffect(() => {
         const place = () => {
             const phone = window.matchMedia('(max-width: 48em)').matches;
-            const cardW = phone ? Math.min(window.innerWidth * 0.8, 220) : 260;
-            const radius = (cardW / 2) / Math.tan((anglePer / 2) * (Math.PI / 180)) * 1.5;
+            const cardW = phone ? Math.min(window.innerWidth * 0.52, 190) : 260;
+            const spacing = phone ? 1.9 : 1.5;
+            const radius = (cardW / 2) / Math.tan((anglePer / 2) * (Math.PI / 180)) * spacing;
             radiusRef.current = radius;
             cardRefs.current.forEach((el, i) => {
                 if (!el) return;
@@ -122,15 +123,20 @@ const WindowCarousel = ({ current, onGoTo, onOpen }: WindowCarouselProps) => {
         <div className="window-carousel">
             <div className="window-carousel__viewport">
                 <div className="window-carousel__track" ref={trackRef}>
-                    {WINDOWS.map((memory, i) => (
-                        <WindowCard
-                            key={memory.slug}
-                            ref={(el) => { cardRefs.current[i] = el; }}
-                            memory={memory}
-                            isCenter={i === current}
-                            onSelect={() => {  }}
-                        />
-                    ))}
+                    {WINDOWS.map((memory, i) => {
+                        let diff = Math.abs((i - current + count) % count);
+                        diff = Math.min(diff, count - diff);
+                        return (
+                            <WindowCard
+                                key={memory.slug}
+                                ref={(el) => { cardRefs.current[i] = el; }}
+                                memory={memory}
+                                isCenter={i === current}
+                                active={diff <= 1}
+                                onSelect={() => {  }}
+                            />
+                        );
+                    })}
                 </div>
             </div>
         </div>

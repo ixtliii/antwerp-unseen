@@ -113,12 +113,35 @@ const DitherVideo = ({
 
     useEffect(() => {
         if (!mouseReactive) return;
-        const onMove = (e: MouseEvent) => {
-            mouseRef.current.tx = e.clientX / window.innerWidth;
-            mouseRef.current.ty = e.clientY / window.innerHeight;
+
+        const onMove = (e: MouseEvent | TouchEvent) => {
+            let clientX, clientY;
+
+            if ('touches' in e) {
+                if (e.touches.length > 0) {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                } else {
+                    return;
+                }
+            } else {
+                clientX = (e as MouseEvent).clientX;
+                clientY = (e as MouseEvent).clientY;
+            }
+
+            mouseRef.current.tx = clientX / window.innerWidth;
+            mouseRef.current.ty = clientY / window.innerHeight;
         };
+
         window.addEventListener('mousemove', onMove);
-        return () => window.removeEventListener('mousemove', onMove);
+        window.addEventListener('touchmove', onMove, { passive: true });
+        window.addEventListener('touchstart', onMove, { passive: true });
+
+        return () => {
+            window.removeEventListener('mousemove', onMove);
+            window.removeEventListener('touchmove', onMove);
+            window.removeEventListener('touchstart', onMove);
+        };
     }, [mouseReactive]);
 
     useEffect(() => {
@@ -175,9 +198,17 @@ const DitherVideo = ({
         const uCanvasAspect = gl.getUniformLocation(program, 'u_canvasAspect');
 
         const resize = () => {
+            const cw = canvas.clientWidth;
+            const ch = canvas.clientHeight;
+
+            if (cw === 0 || ch === 0) {
+                requestAnimationFrame(resize);
+                return;
+            }
+
             const dpr = Math.min(window.devicePixelRatio, 1.5);
-            canvas.width = canvas.clientWidth * dpr;
-            canvas.height = canvas.clientHeight * dpr;
+            canvas.width = cw * dpr;
+            canvas.height = ch * dpr;
             gl.viewport(0, 0, canvas.width, canvas.height);
         };
 
@@ -205,7 +236,7 @@ const DitherVideo = ({
 
                 const responsivePixel = phone ? pixelSize * 0.5 : pixelSize * dpr;
                 const responsiveIntensity = phone ? intensity * 0.15 : intensity;
-                const responsiveMouseReactive = (mouseReactive && !phone) ? 1.0 : 0.0;
+                const responsiveMouseReactive = phone ? (mouseReactive ? 0.4 : 0.0) : (mouseReactive ? 1.0 : 0.0);
 
                 const videoAspect = (video.videoWidth / video.videoHeight) || 1;
                 const canvasAspect = (canvas.width / canvas.height) || 1;

@@ -26,7 +26,7 @@
 .window-page__arrow:hover { opacity: 1; }
 
 @media (max-width: 48em) {
-    .window-page__prompt { top: 4.5rem; font-size: clamp(0.72rem, 3.5vw, 0.95rem); width: 90%; }
+    .window-page__prompt { top: clamp(7rem, 16vh, 10rem); font-size: clamp(1rem, 4.5vw, 1.3rem); width: 88%; }
     .window-page__arrow { font-size: var(--font-size-12); letter-spacing: 0.12em; }
     .window-page__arrows { bottom: 1.2rem; padding: 0 1.2rem; }
 }
