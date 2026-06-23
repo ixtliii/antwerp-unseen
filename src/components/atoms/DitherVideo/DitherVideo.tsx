@@ -205,6 +205,7 @@ const DitherVideo = ({
 
                 const responsivePixel = phone ? pixelSize * 0.5 : pixelSize * dpr;
                 const responsiveIntensity = phone ? intensity * 0.15 : intensity;
+                const responsiveMouseReactive = (mouseReactive && !phone) ? 1.0 : 0.0;
 
                 const videoAspect = (video.videoWidth / video.videoHeight) || 1;
                 const canvasAspect = (canvas.width / canvas.height) || 1;
@@ -217,7 +218,7 @@ const DitherVideo = ({
                 gl.uniform1f(uPixelSize, responsivePixel);
                 gl.uniform1f(uIntensity, responsiveIntensity);
                 gl.uniform1f(uCutout, cutout ? 1.0 : 0.0);
-                gl.uniform1f(uMouseReactive, mouseReactive ? 1.0 : 0.0);
+                gl.uniform1f(uMouseReactive, responsiveMouseReactive);
                 gl.uniform1f(uTime, t);
                 gl.uniform1f(uVideoAspect, videoAspect);
                 gl.uniform1f(uCanvasAspect, canvasAspect);
