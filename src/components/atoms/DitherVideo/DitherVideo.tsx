@@ -50,7 +50,6 @@ const fragmentShader = `
         return (v + 0.5) / 16.0;
     }
 
-    // remap uv so the video covers the canvas without stretching (object-fit: cover)
     vec2 coverUv(vec2 uv) {
         vec2 c = uv - 0.5;
         if (u_canvasAspect > u_videoAspect) {
@@ -175,27 +174,13 @@ const DitherVideo = ({
         const uVideoAspect = gl.getUniformLocation(program, 'u_videoAspect');
         const uCanvasAspect = gl.getUniformLocation(program, 'u_canvasAspect');
 
-        const isPhone = () =>
-            window.matchMedia('(hover: none) and (pointer: coarse)').matches &&
-            window.innerWidth <= 820;
-
         const resize = () => {
             const dpr = Math.min(window.devicePixelRatio, 1.5);
-            if (isPhone()) {
-                // On real phones the high DPR inflates the backing-store resolution,
-                // which makes the dither far denser than on desktop / DevTools.
-                // Cap the backing width so dot density stays low and readable,
-                // independent of the device's actual pixel ratio.
-                const targetW = Math.min(canvas.clientWidth, 480);
-                const ratio = canvas.clientHeight / Math.max(canvas.clientWidth, 1);
-                canvas.width = targetW;
-                canvas.height = Math.round(targetW * ratio);
-            } else {
-                canvas.width = canvas.clientWidth * dpr;
-                canvas.height = canvas.clientHeight * dpr;
-            }
+            canvas.width = canvas.clientWidth * dpr;
+            canvas.height = canvas.clientHeight * dpr;
             gl.viewport(0, 0, canvas.width, canvas.height);
         };
+
         resize();
         window.addEventListener('resize', resize);
 
@@ -218,11 +203,8 @@ const DitherVideo = ({
                     window.matchMedia('(hover: none) and (pointer: coarse)').matches &&
                     window.innerWidth <= 820;
 
-                // On phones the canvas backing store is capped low (see resize),
-                // so dots are already large relative to it — don't multiply by DPR,
-                // and drop the intensity so the whole effect reads as a faint texture.
-                const responsivePixel = phone ? pixelSize : pixelSize * dpr;
-                const responsiveIntensity = phone ? intensity * 0.5 : intensity;
+                const responsivePixel = phone ? pixelSize * 0.5 : pixelSize * dpr;
+                const responsiveIntensity = phone ? intensity * 0.15 : intensity;
 
                 const videoAspect = (video.videoWidth / video.videoHeight) || 1;
                 const canvasAspect = (canvas.width / canvas.height) || 1;
