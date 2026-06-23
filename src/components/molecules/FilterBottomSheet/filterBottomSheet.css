@@ -101,8 +101,8 @@
     transition: color 0.2s;
 }
 
-.filter-sheet__all:hover,
-.filter-sheet__all.is-active { color: var(--primitive-white); }
+.filter-sheet__all:hover { color: rgba(240, 237, 232, 0.7); }
+.filter-sheet__all.is-active { color: var(--primitive-green, #00e676); }
 
 .filter-sheet__count {
     font-size: 0.68rem;
@@ -130,11 +130,14 @@
     margin-bottom: 0.25rem;
 }
 
+/* Category labels are non-interactive HEADINGS — dimmed so they don't read
+   as selected filters. (This was the bug: they were full white.) */
 .filter-sheet__cat-label {
     font-family: var(--font-mono);
-    font-size: 0.82rem;
-    color: var(--primitive-white);
-    letter-spacing: 0.03em;
+    font-size: 0.7rem;
+    color: rgba(240, 237, 232, 0.4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
 .filter-sheet__items {
@@ -145,6 +148,9 @@
 }
 
 .filter-sheet__item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -157,8 +163,25 @@
     transition: color 0.2s;
 }
 
-.filter-sheet__item:hover      { color: rgba(240, 237, 232, 0.65); }
-.filter-sheet__item.is-active  { color: var(--primitive-white); }
+.filter-sheet__item:hover { color: rgba(240, 237, 232, 0.65); }
+
+/* Active item: green text + small filled green square before the label */
+.filter-sheet__item.is-active { color: var(--primitive-green, #00e676); }
+
+.filter-sheet__item::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.filter-sheet__item.is-active::before {
+    background: var(--primitive-green, #00e676);
+    border-color: var(--primitive-green, #00e676);
+}
 
 /* Action buttons */
 .filter-sheet__actions {
