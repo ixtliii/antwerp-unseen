@@ -4,7 +4,7 @@ const en = {
         archive:      'Archive',
         artists: "Artists",
         installation: 'Installation',
-        submit:       'Share',
+        submit:       'Add your story',
     },
     hero: {
         eyebrow:  'The Living Archive',

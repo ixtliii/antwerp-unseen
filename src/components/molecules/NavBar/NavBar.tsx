@@ -106,7 +106,6 @@ const NavBar = ({ light = false }: NavBarProps) => {
         triggerPageTransition(() => navigate(route));
     };
 
-    // Logo → the menu page (ConstellationNav), bypassing the home loading screen.
     const handleLogoClick = () => {
         setOpen(false);
         triggerPageTransition(() => navigate('/constellation'));
