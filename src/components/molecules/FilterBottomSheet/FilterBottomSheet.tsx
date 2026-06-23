@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import type { FilterCategory } from '../FilterMenu/FilterMenu';
 import './filterBottomSheet.css';
@@ -21,15 +21,18 @@ const FilterBottomSheet = ({
     const [open, setOpen] = useState(false);
     const sheetRef = useRef<HTMLDivElement>(null);
 
-    const openSheet = () => {
-        setOpen(true);
-        if (sheetRef.current) {
+    useEffect(() => {
+        if (open && sheetRef.current) {
             gsap.fromTo(
                 sheetRef.current,
                 { y: '100%' },
                 { y: '0%', duration: 0.45, ease: 'expo.out' }
             );
         }
+    }, [open]);
+
+    const openSheet = () => {
+        setOpen(true);
     };
 
     const closeSheet = () => {
@@ -59,15 +62,12 @@ const FilterBottomSheet = ({
 
     return (
         <>
-            {/* Backdrop */}
             {open && (
                 <div className="filter-sheet__backdrop" onClick={closeSheet} />
             )}
 
-            {/* Bottom sheet panel */}
             {open && (
                 <div className="filter-sheet" ref={sheetRef}>
-                    {/* Handle + header */}
                     <div className="filter-sheet__header" onClick={closeSheet}>
                         <span className="filter-sheet__handle" aria-hidden />
                         <div className="filter-sheet__title">
@@ -84,7 +84,6 @@ const FilterBottomSheet = ({
                     </div>
 
                     <div className="filter-sheet__body">
-                        {/* All */}
                         <button
                             type="button"
                             className={`filter-sheet__all ${activeFilter === 'all' ? 'is-active' : ''}`}
@@ -96,7 +95,6 @@ const FilterBottomSheet = ({
                             </span>
                         </button>
 
-                        {/* 2-column category grid */}
                         <div className="filter-sheet__grid">
                             {categories.map(cat => (
                                 <div key={cat.id} className="filter-sheet__group">
@@ -120,7 +118,6 @@ const FilterBottomSheet = ({
                             ))}
                         </div>
 
-                        {/* Actions */}
                         <div className="filter-sheet__actions">
                             <button
                                 type="button"
@@ -142,7 +139,6 @@ const FilterBottomSheet = ({
                 </div>
             )}
 
-            {/* Trigger tab — always visible at bottom */}
             {!open && (
                 <button className="filter-sheet__trigger" onClick={openSheet} type="button">
                     <div className="filter-sheet__trigger-inner">
