@@ -4,7 +4,11 @@ export interface Tag {
     name: string;
     count: number;
 }
-
+declare global {
+    interface Window {
+        webkitAudioContext: typeof AudioContext;
+    }
+}
 export interface Contribution {
     id: string;                          // uuid from Supabase
     type: 'photo' | 'text' | 'voice';
