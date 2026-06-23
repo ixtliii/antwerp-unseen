@@ -24,17 +24,8 @@ import ContributionCard from '../../molecules/ContributionCard/ContributionCard'
 import InstallationQR from '../../molecules/InstallationQR/InstallationQR';
 import SettingsPanel from '../../molecules/SettingsPanel/SettingsPanel';
 
-// QR exclusion zone (percent coords) — keep floating cards out of this box so
-// they never drift over the QR at bottom-centre.
-const QR_ZONE = { xMin: 32, xMax: 68, yMin: 74, yMax: 105 };
-
-const avoidQrZone = (x: number, y: number, vyBias: number): { x: number; y: number } => {
-    if (x > QR_ZONE.xMin && x < QR_ZONE.xMax && y > QR_ZONE.yMin && y < QR_ZONE.yMax) {
-        // push it upward out of the zone
-        return { x, y: QR_ZONE.yMin - 2 + vyBias };
-    }
-    return { x, y };
-};
+// QR sits bottom-centre; the floating cards are constrained to a safe upper-left
+// zone (see X_MAX/Y_MAX in the animation) so they never reach it.
 
 const Installation = () => {
     // --- Resolve location + prompt from URL ---
@@ -124,10 +115,10 @@ const Installation = () => {
         const items: FloatingItem[] = contributions.map((c) => ({
             id: c.id,
             contribution: c,
-            x: -5 + Math.random() * 105,
-            y: -5 + Math.random() * 75,           // start above the QR zone
-            vx: 0.0011 + Math.random() * 0.0007,  // slower drift
-            vy: -0.0003 + (Math.random() - 0.5) * 0.0005,
+            x: 8 + Math.random() * 62,            // safe inner zone, never near edges
+            y: 8 + Math.random() * 46,            // upper area, above the QR
+            vx: (Math.random() < 0.5 ? -1 : 1) * (0.0006 + Math.random() * 0.0005),
+            vy: (Math.random() < 0.5 ? -1 : 1) * (0.0004 + Math.random() * 0.0004),
             opacity: 0,
             phaseOffset: Math.random() * Math.PI * 2,
             highlighted: c.id === HIGHLIGHTED_ID,
@@ -157,22 +148,30 @@ const Installation = () => {
         });
 
         let last = performance.now();
+
+        // safe bounds (percent) — cards span the width but stay in the upper
+        // area, clear of the QR at bottom-centre. X_MAX accounts for card width
+        // so right-side cards never clip off-screen.
+        const X_MIN = 4, X_MAX = 74, Y_MIN = 6, Y_MAX = 58;
+
         const animate = (now: number) => {
             const dt = Math.min(now - last, 32);
             last = now;
             const t = now / 1000;
 
             floatingRef.current = floatingRef.current.map(fi => {
-                let { x, y } = fi;
-                const wave = Math.sin(t * 0.2 + fi.phaseOffset) * 0.0007;
-                x += fi.vx * dt;
-                y += (fi.vy + wave) * dt;
-                if (x > 112) x -= 122;
-                if (x < -12) x += 122;
-                if (y > 108) y -= 118;
-                if (y < -8)  y += 118;
-                ({ x, y } = avoidQrZone(x, y, fi.vy * dt));
-                return { ...fi, x, y };
+                let { x, y, vx, vy } = fi;
+                const wave = Math.sin(t * 0.15 + fi.phaseOffset) * 0.0003;
+                x += vx * dt;
+                y += (vy + wave) * dt;
+
+                // gentle bounce off the safe bounds (no teleport, no squish)
+                if (x < X_MIN) { x = X_MIN; vx = Math.abs(vx); }
+                if (x > X_MAX) { x = X_MAX; vx = -Math.abs(vx); }
+                if (y < Y_MIN) { y = Y_MIN; vy = Math.abs(vy); }
+                if (y > Y_MAX) { y = Y_MAX; vy = -Math.abs(vy); }
+
+                return { ...fi, x, y, vx, vy };
             });
 
             setFloatingItems([...floatingRef.current]);

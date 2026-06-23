@@ -181,6 +181,8 @@
     color: rgba(255, 255, 255, 0.45);
     margin: 0;
     font-style: italic;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .contribution__author {
@@ -230,6 +232,8 @@
     color: rgba(255, 255, 255, 0.88);
     margin: 0;
     font-style: italic;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .contribution__featured-author {
@@ -455,7 +459,7 @@
 .contribution__card--photo {
     background: rgba(8, 8, 8, 0.62);
 }
-@media (min-aspect-ratio: 9/16) and (min-width: 600px) and (orientation: portrait) {
+@media (orientation: portrait) and (max-width: 500px) {
     .installation {
         background: var(--color-bg-canvas, #1d1e20);
     }
