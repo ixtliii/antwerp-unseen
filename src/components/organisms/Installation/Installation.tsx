@@ -88,7 +88,8 @@ const Installation = () => {
 
     useEffect(() => {
         let cancelled = false;
-        (async () => {
+
+        const fetchContributions = async () => {
             const { data, error } = await supabase
                 .from('submissions')
                 .select('*')
@@ -102,10 +103,26 @@ const Installation = () => {
                 .filter((c): c is Contribution => c !== null);
 
             if (mapped.length > 0) setContributions(mapped);
-        })();
-        return () => { cancelled = true; };
-    }, []);
+        };
 
+        fetchContributions();
+
+        const subscription = supabase
+            .channel('submissions_changes')
+            .on(
+                'postgres_changes',
+                { event: 'INSERT', schema: 'public', table: 'submissions' },
+                () => {
+                    fetchContributions();
+                }
+            )
+            .subscribe();
+
+        return () => {
+            cancelled = true;
+            supabase.removeChannel(subscription);
+        };
+    }, []);
     // --- Floating contributions ---
     const [floatingItems, setFloatingItems] = useState<FloatingItem[]>([]);
     const floatingRef = useRef<FloatingItem[]>([]);
