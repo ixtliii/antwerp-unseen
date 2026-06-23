@@ -1,7 +1,7 @@
 .ambient-toggle {
     position: fixed;
-    bottom: var(--spacing-space-6);
-    right: var(--spacing-space-6);
+    top: clamp(5rem, 10vh, 6.5rem);
+    right: clamp(1.25rem, 4vw, 3rem);
     z-index: 9000;
     background: none;
     border: none;
