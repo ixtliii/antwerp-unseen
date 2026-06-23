@@ -177,7 +177,7 @@ const Archive = ({ submissions, activeId, onActiveChange, onOpenDetail }: SceneP
             if (!isDragging.current) return;
             const dx = e.clientX - lastX.current;
             const dy = e.clientY - lastY.current;
-            const delta = (dx + dy) * 0.012;
+            const delta = (dx + dy) * 0.20;
             lastX.current = e.clientX;
             lastY.current = e.clientY;
             const clamped = Math.max(0, Math.min(offsetRef.current - delta, getTotal()));
