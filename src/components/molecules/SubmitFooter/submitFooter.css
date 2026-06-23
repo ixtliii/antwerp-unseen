@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: var(--space-4);
+    gap: var(--spacing-space-4);
 }
 .submit-footer--full {
     flex-direction: column;
@@ -14,47 +14,47 @@
 .submit-footer__user-type {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--spacing-space-3);
     flex-wrap: wrap;
 }
 .submit-footer__user-label {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-12);
     letter-spacing: 0.1em;
-    color: rgba(240, 237, 232, 0.8);
+    color: var(--color-text-secondary);
 }
 
 .submit-footer__type-btn {
     background: transparent;
-    border: 1.5px solid rgba(240, 237, 232, 0.6);
-    color: var(--primitive-white, #f0ede8);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
+    border: 1.5px solid var(--color-text-secondary);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: var(--font-size-12);
     letter-spacing: 0.1em;
-    padding: var(--space-2) var(--space-5);
+    padding: var(--spacing-space-2) var(--spacing-space-5);
     cursor: pointer;
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 .submit-footer__type-btn.is-active {
-    background: #5aff6e;
-    border-color: #5aff6e;
-    color: #000;
+    background: var(--color-bg-accent);
+    border-color: var(--color-bg-accent);
+    color: var(--color-bg-black);
 }
 
 .submit-footer__submit {
-    background: var(--bg-dark, #080808);
-    border: 1.5px solid rgba(240, 237, 232, 0.6);
-    color: var(--primitive-white, #f0ede8);
+    background: var(--color-bg-canvas);
+    border: 1.5px solid var(--color-text-secondary);
+    color: var(--color-text-primary);
     font-family: var(--font-display);
-    font-size: 1rem;
+    font-size: var(--font-size-16);
     letter-spacing: 0.1em;
-    padding: var(--space-4) clamp(2rem, 5vw, 4rem);
+    padding: var(--spacing-space-4) clamp(2rem, 5vw, 4rem);
     cursor: pointer;
     transition: background 0.2s ease, border-color 0.2s ease;
 }
 .submit-footer__submit:hover:not(:disabled) {
-    background: rgba(240, 237, 232, 0.1);
-    border-color: rgba(240, 237, 232, 0.9);
+    background: rgba(219, 227, 238, 0.1);
+    border-color: rgba(219, 227, 238, 0.9);
 }
 .submit-footer__submit:disabled { opacity: 0.4; cursor: not-allowed; }
 .submit-footer__submit--full { width: 100%; }

@@ -2,12 +2,12 @@
     position: fixed;
     inset: 0;
     z-index: 290;
-    background: rgba(8, 8, 8, 0);
+    background: rgba(29, 30, 32, 0);
     pointer-events: none;
     transition: background 0.5s ease;
 }
 .navbar__backdrop--visible {
-    background: rgba(8, 8, 8, 0.85);
+    background: rgba(29, 30, 32, 0.85);
     pointer-events: auto;
 }
 .navbar {
@@ -29,9 +29,6 @@ body.is-immersive .navbar {
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
-/* ── Replace the existing .navbar__logo block in navBar.css with this ───────── */
-/* The logo is now an <img>, so the text-specific font rules are gone and we    */
-/* size the SVG instead. Keep this block; delete the old font-based one.        */
 
 .navbar__logo {
     pointer-events: auto;
@@ -68,16 +65,16 @@ body.is-immersive .navbar {
     border: none;
     cursor: pointer;
     padding: 0;
-    font-family: var(--font-mono, 'DM Mono', monospace);
-    font-size: 0.6rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-10);
     letter-spacing: 0.18em;
 }
-.navbar__lang-opt { color: rgba(240,237,232,0.3); transition: color 0.2s; }
-.navbar__lang-opt--active { color: rgba(240,237,232,0.9); }
-.navbar__lang-sep { color: rgba(240,237,232,0.2); }
-.navbar--light .navbar__lang-opt { color: rgba(17,16,16,0.3); }
-.navbar--light .navbar__lang-opt--active { color: var(--text-light, #111010); }
-.navbar--light .navbar__lang-sep { color: rgba(17,16,16,0.2); }
+.navbar__lang-opt { color: rgba(219, 227, 238, 0.3); transition: color 0.2s; }
+.navbar__lang-opt--active { color: rgba(219, 227, 238, 0.9); }
+.navbar__lang-sep { color: rgba(219, 227, 238, 0.2); }
+.navbar--light .navbar__lang-opt { color: rgba(33, 37, 43, 0.3); }
+.navbar--light .navbar__lang-opt--active { color: var(--text-light); }
+.navbar--light .navbar__lang-sep { color: rgba(33, 37, 43, 0.2); }
 .navbar__system {
     position: relative;
     width: 44px;
@@ -90,8 +87,8 @@ body.is-immersive .navbar {
     right: 0;
     width: 44px;
     height: 44px;
-    background-color: var(--primitive-white, #f0ede8);
-    border: 1px solid var(--primitive-white, #f0ede8);
+    background-color: var(--color-text-primary);
+    border: 1px solid var(--color-text-primary);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -105,14 +102,14 @@ body.is-immersive .navbar {
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 .navbar__trigger:hover {
-    background-color: #fff;
-    border-color: #fff;
+    background-color: var(--primary-white);
+    border-color: var(--primary-white);
 }
 .navbar__trigger-line {
     display: block;
     width: 22px;
     height: 2px;
-    background-color: var(--bg-dark, #040404);
+    background-color: var(--color-bg-canvas);
     transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 }
 .navbar__trigger--active .navbar__trigger-line:nth-child(1) {
@@ -125,11 +122,11 @@ body.is-immersive .navbar {
     transform: translateY(-7px) rotate(-45deg);
 }
 .navbar--light .navbar__trigger {
-    background-color: var(--text-light, #111010);
-    border-color: var(--text-light, #111010);
+    background-color: var(--text-light);
+    border-color: var(--text-light);
 }
 .navbar--light .navbar__trigger-line {
-    background-color: var(--primitive-white, #f0ede8);
+    background-color: var(--color-text-primary);
 }
 .navbar__node {
     position: absolute;
@@ -149,19 +146,19 @@ body.is-immersive .navbar {
     z-index: 5;
 }
 .navbar__node-index {
-    font-family: var(--font-mono, 'DM Mono', monospace);
-    font-size: 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-9);
     letter-spacing: 0.1em;
-    color: rgba(240,237,232,0.4);
+    color: rgba(219, 227, 238, 0.4);
     transition: color 0.3s ease;
 }
 .navbar__node-text {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.85rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-14);
     line-height: 1;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--primitive-white, #f0ede8);
+    color: var(--color-text-primary);
     position: relative;
     transition: opacity 0.3s ease, color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     white-space: nowrap;
@@ -180,11 +177,11 @@ body.is-immersive .navbar {
     will-change: transform;
 }
 .navbar__node:hover .navbar__node-text {
-    color: #fff;
+    color: var(--primary-white);
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 .navbar__node:hover .navbar__node-text::after { transform: scaleX(1); }
-.navbar__node:hover .navbar__node-index { color: rgba(240,237,232,0.9); }
+.navbar__node:hover .navbar__node-index { color: rgba(219, 227, 238, 0.9); }
 @media (max-width: 40em) {
-    .navbar__node-text { font-size: 0.75rem; }
+    .navbar__node-text { font-size: var(--font-size-12); }
 }

@@ -1,28 +1,30 @@
 .newsletter-field {
     position: relative;
-    max-width: 640px;
+    max-width: 660px;
     display: flex;
     align-items: center;
     gap: 1rem;
-    border-bottom: 1px solid var(--primitive-green, #02d77b);
-    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--color-text-accent);
+    padding-bottom: 0.4rem;
 }
 .newsletter-field__input {
     flex: 1;
     background: none;
     border: none;
     outline: none;
-    color: var(--primitive-white, #f0ede8);
-    font-family: var(--font-mono);
-    font-size: 0.95rem;
-    letter-spacing: 0.12em;
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: var(--font-size-20);
+    letter-spacing: 0.02em;
     text-transform: uppercase;
 }
-.newsletter-field__input::placeholder { color: #888; }
+.newsletter-field__input::placeholder { color: var(--color-text-primary); }
 .newsletter-field__btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--primitive-white, #f0ede8);
-    font-size: 1.15rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-20);
     transition: transform 0.3s ease;
 }
 .newsletter-field__btn:hover { transform: translate(3px, -3px); }

@@ -1,198 +1,207 @@
-/* ============================================================
-   ANTWERP UNSEEN — Design Tokens
-   Structure: Primitives → Typography → Semantics
-   Auto-generated from Figma Variables
-   ============================================================ */
+/* ============================================================================
+   tokens.css — Antwerp Unseen design system
+   Mirrors the Figma token architecture:
+     1. PRIMITIVES  — raw values (colour ramps, spacing, type scale)
+     2. SEMANTICS   — meaning-based aliases that components should use
+     3. TYPOGRAPHY  — font families + named text styles
+     4. BRIDGE      — legacy variable names mapped onto the new system so
+                      existing components keep working during migration
+   ============================================================================ */
 
-/* ------------------------------------------------------------
-   PRIMITIVES — Colors
-   ------------------------------------------------------------ */
 :root {
-    /* primary */
-    --primitive-black:          #000000;
-    --primitive-black-50:       rgba(0, 0, 0, 0.5);
-    --primitive-white:          #FFFFFF;
-    --primitive-white-50:       rgba(255, 255, 255, 0.5);
 
-    /* brand */
-    --primitive-brand-100:      #EDF1F7;
-    --primitive-brand-200:      #DBE3EE;
-    --primitive-brand-300:      #C8D4E6;
-    --primitive-brand-400:      #B6C6DD;
-    --primitive-brand-500:      #A4B8D5;
-    --primitive-brand-600:      #8393AA;
-    --primitive-brand-700:      #626E80;
-    --primitive-brand-800:      #424A55;
-    --primitive-brand-900:      #21252B;
+    /* ── 1. PRIMITIVES ──────────────────────────────────────────────────── */
+
+    /* primary */
+    --primary-black:        #000000;
+    --primary-black-50:     #00000080;
+    --primary-white:        #ffffff;
+    --primary-white-50:     #ffffff80;
+    --primary-accent:       #02d77b;
+
+    /* brand (blue-grey) */
+    --brand-100: #edf1f7;
+    --brand-200: #dbe3ee;
+    --brand-300: #c8d4e6;
+    --brand-400: #b6c6dd;
+    --brand-500: #a4b8d5;
+    --brand-600: #8393aa;
+    --brand-700: #626e80;
+    --brand-800: #424a55;
+    --brand-900: #21252b;
 
     /* neutral */
-    --primitive-neutral-100:    #E9EAEC;
-    --primitive-neutral-200:    #D4D5DA;
-    --primitive-neutral-300:    #BEC1C7;
-    --primitive-neutral-400:    #A9ACB5;
-    --primitive-neutral-500:    #9397A2;
-    --primitive-neutral-600:    #767982;
-    --primitive-neutral-700:    #585B61;
-    --primitive-neutral-800:    #3B3C41;
-    --primitive-neutral-900:    #1D1E20;
+    --neutral-100: #e9eaec;
+    --neutral-200: #d4d5da;
+    --neutral-300: #bec1c7;
+    --neutral-400: #a9acb5;
+    --neutral-500: #9397a2;
+    --neutral-600: #767982;
+    --neutral-700: #585b61;
+    --neutral-800: #3b3c41;
+    --neutral-900: #0f0f10;
 
     /* grey */
-    --primitive-grey-100:       #FAFAFB;
-    --primitive-grey-200:       #F4F5F7;
-    --primitive-grey-300:       #EFF1F3;
-    --primitive-grey-400:       #E9ECEF;
-    --primitive-grey-500:       #E4E7EB;
-    --primitive-grey-600:       #B6B9BC;
-    --primitive-grey-700:       #898B8D;
-    --primitive-grey-800:       #5B5C5E;
-    --primitive-grey-900:       #2E2E2F;
+    --grey-100: #fafafb;
+    --grey-200: #f4f5f7;
+    --grey-300: #eff1f3;
+    --grey-400: #e9ecef;
+    --grey-500: #e4e7eb;
+    --grey-600: #b6b9bc;
+    --grey-700: #898b8d;
+    --grey-800: #5b5c5e;
+    --grey-900: #2e2e2f;
 
     /* dark */
-    --primitive-dark-100:       #D8D9DC;
-    --primitive-dark-200:       #B2B3B8;
-    --primitive-dark-300:       #8B8D95;
-    --primitive-dark-400:       #656771;
-    --primitive-dark-500:       #3E414E;
-    --primitive-dark-600:       #32343E;
-    --primitive-dark-700:       #25272F;
-    --primitive-dark-800:       #191A1F;
-    --primitive-dark-900:       #0C0D10;
+    --dark-100: #d8d9dc;
+    --dark-200: #b2b3b8;
+    --dark-300: #8b8d95;
+    --dark-400: #656771;
+    --dark-500: #3e414e;
+    --dark-600: #32343e;
+    --dark-700: #25272f;
+    --dark-800: #191a1f;
+    --dark-900: #0c0d10;
 
-    /* orange */
-    --primitive-orange-100:     #F7E3D2;
-    --primitive-orange-200:     #EFC8A5;
-    --primitive-orange-300:     #E8AC78;
-    --primitive-orange-400:     #E0914B;
-    --primitive-orange-500:     #D8751E;
-    --primitive-orange-600:     #AD5E18;
-    --primitive-orange-700:     #824612;
-    --primitive-orange-800:     #562F0C;
-    --primitive-orange-900:     #2B1706;
+    /* orange (secondary accent) */
+    --orange-100: #f7e3d2;
+    --orange-200: #efc8a5;
+    --orange-300: #e8ac78;
+    --orange-400: #e0914b;
+    --orange-500: #d8751e;
+    --orange-600: #ad5e18;
+    --orange-700: #824612;
+    --orange-800: #562f0c;
+    --orange-900: #2b1706;
 
     /* red */
-    --primitive-red-100:        #F3DBDB;
-    --primitive-red-200:        #E7B7B7;
-    --primitive-red-300:        #DB9494;
-    --primitive-red-400:        #CF7070;
-    --primitive-red-500:        #C34C4C;
-    --primitive-red-600:        #9C3D3D;
-    --primitive-red-700:        #752E2E;
-    --primitive-red-800:        #4E1E1E;
-    --primitive-red-900:        #270F0F;
+    --red-100: #f3dbdb;
+    --red-200: #e7b7b7;
+    --red-300: #db9494;
+    --red-400: #cf7070;
+    --red-500: #c34c4c;
+    --red-600: #9c3d3d;
+    --red-700: #752e2e;
+    --red-800: #4e1e1e;
+    --red-900: #270f0f;
 
     /* green */
-    --primitive-green-100:      #E2F3E1;
-    --primitive-green-200:      #C5E8C3;
-    --primitive-green-300:      #A7DCA4;
-    --primitive-green-400:      #8AD186;
-    --primitive-green-500:      #6DC568;
-    --primitive-green-600:      #579E53;
-    --primitive-green-700:      #41763E;
-    --primitive-green-800:      #2C4F2A;
-    --primitive-green-900:      #162715;
-}
+    --green-100: #e2f3e1;
+    --green-200: #c5e8c3;
+    --green-300: #a7dca4;
+    --green-400: #8ad186;
+    --green-500: #6dc568;
+    --green-600: #579e53;
+    --green-700: #41763e;
+    --green-800: #2c4f2a;
+    --green-900: #162715;
 
-/* ------------------------------------------------------------
-   PRIMITIVES — Spacing
-   ------------------------------------------------------------ */
-:root {
-    --space-1:  4px;
-    --space-2:  8px;
-    --space-3:  12px;
-    --space-4:  16px;
-    --space-5:  20px;
-    --space-6:  24px;
-    --space-7:  36px;
-    --space-8:  48px;
-}
-@font-face {
-    font-family: 'ArbanePixel';
-    src: url('/fonts/ArbanePixel-Regular_demo.otf') format('opentype');
-    font-display: swap;
-}
-/* ------------------------------------------------------------
-   TYPOGRAPHY
-   ------------------------------------------------------------ */
-:root {
-    /* font family */
-    --font-satoshi:         'Satoshi Variable', sans-serif;
-    /* kept from project brief */
-    --font-display:         'Bebas Neue', sans-serif;
-    --font-mono:            'DM Mono', monospace;
+    /* spacing scale (rem; values are the design-system px ÷ 16) */
+    --spacing-space-1: 0.25rem;   /* 4px  */
+    --spacing-space-2: 0.5rem;    /* 8px  */
+    --spacing-space-3: 0.75rem;   /* 12px */
+    --spacing-space-4: 1rem;      /* 16px */
+    --spacing-space-5: 1.25rem;   /* 20px */
+    --spacing-space-6: 1.5rem;    /* 24px */
+    --spacing-space-7: 2.25rem;   /* 36px */
+    --spacing-space-8: 3rem;      /* 48px */
 
-    /* font size (px — use rem in practice: value / 16) */
-    --font-size-14:         0.875rem;   /* 14px */
-    --font-size-16:         1rem;       /* 16px */
-    --font-size-24:         1.5rem;     /* 24px */
-    --font-size-32:         2rem;       /* 32px */
-    --font-size-36:         2.25rem;    /* 36px */
-    --font-size-40:         2.5rem;     /* 40px */
-    --font-size-48:         3rem;       /* 48px */
-    --font-size-64:         4rem;       /* 64px */
-    --font-size-96:         6rem;       /* 96px */
+    /* type scale (rem; design-system sizes ÷ 16, plus UI micro-sizes marked *) */
+    --font-size-9:  0.5625rem;  /* 9px  * UI micro (not in Figma, added for UI density) */
+    --font-size-10: 0.625rem;   /* 10px * UI micro */
+    --font-size-11: 0.6875rem;  /* 11px * UI micro */
+    --font-size-12: 0.75rem;    /* 12px * UI micro */
+    --font-size-13: 0.8125rem;  /* 13px * UI micro */
+    --font-size-14: 0.875rem;   /* 14px   Figma */
+    --font-size-16: 1rem;       /* 16px   Figma */
+    --font-size-18: 1.125rem;   /* 18px * UI (between Figma 16 and 20) */
+    --font-size-20: 1.25rem;    /* 20px   Figma */
+    --font-size-24: 1.5rem;     /* 24px   Figma */
+    --font-size-32: 2rem;       /* 32px   Figma */
+    --font-size-36: 2.25rem;    /* 36px   Figma */
+    --font-size-40: 2.5rem;     /* 40px   Figma */
+    --font-size-48: 3rem;       /* 48px   Figma */
+    --font-size-64: 4rem;       /* 64px   Figma */
+    --font-size-96: 6rem;       /* 96px   Figma */
 
-    /* font weight */
-    --font-weight-light:    300;
-    --font-weight-regular:  400;
-    --font-weight-medium:   500;
-    --font-weight-bold:     700;
+    /* font weights — mapped to the actual static font files in public/fonts.
+       (The Figma system expresses these as variable-font axis numbers
+       450/550/650/750; since you have static weight files, these map to the
+       conventional CSS weights the @font-face rules declare.) */
+    --font-weight-light:   350;
+    --font-weight-regular: 400;
+    --font-weight-medium:  500;
+    --font-weight-bold:    700;
 
-    /* letter spacing */
-    --letter-spacing-0:     0;
+    --font-weight-display: 700;
 
-    /* line height */
-    --line-height-140:      1.4;
-}
 
-/* ------------------------------------------------------------
-   SEMANTICS — resolved aliases
-   ------------------------------------------------------------ */
-:root {
-    /* background */
-    --color-bg-canvas:          var(--primitive-neutral-100);   /* neutral/100  → #E9EAEC */
-    --color-bg-surface:         var(--primitive-brand-100);     /* brand/100    → #EDF1F7 */
-    --color-bg-brand:           var(--primitive-brand-500);     /* brand/500    → #A4B8D5 */
-    --color-bg-brand-hover:     var(--primitive-brand-600);     /* brand/600    → #8393AA */
-    --color-bg-success:         var(--primitive-green-100);     /* green/100    → #E2F3E1 */
-    --color-bg-error:           var(--primitive-red-100);       /* red/100      → #F3DBDB */
+    /* ── 2. SEMANTICS ───────────────────────────────────────────────────── */
+    /* Components should reference THESE, not the primitives above. */
+
+    /* backgrounds */
+    --color-bg-canvas:              var(--neutral-900);   /* #1d1e20 main bg */
+    --color-bg-surface:             var(--brand-100);     /* #edf1f7 light surface */
+    --color-bg-brand:               var(--grey-400);
+    --color-bg-brand-hover:         var(--brand-600);
+    --color-bg-success:             var(--green-100);
+    --color-bg-error:               var(--red-100);
+    --color-bg-black:               var(--primary-black);
+    --color-bg-white:               var(--primary-white);
+    --color-bg-btn:                 var(--dark-900);      /* #0c0d10 button bg */
+    --color-bg-accent:              var(--primary-accent);
+    --color-bg-accent-second:       var(--orange-500);
+    --color-bg-accent-second-light: var(--orange-400);
+    --color-bg-accent-second-muted: var(--orange-200);
 
     /* text */
-    --color-text-primary:       var(--primitive-neutral-900);   /* neutral/900  → #1D1E20 */
-    --color-text-secondary:     var(--primitive-neutral-600);   /* neutral/600  → #767982 */
-    --color-text-muted:         var(--primitive-neutral-400);   /* neutral/400  → #A9ACB5 */
-    --color-text-success:       var(--primitive-green-700);     /* green/700    → #41763E */
-    --color-text-error:         var(--primitive-red-700);       /* red/700      → #752E2E */
+    --color-text-primary:        var(--brand-200);    /* #dbe3ee */
+    --color-text-primary-dark:   var(--brand-800);    /* #424a55 */
+    --color-text-secondary:      var(--brand-400);
+    --color-text-secondary-dark: var(--brand-600);
+    --color-text-body:           var(--brand-200);
+    --color-text-muted:          var(--neutral-400);  /* #a9acb5 */
+    --color-text-accent:         var(--primary-accent);
+    --color-text-success:        var(--green-700);
+    --color-text-error:          var(--red-700);
 
-    /* border */
-    --color-border-default:     var(--primitive-brand-200);     /* brand/200    → #DBE3EE */
+    /* borders */
+    --color-border-default: var(--brand-200);
+    --color-border-muted:   var(--neutral-300);
 
-    /* spacing aliases */
-    --space-gap-s:              var(--space-4);                 /* spacing/space-4 → 16px */
-    --space-gap-m:              var(--space-5);                 /* spacing/space-5 → 20px */
+    /* semantic spacing aliases */
+    --space-gap-s: var(--spacing-space-4);  /* 16px */
+    --space-gap-m: var(--spacing-space-5);  /* 20px */
 
-    /* typography alias */
-    --font-label:               var(--font-size-16);            /* Font Size/16 */
+    --font-label: var(--font-size-16);
 
-    --font-pixel: 'ArbanePixel', monospace;
-}
 
-/* ------------------------------------------------------------
-   LEGACY / PROJECT-SPECIFIC
-   kept for backwards compat with existing components
-   ------------------------------------------------------------ */
-:root {
-    /* 3D scene */
-    --perspective:      1200px;
-    --card-width:       500px;
-    --card-height:      340px;
-    --card-gap:         5px;
+    /* ── 3. TYPOGRAPHY ──────────────────────────────────────────────────── */
 
-    /* page backgrounds (from project brief) */
-    --bg-dark:          #080808;
-    --bg-light:         var(--color-bg-canvas);
-    --text-dark:        #f0ede8;
-    --text-light:       #111010;
-}
-html, body {
-    background: var(--bg-dark);
+    --font-display: 'SunAntwerpen', sans-serif;                 /* headings / wordmark */
+    --font-body:    'Neue Haas Grotesk Display Pro', sans-serif;/* body + UI text */
+    --font-pixel:   'ArbanePixel', monospace;                   /* logo accent letters only */
+
+
+    /* ── 4. BRIDGE (legacy names → new system) ──────────────────────────── */
+
+
+    --primitive-green: var(--primary-accent);     /* was #02d77b — unchanged */
+    --primitive-white: var(--color-text-primary); /* was warm #f0ede8 → cool #dbe3ee */
+    --bg-dark:         var(--color-bg-canvas);     /* was #080808 → #1d1e20 */
+
+    /* old --font-mono pointed at DM Mono; the new body font replaces it.
+       Name kept so existing references resolve; it is no longer monospace. */
+    --font-mono: var(--font-body);
+
+    /* legacy spacing names (your components used --space-2 … --space-4) */
+    --space-1: var(--spacing-space-1);
+    --space-2: var(--spacing-space-2);
+    --space-3: var(--spacing-space-3);
+    --space-4: var(--spacing-space-4);
+    --space-5: var(--spacing-space-5);
+    --space-6: var(--spacing-space-6);
+
+    /* legacy text-light token used on --light page variants */
+    --text-light: var(--brand-900);
 }

@@ -1,6 +1,3 @@
-/* FilterMenu — right-side vertical panel */
-/* Hidden on mobile (<48em) — FilterBottomSheet handles that breakpoint */
-
 @media (max-width: 48em) {
     .filter-menu { display: none !important; }
 }
@@ -13,8 +10,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: var(--space-3);
-    font-family: var(--font-mono);
+    gap: var(--spacing-space-6);
+    font-family: var(--font-body);
     pointer-events: auto;
     z-index: 10;
     max-height: 80vh;
@@ -25,68 +22,64 @@
 
 .filter-menu::-webkit-scrollbar { display: none; }
 
-/* ── "all" row ── */
 .filter-menu__all {
     display: flex;
     align-items: baseline;
-    gap: var(--space-2);
+    justify-content: space-between;
+    gap: var(--spacing-space-2);
+    width: 160px;
     background: transparent;
     border: none;
     cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
-    color: rgba(240, 237, 232, 0.35);
+    font-family: var(--font-body);
+    font-size: var(--font-size-20);
+    color: var(--color-text-primary-dark);
     text-align: right;
     padding: 0;
     transition: color 0.2s;
 }
 
-.filter-menu__all:hover { color: rgba(240, 237, 232, 0.7); }
+.filter-menu__all:hover { color: var(--color-text-secondary); }
 
 .filter-menu__all.is-active,
 .filter-menu__all.is-active .filter-menu__count {
-    color: var(--primitive-green, #00e676);
-    opacity: 1;
+    color: var(--color-text-accent);
 }
 
-.filter-menu__all-label { font-size: 0.875rem; }
+.filter-menu__all-label { font-size: var(--font-size-20); }
 
-/* ── Category group ── */
 .filter-menu__group {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: var(--space-2);
+    align-items: flex-start;
+    gap: var(--spacing-space-3);
+    width: 160px;
 }
 
 .filter-menu__category {
     display: flex;
     align-items: baseline;
-    gap: var(--space-2);
+    justify-content: space-between;
+    width: 100%;
 }
 
-/* Category labels are non-interactive HEADINGS — dimmed so they don't read
-   as selected filters. (This was the bug: they were full white.) */
 .filter-menu__cat-label {
-    font-size: 0.7rem;
-    color: rgba(240, 237, 232, 0.4);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-size: var(--font-size-20);
+    color: var(--color-text-primary-dark);
 }
 
 .filter-menu__count {
-    font-size: 0.68rem;
-    color: var(--primitive-white);
-    opacity: 0.35;
-    letter-spacing: 0.04em;
+    font-size: var(--font-size-14);
+    color: var(--color-text-muted);
 }
 
-/* ── Sub-items ── */
 .filter-menu__items {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 0.3rem;
+    align-items: flex-start;
+    gap: var(--spacing-space-2);
+    width: 100%;
+    padding-left: var(--spacing-space-2);
 }
 
 .filter-menu__item {
@@ -96,24 +89,20 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: rgba(240, 237, 232, 0.3);
-    text-align: right;
+    font-family: var(--font-body);
+    font-size: var(--font-size-16);
+    color: var(--color-text-muted);
+    text-align: left;
     padding: 0;
-    letter-spacing: 0.02em;
     transition: color 0.2s;
 }
 
-.filter-menu__item:hover { color: rgba(240, 237, 232, 0.65); }
+.filter-menu__item:hover { color: var(--color-text-secondary); }
 
-/* Active item: green text + a small filled green square before the label */
 .filter-menu__item.is-active {
-    color: var(--primitive-green, #00e676);
+    color: var(--color-text-accent);
 }
 
-/* The square marker — transparent by default, green+filled when active.
-   order:-1 keeps the square before the label even in the right-aligned panel. */
 .filter-menu__item::before {
     content: '';
     width: 7px;
@@ -121,11 +110,10 @@
     flex-shrink: 0;
     background: transparent;
     border: 1px solid transparent;
-    order: -1;
     transition: background 0.2s, border-color 0.2s;
 }
 
 .filter-menu__item.is-active::before {
-    background: var(--primitive-green, #00e676);
-    border-color: var(--primitive-green, #00e676);
+    background: var(--color-bg-accent);
+    border-color: var(--color-bg-accent);
 }

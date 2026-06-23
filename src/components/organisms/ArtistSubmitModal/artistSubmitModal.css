@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    color: var(--primitive-white, #f0ede8);
+    color: var(--color-text-primary);
 }
 
 .artist-submit__top-bar {
@@ -18,8 +18,8 @@
 .artist-submit__close {
     background: none;
     border: none;
-    color: var(--primitive-white, #f0ede8);
-    font-size: 2rem;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-32);
     cursor: pointer;
     padding: 0;
     line-height: 1;
@@ -56,7 +56,7 @@
 .artist-submit__success-mark {
     width: 48px;
     height: 48px;
-    border: 2px solid #00e676;
+    border: 2px solid var(--color-bg-accent);
     border-radius: 50%;
     position: relative;
 }
@@ -67,7 +67,7 @@
     top: 9px;
     width: 12px;
     height: 22px;
-    border: solid #00e676;
+    border: solid var(--color-bg-accent);
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
@@ -80,7 +80,7 @@
 }
 
 .artist-submit__title {
-    font-family: var(--font-display, sans-serif);
+    font-family: var(--font-display);
     font-size: clamp(1.8rem, 4vw, 2.6rem);
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -89,10 +89,10 @@
 }
 
 .artist-submit__desc {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.9rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-14);
     line-height: 1.6;
-    color: rgba(240, 237, 232, 0.7);
+    color: var(--color-text-secondary);
     margin: 0;
 }
 
@@ -103,20 +103,20 @@
 }
 
 .artist-submit__label {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.7rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-11);
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: rgba(240, 237, 232, 0.6);
+    color: var(--color-text-secondary);
 }
 
 .artist-submit__input,
 .artist-submit__textarea {
     background: transparent;
-    border: 1px solid rgba(240, 237, 232, 0.25);
-    color: var(--primitive-white, #f0ede8);
-    font-family: var(--font-mono, monospace);
-    font-size: 0.95rem;
+    border: 1px solid rgba(219, 227, 238, 0.25);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: var(--font-size-16);
     padding: 0.8em 1em;
     width: 100%;
     box-sizing: border-box;
@@ -125,10 +125,10 @@
 .artist-submit__input:focus,
 .artist-submit__textarea:focus {
     outline: none;
-    border-color: #00e676;
+    border-color: var(--color-bg-accent);
 }
 .artist-submit__input.is-invalid {
-    border-color: rgba(255, 90, 90, 0.7);
+    border-color: var(--red-400);
 }
 .artist-submit__textarea {
     resize: vertical;
@@ -136,9 +136,9 @@
 }
 
 .artist-submit__hint {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.7rem;
-    color: rgba(255, 120, 120, 0.85);
+    font-family: var(--font-body);
+    font-size: var(--font-size-11);
+    color: var(--red-400);
     letter-spacing: 0.04em;
 }
 
@@ -147,17 +147,17 @@
 .artist-submit__upload-btn {
     align-self: flex-start;
     background: transparent;
-    border: 1px dashed rgba(240, 237, 232, 0.4);
-    color: var(--primitive-white, #f0ede8);
-    font-family: var(--font-mono, monospace);
-    font-size: 0.78rem;
+    border: 1px dashed rgba(219, 227, 238, 0.4);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: var(--font-size-13);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.7em 1.4em;
     cursor: pointer;
     transition: border-color 0.2s ease, color 0.2s ease;
 }
-.artist-submit__upload-btn:hover:not(:disabled) { border-color: #00e676; color: #00e676; }
+.artist-submit__upload-btn:hover:not(:disabled) { border-color: var(--color-bg-accent); color: var(--color-text-accent); }
 .artist-submit__upload-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .artist-submit__file-list {
@@ -173,39 +173,39 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    border: 1px solid rgba(240, 237, 232, 0.15);
+    border: 1px solid rgba(219, 227, 238, 0.15);
     padding: 0.5em 0.8em;
 }
 .artist-submit__file-name {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.78rem;
-    color: rgba(240, 237, 232, 0.8);
+    font-family: var(--font-body);
+    font-size: var(--font-size-13);
+    color: var(--color-text-secondary);
     word-break: break-all;
 }
 .artist-submit__file-remove {
     background: none;
     border: none;
-    color: rgba(240, 237, 232, 0.6);
-    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-20);
     line-height: 1;
     cursor: pointer;
     flex-shrink: 0;
     transition: color 0.2s ease;
 }
-.artist-submit__file-remove:hover { color: #00e676; }
+.artist-submit__file-remove:hover { color: var(--color-text-accent); }
 
 .artist-submit__error {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.78rem;
-    color: rgba(255, 120, 120, 0.9);
-    border: 1px solid rgba(255, 120, 120, 0.3);
+    font-family: var(--font-body);
+    font-size: var(--font-size-13);
+    color: var(--red-400);
+    border: 1px solid var(--red-700);
     padding: 0.6em 1em;
     margin: 0;
 }
 
 .artist-submit__btn {
-    font-family: var(--font-display, sans-serif);
-    font-size: 1rem;
+    font-family: var(--font-display);
+    font-size: var(--font-size-16);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.9em 1.6em;
@@ -214,17 +214,17 @@
     transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 .artist-submit__btn--primary {
-    border: 1px solid #00e676;
-    color: #00e676;
+    border: 1px solid var(--color-bg-accent);
+    color: var(--color-text-accent);
     margin-top: 0.5rem;
 }
-.artist-submit__btn--primary:hover:not(:disabled) { background: #00e676; color: var(--bg-dark, #040404); }
+.artist-submit__btn--primary:hover:not(:disabled) { background: var(--color-bg-accent); color: var(--color-bg-canvas); }
 .artist-submit__btn--primary:disabled { opacity: 0.35; cursor: not-allowed; }
 .artist-submit__btn--ghost {
-    border: 1px solid rgba(240, 237, 232, 0.3);
-    color: var(--primitive-white, #f0ede8);
+    border: 1px solid rgba(219, 227, 238, 0.3);
+    color: var(--color-text-primary);
 }
-.artist-submit__btn--ghost:hover { border-color: var(--primitive-white, #f0ede8); }
+.artist-submit__btn--ghost:hover { border-color: var(--color-text-primary); }
 
 @media (max-width: 48em) {
     .artist-submit__top-bar { padding: 1.25rem; }

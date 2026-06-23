@@ -1,6 +1,6 @@
 .back-button {
     position: fixed;
-    top: clamp(7rem, 14vh, 9rem);  /* pushed down, below the logo/navbar */
+    top: clamp(7rem, 14vh, 9rem);
     left: clamp(1.5rem, 4vw, 3rem);
     z-index: 30;
     display: inline-flex;
@@ -9,9 +9,9 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--primitive-white, #f0ede8);
-    font-family: var(--font-mono, monospace);
-    font-size: 0.8rem;
+    color: var(--color-text-primary);        /* was --primitive-white / #f0ede8 */
+    font-family: var(--font-body);           /* was --font-mono */
+    font-size: var(--font-size-13);
     letter-spacing: 0.2em;
     text-transform: uppercase;
     opacity: 0.7;
@@ -21,12 +21,11 @@
 
 .back-button__arrow {
     display: inline-block;
-    font-size: 1.2rem;
+    font-size: var(--font-size-20);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .back-button:hover .back-button__arrow { transform: translateX(-5px); }
 
-/* show the label always so it's obviously a back button */
 .back-button__label {
     white-space: nowrap;
 }

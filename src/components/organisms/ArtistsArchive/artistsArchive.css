@@ -4,8 +4,8 @@
     grid-template-columns: clamp(18rem, 26vw, 28rem) 1fr;
     height: 100vh;
     width: 100vw;
-    background: var(--bg-dark, #040404);
-    color: var(--primitive-white, #f0ede8);
+    background: var(--color-bg-canvas);
+    color: var(--color-text-primary);
     overflow: hidden;
 }
 
@@ -44,12 +44,12 @@
 }
 
 .artists-sidebar__logo {
-    font-family: var(--font-display, sans-serif);
-    font-size: 2rem;
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: var(--font-size-32);
+    font-weight: var(--font-weight-display);
     line-height: 1;
     letter-spacing: -0.02em;
-    color: var(--primitive-white, #f0ede8);
+    color: var(--color-text-primary);
 }
 
 .artists-sidebar__bottom {
@@ -59,20 +59,20 @@
 }
 
 .artists-sidebar__title {
-    font-family: var(--font-display, sans-serif);
+    font-family: var(--font-display);
     font-size: clamp(2rem, 3.5vw, 3rem);
     line-height: 1.1;
     letter-spacing: 0.01em;
-    font-weight: 700;
+    font-weight: var(--font-weight-display);
     margin: 0;
-    color: var(--primitive-white, #f0ede8);
+    color: var(--color-text-primary);
 }
 
 .artists-sidebar__desc {
-    font-family: var(--font-mono, sans-serif);
-    font-size: 0.85rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-14);
     line-height: 1.5;
-    color: rgba(240, 237, 232, 0.7);
+    color: var(--color-text-secondary);
     margin: 0;
 }
 
@@ -84,18 +84,18 @@
     display: flex;
     align-items: center;
     gap: 2rem;
-    color: var(--primitive-white, #f0ede8);
+    color: var(--color-text-primary);
 }
 
 .artists-lang {
-    font-family: var(--font-mono, sans-serif);
-    font-size: 1rem;
-    font-weight: 500;
+    font-family: var(--font-body);
+    font-size: var(--font-size-16);
+    font-weight: var(--font-weight-medium);
     letter-spacing: 0.05em;
 }
 
 .artists-lang--active {
-    color: #00e676;
+    color: var(--color-text-accent);
 }
 
 .artists-menu-btn {
@@ -112,7 +112,7 @@
     display: block;
     width: 32px;
     height: 2px;
-    background: var(--primitive-white, #f0ede8);
+    background: var(--color-text-primary);
 }
 
 .artists-grid-scroll {
@@ -150,16 +150,16 @@
 
 .artists-mobile-search {
     display: none;
-}/* ── Append to artistsArchive.css — "Submit your work" trigger button ──────── */
+}
 
 .artists-sidebar__submit {
     align-self: flex-start;
     margin-top: 0.5rem;
     background: transparent;
-    border: 1px solid #00e676;
-    color: #00e676;
-    font-family: var(--font-mono, monospace);
-    font-size: 0.8rem;
+    border: 1px solid var(--color-bg-accent);
+    color: var(--color-text-accent);
+    font-family: var(--font-body);
+    font-size: var(--font-size-13);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.7em 1.3em;
@@ -167,11 +167,10 @@
     transition: background 0.2s ease, color 0.2s ease;
 }
 .artists-sidebar__submit:hover {
-    background: #00e676;
-    color: var(--bg-dark, #040404);
+    background: var(--color-bg-accent);
+    color: var(--color-bg-canvas);
 }
 
-/* Mobile: a compact + button sitting in the bottom search bar */
 .artists-mobile-submit {
     display: none;
 }
@@ -225,11 +224,9 @@
         left: 0;
         right: 0;
         z-index: 100;
-        background: var(--primitive-white, #f0ede8);
+        background: var(--color-bg-surface);
         padding: 1rem 1.5rem;
         border-top: 1px solid rgba(0, 0, 0, 0.12);
-    }
-    .artists-mobile-search {
         gap: 0.75rem;
     }
     .artists-mobile-submit {
@@ -239,10 +236,10 @@
         flex-shrink: 0;
         width: 2.6rem;
         height: 2.6rem;
-        background: #00e676;
+        background: var(--color-bg-accent);
         border: none;
-        color: var(--bg-dark, #040404);
-        font-size: 1.6rem;
+        color: var(--color-bg-canvas);
+        font-size: var(--font-size-24);
         line-height: 1;
         cursor: pointer;
     }
