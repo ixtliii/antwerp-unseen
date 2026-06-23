@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { useTexture, Text } from '@react-three/drei';
+import { Text } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import { useFrame } from '@react-three/fiber';
 import type { Submission } from '../../../types';
+import { transformedImageUrl } from '../../../lib/supabaseImage';
 
 // ── Vertex shader (shared) ─────────────────────────────────────────────────
 
@@ -118,14 +119,41 @@ type GW = { get: () => number };
 
 const ImageFace = ({
                        url,
+                       fallbackUrl,
                        velocityRef,
                        grayscaleWeight,
                    }: {
     url: string;
+    fallbackUrl: string;
     velocityRef: React.MutableRefObject<number>;
     grayscaleWeight: GW;
 }) => {
-    const texture = useTexture(url);
+    const [texture, setTexture] = useState<THREE.Texture | null>(null);
+
+    useEffect(() => {
+        let cancelled = false;
+        const loader = new THREE.TextureLoader();
+        loader.crossOrigin = 'anonymous';
+
+        const load = (src: string, isLast: boolean) => {
+            loader.load(
+                src,
+                (tex) => {
+                    if (cancelled) { tex.dispose(); return; }
+                    tex.colorSpace = THREE.SRGBColorSpace;
+                    setTexture(tex);
+                },
+                undefined,
+                () => {
+                    if (cancelled) return;
+                    if (!isLast) load(fallbackUrl, true);
+                }
+            );
+        };
+
+        load(url, url === fallbackUrl);
+        return () => { cancelled = true; };
+    }, [url, fallbackUrl]);
 
     const material = useMemo(
         () =>
@@ -139,13 +167,19 @@ const ImageFace = ({
                 vertexShader:   VERT,
                 fragmentShader: FRAG,
             }),
-        [texture]
+        []
     );
+
+    useEffect(() => {
+        if (texture) material.uniforms.map.value = texture;
+    }, [texture, material]);
 
     useFrame(() => {
         material.uniforms.velocity.value  = velocityRef.current;
         material.uniforms.grayscale.value = grayscaleWeight.get();
     });
+
+    if (!texture) return null;
 
     return (
         <mesh position-z={-0.001}>
@@ -530,9 +564,9 @@ const SubmissionCard = ({
     const props = useSpring({
         from: { scale: 0, yLift: -0.5, grayscaleWeight: 1 },
         to: {
-            scale:           isActive ? 1.5 : 1.15,
-            yLift:           isActive ? 0.4   : 0,
-            grayscaleWeight: isActive ? 0     : 1,
+            scale:           isActive ? 1.3 : 1,
+            yLift:           isActive ? 0.4 : 0,
+            grayscaleWeight: isActive ? 0   : 1,
         },
         config: { tension: 160, friction: 20 },
     });
@@ -559,7 +593,10 @@ const SubmissionCard = ({
     };
 
     const dateStr  = submission.created_at.split('T')[0];
-    const imageUrl = submission.file_url ?? '/silhouette-default.jpg';
+    const rawImageUrl = submission.file_url ?? '/silhouette-default.jpg';
+    const imageUrl = submission.format === 'image'
+        ? transformedImageUrl(submission.file_url, { width: 800, height: 560, quality: 70, resize: 'cover' })
+        : rawImageUrl;
 
     return (
         <animated.group
@@ -583,6 +620,7 @@ const SubmissionCard = ({
                         {submission.format === 'image' && (
                             <ImageFace
                                 url={imageUrl}
+                                fallbackUrl={rawImageUrl}
                                 velocityRef={velocityRef}
                                 grayscaleWeight={props.grayscaleWeight}
                             />
