@@ -52,9 +52,25 @@ const WindowExpanded = ({ memory, ditherOn, onToggleDither, onClose, onPrev, onN
         <div className="window-expanded" ref={rootRef} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
             <div className="window-expanded__media">
                 {ditherOn ? (
-                    <DitherVideo key={`${memory.slug}-d`} src={memory.videoSrc} pixelSize={2} intensity={1} className="window-expanded__video" />
+                    <DitherVideo
+                        key={`${memory.slug}-d`}
+                        src={memory.videoSrc}
+                        pixelSize={2}
+                        intensity={1}
+                        strongOnMobile={true}
+                        className="window-expanded__video"
+                    />
                 ) : (
-                    <video key={`${memory.slug}-p`} className="window-expanded__video" src={memory.videoSrc} autoPlay muted loop playsInline />
+                    <video
+                        key={`${memory.slug}-p`}
+                        className="window-expanded__video"
+                        src={memory.videoSrc}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        crossOrigin="anonymous"
+                    />
                 )}
             </div>
 
