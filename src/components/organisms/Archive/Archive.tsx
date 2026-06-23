@@ -202,7 +202,7 @@ const Archive = ({ submissions, activeId, onActiveChange, onOpenDetail }: SceneP
             const dx = x - lastX.current;
             const dy = y - lastY.current;
 
-            const delta = (dx + dy) * 0.60;
+            const delta = (dx + dy) * 0.060;
 
             lastX.current = x;
             lastY.current = y;
