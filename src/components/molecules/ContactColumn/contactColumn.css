@@ -11,9 +11,9 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-space-2);
-    margin-bottom: var(--spacing-space-5);
+    margin-bottom: var(--spacing-space-4);
     font-family: var(--font-body);
-    font-size: var(--font-size-20);
+    font-size: var(--font-size-14);
     line-height: 1.5;
 }
 .contact-column__icon {

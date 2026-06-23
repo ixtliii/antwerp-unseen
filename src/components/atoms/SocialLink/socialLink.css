@@ -7,7 +7,7 @@
     padding: 0.2rem 0;
     text-decoration: none;
     font-family: var(--font-body);
-    font-size: var(--font-size-20);
+    font-size: var(--font-size-14);
     color: var(--color-text-primary);
     transition: color 0.3s ease;
 }

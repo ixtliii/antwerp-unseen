@@ -41,8 +41,10 @@ const ContactPage = () => {
 
                 <div className="contact-page__socials">
                     <h2 className="contact-page__heading">Socials</h2>
-                    <SocialLink label="Instagram" href="https://instagram.com" />
-                    <SocialLink label="LinkedIn" href="https://linkedin.com" />
+                    <div className="socials__container">
+                        <SocialLink label="Instagram" href="https://instagram.com" />
+                        <SocialLink label="LinkedIn" href="https://linkedin.com" />
+                    </div>
                 </div>
 
                 <div className="contact-page__news">

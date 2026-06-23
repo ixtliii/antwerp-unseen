@@ -34,6 +34,11 @@
     flex-direction: column;
     gap: var(--spacing-space-5);
 }
+.socials__container{
+    display: flex;
+    gap: var(--space-4);
+    flex-direction: column;
+}
 
 .contact-page__socials .contact-page__heading { margin-bottom: var(--spacing-space-1); }
 
@@ -42,7 +47,7 @@
     align-self: end;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-space-7);
+    gap: var(--spacing-space-6);
     width: 100%;
     max-width: 660px;
 }
@@ -61,9 +66,9 @@
     word-break: normal;
     hyphens: none;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: var(--space-6);
     white-space: normal;
-    width: 100%;
 }
 
 .contact-page__wordmark-pixel {
@@ -83,15 +88,6 @@
     margin: 0 0 var(--spacing-space-6);
 }
 
-.contact-page__year {
-    position: fixed;
-    bottom: clamp(1rem, 3vh, 1.5rem);
-    right: clamp(1.5rem, 4vw, 2.25rem);
-    font-family: var(--font-body);
-    font-size: var(--font-size-20);
-    color: var(--color-text-primary);
-    z-index: 2;
-}
 
 @media (max-width: 48em) {
     .contact-page {
@@ -112,17 +108,14 @@
     }
 
     .contact-page__wordmark {
-        font-size: clamp(4rem, 16vw, 6rem);
-        line-height: 0.9;
+        font-size: clamp(5.5rem, 16vw, 6rem);
+        line-height: 0.5;
         max-width: 100%;
         margin-top: var(--spacing-space-8);
+        flex-direction: column;
     }
 
     .contact-page__year {
-        position: relative;
-        display: block;
-        width: 100%;
-        text-align: right;
-        margin-top: var(--spacing-space-3);
+        display: none;
     }
 }

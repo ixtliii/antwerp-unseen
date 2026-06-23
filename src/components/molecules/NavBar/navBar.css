@@ -7,7 +7,7 @@
     transition: background 0.5s ease;
 }
 .navbar__backdrop--visible {
-    background: rgba(29, 30, 32, 0.85);
+    background: rgba(16, 16, 17, 0.93);
     pointer-events: auto;
 }
 .navbar {
@@ -45,7 +45,7 @@ body.is-immersive .navbar {
 
 .navbar__logo-img {
     display: block;
-    height: 2.4rem;
+    height: 2rem;
     width: auto;
 }
 
@@ -183,5 +183,5 @@ body.is-immersive .navbar {
 .navbar__node:hover .navbar__node-text::after { transform: scaleX(1); }
 .navbar__node:hover .navbar__node-index { color: rgba(219, 227, 238, 0.9); }
 @media (max-width: 40em) {
-    .navbar__node-text { font-size: var(--font-size-12); }
+    .navbar__node-text { font-size: var(--font-size-13); }
 }

@@ -59,8 +59,8 @@
 }
 .submit-flow__subtitle {
     font-family: var(--font-body);
-    font-size: var(--font-size-24);
-    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-16);
+    font-weight: var(--font-weight-light);
     color: var(--color-text-secondary);
     margin: 0;
     text-align: center;
