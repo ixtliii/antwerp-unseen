@@ -87,10 +87,8 @@ const Rail = ({ submissions, activeId, offsetRef, onActiveChange, onOpenDetail, 
                     isActive={submission.id === activeId}
                     onClick={() => {
                         if (submission.id === activeId) {
-                            // Second click on active card → open detail view
                             onOpenDetail(submission.id);
                         } else {
-                            // First click → activate card
                             onActiveChange(submission.id);
                         }
                     }}
@@ -107,6 +105,7 @@ const Archive = ({ submissions, activeId, onActiveChange, onOpenDetail }: SceneP
     const [isHovered, setIsHovered] = useState(false);
     const isDragging  = useRef(false);
     const lastX       = useRef(0);
+    const lastY       = useRef(0);
     const offsetRef   = useRef(0);
     const activeIdRef = useRef(activeId);
     const cursorRef   = useRef<HTMLDivElement>(null);
@@ -168,6 +167,7 @@ const Archive = ({ submissions, activeId, onActiveChange, onOpenDetail }: SceneP
             initAudio();
             isDragging.current = true;
             lastX.current = e.clientX;
+            lastY.current = e.clientY;
         };
 
         const handleMouseMove = (e: MouseEvent) => {
@@ -175,8 +175,11 @@ const Archive = ({ submissions, activeId, onActiveChange, onOpenDetail }: SceneP
                 cursorRef.current.style.transform = `translate3d(${e.clientX}px,${e.clientY}px,0)`;
             }
             if (!isDragging.current) return;
-            const delta   = (e.clientX - lastX.current) * 0.008;
+            const dx = e.clientX - lastX.current;
+            const dy = e.clientY - lastY.current;
+            const delta = (dx + dy) * 0.012;
             lastX.current = e.clientX;
+            lastY.current = e.clientY;
             const clamped = Math.max(0, Math.min(offsetRef.current - delta, getTotal()));
             offsetRef.current = clamped;
             advance(clamped);
@@ -188,14 +191,22 @@ const Archive = ({ submissions, activeId, onActiveChange, onOpenDetail }: SceneP
             initAudio();
             isDragging.current = true;
             lastX.current = e.touches[0].clientX;
+            lastY.current = e.touches[0].clientY;
         };
 
         const handleTouchMove = (e: TouchEvent) => {
             if (!isDragging.current) return;
             e.preventDefault();
-            const x       = e.touches[0].clientX;
-            const delta   = (x - lastX.current) * 0.012;
+            const x = e.touches[0].clientX;
+            const y = e.touches[0].clientY;
+            const dx = x - lastX.current;
+            const dy = y - lastY.current;
+
+            const delta = (dx + dy) * 0.020;
+
             lastX.current = x;
+            lastY.current = y;
+
             const clamped = Math.max(0, Math.min(offsetRef.current - delta, getTotal()));
             offsetRef.current = clamped;
             advance(clamped);
@@ -248,7 +259,7 @@ const Archive = ({ submissions, activeId, onActiveChange, onOpenDetail }: SceneP
                 camera={{
                     position: [-5.47, 7.02, 6.76],
                     rotation: [-0.80, -0.51, -0.47],
-                    fov: typeof window !== 'undefined' && window.innerWidth <= 768 ? 78 : 50,
+                    fov: typeof window !== 'undefined' && window.innerWidth <= 768 ? 50 : 50,
                 }}
             >
                 <ambientLight intensity={1} />
@@ -262,7 +273,6 @@ const Archive = ({ submissions, activeId, onActiveChange, onOpenDetail }: SceneP
                 />
             </Canvas>
 
-            {/* ADD YOUR STORY — fixed above filter tab */}
             <button
                 className="archive__add-story"
                 onClick={() => triggerPageTransition(() => navigate('/submit'))}
