@@ -45,6 +45,15 @@
 }
 .window-expanded__prev { background: var(--bg-dark, #080808); color: var(--primitive-white, #f0ede8); border: 1px solid #333; }
 .window-expanded__next { background: var(--primitive-green, #02d77b); color: #000; }
+.window-expanded__fx {
+    display: flex;
+    align-items: center;
+    background: var(--bg-dark);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(240, 237, 232, 0.18);
+    padding: 0.6rem 0.9rem;
+    border-radius: 2px;
+}
 
 @media (max-width: 48em) {
     .window-expanded__loc { display: none; }

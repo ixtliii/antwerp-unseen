@@ -45,7 +45,7 @@ const SuccessStep = ({ onReturn }: SuccessStepProps) => {
             <p className="submit-flow__subtitle">Thank you for your participation.</p>
 
             <button type="button" className="success-step__return" onClick={onReturn}>
-                RETURN TO ARCHIVE
+                SEE THE ARCHIVE
             </button>
         </div>
     );

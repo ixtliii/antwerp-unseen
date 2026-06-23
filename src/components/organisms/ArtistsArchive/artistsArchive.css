@@ -150,6 +150,30 @@
 
 .artists-mobile-search {
     display: none;
+}/* ── Append to artistsArchive.css — "Submit your work" trigger button ──────── */
+
+.artists-sidebar__submit {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+    background: transparent;
+    border: 1px solid #00e676;
+    color: #00e676;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.7em 1.3em;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.artists-sidebar__submit:hover {
+    background: #00e676;
+    color: var(--bg-dark, #040404);
+}
+
+/* Mobile: a compact + button sitting in the bottom search bar */
+.artists-mobile-submit {
+    display: none;
 }
 
 @media (max-width: 48em) {
@@ -204,5 +228,22 @@
         background: var(--primitive-white, #f0ede8);
         padding: 1rem 1.5rem;
         border-top: 1px solid rgba(0, 0, 0, 0.12);
+    }
+    .artists-mobile-search {
+        gap: 0.75rem;
+    }
+    .artists-mobile-submit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 2.6rem;
+        height: 2.6rem;
+        background: #00e676;
+        border: none;
+        color: var(--bg-dark, #040404);
+        font-size: 1.6rem;
+        line-height: 1;
+        cursor: pointer;
     }
 }

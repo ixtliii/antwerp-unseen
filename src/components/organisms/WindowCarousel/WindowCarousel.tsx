@@ -17,18 +17,15 @@ const WindowCarousel = ({ current, onGoTo, onOpen }: WindowCarouselProps) => {
     const anglePer = 360 / count;
     const radiusRef = useRef(600);
 
-    // drag state
     const drag = useRef({ active: false, startX: 0, lastX: 0, moved: false, pointerId: -1 });
-    // keep latest current in a ref so the drag handler isn't stale
     const currentRef = useRef(current);
     useEffect(() => { currentRef.current = current; }, [current]);
 
-    // place cards around the ring; recompute on resize
     useEffect(() => {
         const place = () => {
             const phone = window.matchMedia('(max-width: 48em)').matches;
-            const cardW = phone ? Math.min(window.innerWidth * 0.7, 320) : 420;
-            const radius = (cardW / 2) / Math.tan((anglePer / 2) * (Math.PI / 180)) * 1.2;
+            const cardW = phone ? Math.min(window.innerWidth * 0.8, 220) : 260;
+            const radius = (cardW / 2) / Math.tan((anglePer / 2) * (Math.PI / 180)) * 1.5;
             radiusRef.current = radius;
             cardRefs.current.forEach((el, i) => {
                 if (!el) return;
@@ -41,7 +38,6 @@ const WindowCarousel = ({ current, onGoTo, onOpen }: WindowCarouselProps) => {
         return () => window.removeEventListener('resize', place);
     }, [anglePer]);
 
-    // rotate the drum to bring the active card to front
     useEffect(() => {
         gsap.to(trackRef.current, {
             rotateY: -current * anglePer,
