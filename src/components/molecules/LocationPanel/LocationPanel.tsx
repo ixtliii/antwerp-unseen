@@ -34,7 +34,7 @@ const LocationPanel = ({ pin, onClose, onAddStory }: LocationPanelProps) => {
             <button type="button" className="location-panel__backdrop" onClick={onClose} aria-label="Close" />
 
             <div className="location-panel__card" role="dialog" aria-modal="true" aria-label={pin.name}>
-                <button type="button" className="location-panel__close" onClick={onClose}>✕ Close</button>
+                <button type="button" className="location-panel__close" onClick={onClose}>✕ CLOSE</button>
 
                 <div className="location-panel__media">
                     <img src={pin.image} alt={pin.name} className="location-panel__img" />
@@ -48,11 +48,17 @@ const LocationPanel = ({ pin, onClose, onAddStory }: LocationPanelProps) => {
                     <div className="location-panel__actions">
                         <a className="location-panel__btn location-panel__btn--primary"
                            href={mapsUrl(pin)} target="_blank" rel="noopener noreferrer">
-                            Open in Maps ↗
+                            OPEN IN MAPS
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginLeft: '8px' }} aria-hidden="true">
+                                <path d="M7 17l9.2-9.2M17 17V7H7"/>
+                            </svg>
                         </a>
                         <button type="button" className="location-panel__btn"
                                 onClick={() => onAddStory(pin.slug)}>
-                            Add your story →
+                            ADD YOUR STORY
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginLeft: '8px' }} aria-hidden="true">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
