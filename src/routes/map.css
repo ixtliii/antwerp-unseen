@@ -21,7 +21,8 @@
 .map-page__hint.is-focused { color: rgba(2, 215, 123, 0.8); }
 
 @media (max-width: 48em) {
-    .map-page__head { top: 4.5rem; font-size: var(--font-size-9); }
+    .map-page__head { top: 10rem; font-size: var(--font-size-9);
+        z-index: 0; }
     .map-page__corner--tr { top: 4.5rem; }
     .map-page__corner--bl { bottom: 6.5rem; }
 }
