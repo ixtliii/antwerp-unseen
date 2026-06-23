@@ -5,6 +5,7 @@ import WindowExpanded from '../components/organisms/WindowExpanded/WindowExpande
 import { readDitherPref } from '../components/atoms/EffectToggle/EffectToggle';
 import { WINDOWS } from '../data/windows';
 import './window.css';
+import DitherVideo from "../components/atoms/DitherVideo/DitherVideo.tsx";
 
 const WindowPage = () => {
     const [current, setCurrent] = useState(1);
@@ -20,6 +21,15 @@ const WindowPage = () => {
     return (
         <PageLayout noPadding showFooter={false}>
             <div className="window-page">
+                <DitherVideo
+                    src="/videos/aura.mp4"
+                    pixelSize={6}
+                    intensity={0.35}
+                    cutout
+                    playbackRate={2}
+                    mouseReactive
+                    className="artists-bg-video"
+                />
                 <p className="window-page__prompt">
                     <em>Somewhere</em> in the city, a stranger is walking past this screen right now.
                 </p>

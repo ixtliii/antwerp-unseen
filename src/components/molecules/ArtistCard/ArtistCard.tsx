@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Artwork } from '../../../types';
+import { transformedImageUrl } from '../../../lib/supabaseImage';
 import './artistCard.css';
 
 type Props = {
@@ -16,6 +18,11 @@ const transitionSpring = {
 
 const ArtistCard = ({ artwork, onClick }: Props) => {
     const uniqueId = artwork._key || artwork.id;
+    const [failed, setFailed] = useState(false);
+
+    const src = failed
+        ? artwork.image_url
+        : transformedImageUrl(artwork.image_url, { width: 600, quality: 70, resize: 'cover' });
 
     return (
         <motion.button
@@ -40,9 +47,10 @@ const ArtistCard = ({ artwork, onClick }: Props) => {
                 </div>
                 <div className="artists-card__img-wrap">
                     <motion.img
-                        src={artwork.image_url}
+                        src={src}
                         alt={artwork.name}
                         loading="lazy"
+                        onError={() => setFailed(true)}
                         layoutId={`artwork-image-${uniqueId}`}
                         transition={transitionSpring}
                     />
