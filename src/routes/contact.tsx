@@ -3,6 +3,7 @@ import ContactColumn from '../components/molecules/ContactColumn/ContactColumn';
 import SocialLink from '../components/atoms/SocialLink/SocialLink';
 import NewsletterField from '../components/atoms/NewsletterField/NewsletterField';
 import './contact.css';
+import DitherVideo from "../components/atoms/DitherVideo/DitherVideo.tsx";
 
 const ContactPage = () => {
     const handleNewsletter = (email: string) => {
@@ -12,6 +13,15 @@ const ContactPage = () => {
     return (
         <PageLayout noPadding showFooter={false}>
             <div className="contact-page">
+                <DitherVideo
+                    src="/videos/crowd.mp4"
+                    pixelSize={6}
+                    intensity={0.35}
+                    cutout
+                    playbackRate={1}
+                    mouseReactive
+                    className="artists-bg-video"
+                />
                 <ContactColumn
                     className="contact-page__contact"
                     title="Contact Us"
