@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../../../lib/supabaseClient';
+import { moderateText } from '../../../lib/moderation';
 import { triggerPageTransition } from '../../globals/PixelTransition/triggerTransition';
 import BackButton from '../../atoms/BackButton/BackButton';
 import PromptStep from './steps/PromptStep';
@@ -88,10 +89,45 @@ const SubmitFlow = () => {
     const handleConfirm = async () => {
         if (!prompt || !format) return;
 
+        // ── Validation: content presence ──────────────────────────────────────
+        if (format === 'text' && !text.trim()) {
+            setSubmitError('Please write something before submitting.');
+            return;
+        }
+        if ((format === 'voice' || format === 'image' || format === 'video') && !file) {
+            setSubmitError('Please add a file before submitting.');
+            return;
+        }
+
+        // ── Validation: prompt must be a real prompt ──────────────────────────
+        if (!PROMPTS.some((p) => p.id === prompt.id)) {
+            setSubmitError('Invalid prompt. Please start again.');
+            return;
+        }
+
+        // ── Validation: file size cap (25 MB) ─────────────────────────────────
+        const MAX_BYTES = 25 * 1024 * 1024;
+        if (file && file.size > MAX_BYTES) {
+            setSubmitError('File is too large. Please keep it under 25 MB.');
+            return;
+        }
+
         setSubmitting(true);
         setSubmitError(null);
 
         try {
+            // ── Moderation: block harmful text before anything is stored ──────
+            if (format === 'text') {
+                const result = await moderateText(text);
+                if (!result.ok) {
+                    setSubmitError(
+                        "Your submission doesn't meet our community guidelines. Please revise it."
+                    );
+                    setSubmitting(false);
+                    return;
+                }
+            }
+
             let fileUrl: string | null = null;
             let fileName: string | null = null;
 
@@ -119,7 +155,7 @@ const SubmitFlow = () => {
                 prompt_text: prompt.text,
                 format,
                 user_type: userType,
-                content_text: format === 'text' ? text : null,
+                content_text: format === 'text' ? text.trim() : null,
                 file_url: fileUrl,
                 file_name: fileName,
             });

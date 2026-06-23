@@ -8,7 +8,6 @@ import {
     INSTALLATION_PROMPTS,
     DEFAULT_LOCATION,
     DEFAULT_PROMPT_ID,
-    HIGHLIGHTED_ID,
     MOCK_CONTRIBUTIONS,
     mapSubmission,
     loadSettings,
@@ -24,11 +23,9 @@ import ContributionCard from '../../molecules/ContributionCard/ContributionCard'
 import InstallationQR from '../../molecules/InstallationQR/InstallationQR';
 import SettingsPanel from '../../molecules/SettingsPanel/SettingsPanel';
 
-// QR sits bottom-centre; the floating cards are constrained to a safe upper-left
-// zone (see X_MAX/Y_MAX in the animation) so they never reach it.
+
 
 const Installation = () => {
-    // --- Resolve location + prompt from URL ---
     const [searchParams] = useSearchParams();
     const locationSlug = searchParams.get('location') ?? DEFAULT_LOCATION;
     const promptId = Number(searchParams.get('prompt')) || DEFAULT_PROMPT_ID;
@@ -39,7 +36,6 @@ const Installation = () => {
         return `${PUBLIC_BASE_URL}/submit?${params.toString()}`;
     }, [locationSlug, promptId]);
 
-    // --- Visual settings (persisted, Shift+D panel) ---
     const [settings, setSettings]         = useState<VisualSettings>(loadSettings);
     const [showSettings, setShowSettings] = useState(false);
     const settingsRef = useRef<VisualSettings>(loadSettings());
@@ -57,7 +53,6 @@ const Installation = () => {
         return () => window.removeEventListener('keydown', onKey);
     }, []);
 
-    // --- GPU render pipeline (camera, segmenter, WebGL) ---
     const { videoRef, displayCanvasRef, started, startCamera } =
         useInstallationRender({ settingsRef });
 
@@ -72,6 +67,23 @@ const Installation = () => {
     // --- Active state ---
     const [isActive, setIsActive] = useState(false);
 
+    // --- Fullscreen (hide browser chrome) ---
+    const enterFullscreen = useCallback(() => {
+        const el = document.documentElement as HTMLElement & {
+            webkitRequestFullscreen?: () => Promise<void>;
+        };
+        const doc = document as Document & {
+            webkitFullscreenElement?: Element;
+            webkitExitFullscreen?: () => Promise<void>;
+        };
+        const isFs = document.fullscreenElement || doc.webkitFullscreenElement;
+        if (isFs) {
+            (document.exitFullscreen ?? doc.webkitExitFullscreen)?.call(document)?.catch?.(() => {});
+        } else {
+            (el.requestFullscreen ?? el.webkitRequestFullscreen)?.call(el)?.catch?.(() => {});
+        }
+    }, []);
+
     // --- Auto-activate once the camera is running ---
     useEffect(() => {
         if (started) setIsActive(true);
@@ -83,115 +95,210 @@ const Installation = () => {
         return () => { clearTimeout(delay); stopVoice(); };
     }, [isActive, playVoice, stopVoice]);
 
-    // --- Contributions: real submissions from DB, fallback to mock ---
-    const [contributions, setContributions] = useState<Contribution[]>(MOCK_CONTRIBUTIONS);
+    // --- Floating contributions (incremental: add/remove, never full reset) ---
+    const [floatingItems, setFloatingItems] = useState<FloatingItem[]>([]);
+    const floatingRef = useRef<FloatingItem[]>([]);
+    const rafFloatRef = useRef<number>(0);
+    const seenIds = useRef<Set<string | number>>(new Set());
+    const audioCtxRef = useRef<AudioContext | null>(null);
 
+    // soft chime when a new submission arrives
+    const playArrivalSound = useCallback(() => {
+        try {
+            if (!audioCtxRef.current) {
+                const Ctx = window.AudioContext ||
+                    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+                if (!Ctx) return;
+                audioCtxRef.current = new Ctx();
+            }
+            const ctx = audioCtxRef.current;
+            if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now);          // C5
+            osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.18); // G5
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.12, now + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+            osc.start(now);
+            osc.stop(now + 0.9);
+        } catch { /* ignore */ }
+    }, []);
+
+    const spawnItem = useCallback((c: Contribution, fadeIn: boolean): FloatingItem => ({
+        id: c.id,
+        contribution: c,
+        x: -10 + Math.random() * 120,
+        y: 4 + Math.random() * 62,
+        vx: (Math.random() < 0.5 ? -1 : 1) * (0.0016 + Math.random() * 0.0012),
+        vy: (Math.random() < 0.5 ? -1 : 1) * (0.0011 + Math.random() * 0.0009),
+        opacity: fadeIn ? 0 : 0,
+        phaseOffset: Math.random() * Math.PI * 2,
+        highlighted: false,
+    }), []);
+
+    // initial load + realtime add/remove
     useEffect(() => {
         let cancelled = false;
 
-        const fetchContributions = async () => {
+        const fadeTo = (id: string | number, target: number) => {
+            const step = () => {
+                const item = floatingRef.current.find(f => f.id === id);
+                if (!item) return;
+                const diff = target - item.opacity;
+                if (Math.abs(diff) < 0.02) {
+                    item.opacity = target;
+                } else {
+                    item.opacity += diff * 0.08;
+                    requestAnimationFrame(step);
+                }
+                setFloatingItems(floatingRef.current.map(f => ({ ...f })));
+            };
+            step();
+        };
+
+        // actually create + animate a card (assumes id already reserved)
+        const addContributionReserved = (c: Contribution, withSound: boolean, isNew: boolean) => {
+            const item = spawnItem(c, true);
+            item.isNew = isNew;
+            floatingRef.current = [...floatingRef.current, item];
+            setFloatingItems(floatingRef.current.map(f => ({ ...f })));
+            if (withSound) playArrivalSound();
+            fadeTo(c.id, 1);
+
+            if (isNew) {
+                // clear the entrance flag once the animation has played
+                setTimeout(() => {
+                    const it = floatingRef.current.find(f => f.id === c.id);
+                    if (it) {
+                        it.isNew = false;
+                        setFloatingItems(floatingRef.current.map(f => ({ ...f })));
+                    }
+                }, 2200);
+            }
+        };
+
+        // realtime path: reserve first, bail if already present
+        const addContribution = (c: Contribution, withSound: boolean) => {
+            if (seenIds.current.has(c.id)) return;
+            seenIds.current.add(c.id);
+            addContributionReserved(c, withSound, true);
+        };
+
+        const removeContribution = (id: string | number) => {
+            if (!seenIds.current.has(id)) return;
+            fadeTo(id, 0);
+            setTimeout(() => {
+                floatingRef.current = floatingRef.current.filter(f => f.id !== id);
+                seenIds.current.delete(id);
+                setFloatingItems(floatingRef.current.map(f => ({ ...f })));
+            }, 700);
+        };
+
+        const loadInitial = async () => {
             const { data, error } = await supabase
                 .from('submissions')
                 .select('*')
                 .order('created_at', { ascending: false })
                 .limit(30);
 
-            if (cancelled || error || !data || data.length === 0) return;
+            const source = (!error && data && data.length > 0)
+                ? data.map((row, i) => mapSubmission(row, i)).filter((c): c is Contribution => c !== null)
+                : MOCK_CONTRIBUTIONS;
 
-            const mapped = data
-                .map((row, i) => mapSubmission(row, i))
-                .filter((c): c is Contribution => c !== null);
-
-            if (mapped.length > 0) setContributions(mapped);
+            if (cancelled) return;
+            // stagger the initial fade-in. Reserve each id synchronously here so a
+            // duplicate effect run or an early realtime event can't add it twice.
+            source.forEach((c, i) => {
+                if (seenIds.current.has(c.id)) return;
+                seenIds.current.add(c.id);
+                setTimeout(() => { if (!cancelled) addContributionReserved(c, false, false); }, i * 220);
+            });
         };
 
-        fetchContributions();
+        loadInitial();
 
         const subscription = supabase
             .channel('submissions_changes')
-            .on(
-                'postgres_changes',
+            .on('postgres_changes',
                 { event: 'INSERT', schema: 'public', table: 'submissions' },
-                () => {
-                    fetchContributions();
-                }
-            )
+                (payload) => {
+                    const c = mapSubmission(payload.new, 0);
+                    if (c) addContribution(c, true);
+                })
+            .on('postgres_changes',
+                { event: 'DELETE', schema: 'public', table: 'submissions' },
+                (payload) => {
+                    const oldId = (payload.old as { id?: string | number })?.id;
+                    if (oldId !== undefined) removeContribution(oldId);
+                })
             .subscribe();
 
         return () => {
             cancelled = true;
             supabase.removeChannel(subscription);
+            seenIds.current.clear();
+            floatingRef.current = [];
         };
-    }, []);
-    // --- Floating contributions ---
-    const [floatingItems, setFloatingItems] = useState<FloatingItem[]>([]);
-    const floatingRef = useRef<FloatingItem[]>([]);
-    const rafFloatRef = useRef<number>(0);
-
-    const initFloating = useCallback(() => {
-        const items: FloatingItem[] = contributions.map((c) => ({
-            id: c.id,
-            contribution: c,
-            x: 8 + Math.random() * 62,            // safe inner zone, never near edges
-            y: 8 + Math.random() * 46,            // upper area, above the QR
-            vx: (Math.random() < 0.5 ? -1 : 1) * (0.0006 + Math.random() * 0.0005),
-            vy: (Math.random() < 0.5 ? -1 : 1) * (0.0004 + Math.random() * 0.0004),
-            opacity: 0,
-            phaseOffset: Math.random() * Math.PI * 2,
-            highlighted: c.id === HIGHLIGHTED_ID,
-        }));
-        floatingRef.current = items;
-        setTimeout(() => setFloatingItems([...items]), 0);
-        return items;
-    }, [contributions]);
+    }, [spawnItem, playArrivalSound]);
 
     useEffect(() => {
         if (!isActive) {
             cancelAnimationFrame(rafFloatRef.current);
-            return () => { setFloatingItems([]); };
+            return;
         }
-
-        const items = initFloating();
-
-        const timeouts: ReturnType<typeof setTimeout>[] = [];
-        items.forEach((item, i) => {
-            const t = setTimeout(() => {
-                floatingRef.current = floatingRef.current.map(p =>
-                    p.id === item.id ? { ...p, opacity: 1 } : p
-                );
-                setFloatingItems([...floatingRef.current]);
-            }, i * 450);
-            timeouts.push(t);
-        });
 
         let last = performance.now();
 
-        // safe bounds (percent) — cards span the width but stay in the upper
-        // area, clear of the QR at bottom-centre. X_MAX accounts for card width
-        // so right-side cards never clip off-screen.
-        const X_MIN = 4, X_MAX = 74, Y_MIN = 6, Y_MAX = 58;
+        // Cards drift past the screen edges and re-enter from the opposite side.
+        // Travel band is kept above the bottom QR zone (yWrap caps at ~70%).
+        const PAD = 18;            // how far past the edge (%) before wrapping
+        const Y_FLOOR = 70;        // keep cards above the QR at bottom-centre
+        const SEP_DIST = 22;       // min separation (%) before cards push apart
+        const SEP_FORCE = 0.015;   // how hard they push apart
 
         const animate = (now: number) => {
             const dt = Math.min(now - last, 32);
             last = now;
             const t = now / 1000;
 
-            floatingRef.current = floatingRef.current.map(fi => {
-                let { x, y, vx, vy } = fi;
-                const wave = Math.sin(t * 0.15 + fi.phaseOffset) * 0.0003;
-                x += vx * dt;
-                y += (vy + wave) * dt;
+            const arr = floatingRef.current;
 
-                // gentle bounce off the safe bounds (no teleport, no squish)
-                if (x < X_MIN) { x = X_MIN; vx = Math.abs(vx); }
-                if (x > X_MAX) { x = X_MAX; vx = -Math.abs(vx); }
-                if (y < Y_MIN) { y = Y_MIN; vy = Math.abs(vy); }
-                if (y > Y_MAX) { y = Y_MAX; vy = -Math.abs(vy); }
+            // 1) drift + gentle wave + wrap around the (extended) screen
+            for (const fi of arr) {
+                const wave = Math.sin(t * 0.1 + fi.phaseOffset) * 0.0006;
+                fi.x += fi.vx * dt;
+                fi.y += (fi.vy + wave) * dt;
 
-                return { ...fi, x, y, vx, vy };
-            });
+                if (fi.x < -PAD) fi.x = 100 + PAD;
+                if (fi.x > 100 + PAD) fi.x = -PAD;
+                if (fi.y < -PAD) fi.y = Y_FLOOR;
+                if (fi.y > Y_FLOOR + PAD) fi.y = -PAD;
+            }
 
-            setFloatingItems([...floatingRef.current]);
+            // 2) separation — push apart any two cards that are too close
+            for (let i = 0; i < arr.length; i++) {
+                for (let j = i + 1; j < arr.length; j++) {
+                    const a = arr[i], b = arr[j];
+                    const dx = a.x - b.x;
+                    const dy = a.y - b.y;
+                    const d = Math.sqrt(dx * dx + dy * dy);
+                    if (d > 0 && d < SEP_DIST) {
+                        const push = (SEP_DIST - d) * SEP_FORCE;
+                        const nx = (dx / d) * push;
+                        const ny = (dy / d) * push;
+                        a.x += nx; a.y += ny;
+                        b.x -= nx; b.y -= ny;
+                    }
+                }
+            }
+
+            setFloatingItems(arr.map(fi => ({ ...fi })));
             rafFloatRef.current = requestAnimationFrame(animate);
         };
 
@@ -199,9 +306,8 @@ const Installation = () => {
 
         return () => {
             cancelAnimationFrame(rafFloatRef.current);
-            timeouts.forEach(clearTimeout);
         };
-    }, [isActive, initFloating]);
+    }, [isActive]);
 
     // --- Render ---
     return (
@@ -227,9 +333,17 @@ const Installation = () => {
                 {floatingItems.map(item => (
                     <div
                         key={item.id}
-                        className={`installation__contribution ${item.highlighted ? 'installation__contribution--featured' : ''}`}
+                        className={`installation__contribution ${item.highlighted ? 'installation__contribution--featured' : ''} ${item.isNew ? 'installation__contribution--new' : ''}`}
                         style={{ left: `${item.x}%`, top: `${item.y}%`, opacity: item.opacity }}
                     >
+                        {item.isNew && (
+                            <span className="installation__spark" aria-hidden>
+                                <span className="installation__spark-glint" />
+                                {Array.from({ length: 8 }).map((_, k) => (
+                                    <span key={k} className={`installation__spark-dot installation__spark-dot--${k}`} />
+                                ))}
+                            </span>
+                        )}
                         <ContributionCard item={item} />
                     </div>
                 ))}
@@ -250,6 +364,9 @@ const Installation = () => {
                     onClick={() => setIsActive(v => !v)}
                 >
                     {isActive ? 'Deactivate' : 'Activate'}
+                </button>
+                <button className="installation__btn" onClick={enterFullscreen}>
+                    Fullscreen
                 </button>
             </div>
         </div>

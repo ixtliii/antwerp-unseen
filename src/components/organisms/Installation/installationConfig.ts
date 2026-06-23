@@ -19,17 +19,18 @@ export const VOICE_FILE = '/New_Recording_44.mp3';
 
 // --- Contribution types ---
 export interface Contribution {
-    id: number;
-    type: 'voice' | 'text' | 'photo';
+    id: string | number;
+    type: 'voice' | 'text' | 'photo' | 'video';
     text: string;
     author?: string;
     time: string;
     date: string;
     imgUrl?: string;
+    videoUrl?: string;
 }
 
 export interface FloatingItem {
-    id: number;
+    id: string | number;
     contribution: Contribution;
     x: number;
     y: number;
@@ -38,6 +39,7 @@ export interface FloatingItem {
     opacity: number;
     phaseOffset: number;
     highlighted: boolean;
+    isNew?: boolean;
 }
 
 export interface Particle {
@@ -63,6 +65,7 @@ export const mapSubmission = (s: any, index: number): Contribution | null => {
         voice: 'voice',
         text:  'text',
         image: 'photo',
+        video: 'video',
     };
     const type = typeMap[s?.format];
     if (!type) return null;
@@ -74,15 +77,16 @@ export const mapSubmission = (s: any, index: number): Contribution | null => {
     const date = created.toLocaleDateString('en-GB');
 
     return {
-        id: index + 1,
+        id: s?.id ?? index + 1,
         type,
         text: s?.content_text ? `"${s.content_text}"` : '',
         author: s?.location ? `A local, ${s.location}` : 'Anonymous',
         time,
         date,
         imgUrl: type === 'photo' && s?.file_url
-            ? transformedImageUrl(s.file_url, { width: 240, height: 180, quality: 60, resize: 'cover' })
+            ? transformedImageUrl(s.file_url, { width: 240, height: 180, quality: 60, resize: 'contain' })
             : undefined,
+        videoUrl: type === 'video' && s?.file_url ? s.file_url : undefined,
     };
 };
 

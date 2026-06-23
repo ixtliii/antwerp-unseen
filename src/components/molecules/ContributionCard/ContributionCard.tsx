@@ -78,6 +78,28 @@ const ContributionCard = ({ item }: ContributionCardProps) => {
         );
     }
 
+    if (contribution.type === 'video') {
+        return (
+            <div className="contribution__card contribution__card--photo">
+                {contribution.videoUrl
+                    ? (
+                        <video
+                            className="contribution__video"
+                            src={contribution.videoUrl}
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                        />
+                    )
+                    : <PhotoPlaceholder />
+                }
+                {contribution.author && <p className="contribution__author">— {contribution.author}</p>}
+                <p className="contribution__meta">{contribution.time} · {contribution.date}</p>
+            </div>
+        );
+    }
+
     return (
         <div className="contribution__card contribution__card--photo">
             {contribution.imgUrl
