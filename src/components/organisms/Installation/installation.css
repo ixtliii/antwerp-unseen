@@ -112,7 +112,7 @@
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 30;
-    white-space: nowrap;
+    width: min(80vw, 60rem);
 }
 
 .installation__prompt p {
@@ -145,6 +145,7 @@
     position: absolute;
     z-index: 25;
     pointer-events: none;
+    width: clamp(130px, 18vw, 190px);
     /* CSS transition only for opacity fade-in — position is updated by JS every frame */
     transition: opacity 0.9s ease;
     will-change: transform, left, top;
@@ -152,6 +153,7 @@
 
 .installation__contribution--featured {
     z-index: 28;
+    width: clamp(180px, 24vw, 260px);
 }
 
 /* Regular card */
@@ -163,7 +165,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
-    max-width: clamp(130px, 18vw, 190px);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .contribution__card--photo img {
@@ -209,7 +212,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.45rem;
-    max-width: clamp(180px, 24vw, 260px);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .contribution__featured-top {
