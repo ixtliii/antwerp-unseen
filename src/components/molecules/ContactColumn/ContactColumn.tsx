@@ -1,6 +1,11 @@
 import './contactColumn.css';
+import type {ReactNode} from "react";
 
-interface ContactRow { icon: string; value: string; href?: string; }
+interface ContactRow {
+    icon: ReactNode;
+    value: string;
+    href?: string;
+}
 interface ContactColumnProps { title: string; rows: ContactRow[]; className?: string; }
 
 const ContactColumn = ({ title, rows, className }: ContactColumnProps) => (
