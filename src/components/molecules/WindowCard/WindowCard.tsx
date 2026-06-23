@@ -12,7 +12,7 @@ interface WindowCardProps {
 }
 
 const WindowCard = forwardRef<HTMLButtonElement, WindowCardProps>(
-    ({ memory, onSelect }, ref) => (
+    ({ memory, active, onSelect }, ref) => (
         <button ref={ref} type="button" className="window-card" onClick={onSelect} aria-label={memory.location}>
             <span className="window-card__inner">
                 {memory.isLive ? (
@@ -23,6 +23,7 @@ const WindowCard = forwardRef<HTMLButtonElement, WindowCardProps>(
                         pixelSize={3}
                         intensity={0.9}
                         playbackRate={0.6}
+                        strongOnMobile={true}
                         className="window-card__media"
                     />
                 )}

@@ -22,10 +22,14 @@ const WindowCarousel = ({ current, onGoTo, onOpen }: WindowCarouselProps) => {
     useEffect(() => { currentRef.current = current; }, [current]);
 
     useEffect(() => {
+        // Inside WindowCarousel.tsx -> useEffect
         const place = () => {
             const phone = window.matchMedia('(max-width: 48em)').matches;
             const cardW = phone ? Math.min(window.innerWidth * 0.52, 190) : 260;
-            const spacing = phone ? 1.9 : 1.5;
+
+            // CHANGE THIS LINE: Lower numbers = tighter gap. Try 1.15 for mobile and 1.1 for desktop.
+            const spacing = phone ? 1.25 : 1.1;
+
             const radius = (cardW / 2) / Math.tan((anglePer / 2) * (Math.PI / 180)) * spacing;
             radiusRef.current = radius;
             cardRefs.current.forEach((el, i) => {

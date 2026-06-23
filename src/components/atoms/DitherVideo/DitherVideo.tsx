@@ -8,6 +8,7 @@ interface Props {
     cutout?: boolean;
     playbackRate?: number;
     mouseReactive?: boolean;
+    strongOnMobile?: boolean;
     className?: string;
 }
 
@@ -96,6 +97,7 @@ const DitherVideo = ({
                          cutout = false,
                          playbackRate = 1,
                          mouseReactive = false,
+                         strongOnMobile = false,
                          className = '',
                      }: Props) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -234,8 +236,14 @@ const DitherVideo = ({
                     window.matchMedia('(hover: none) and (pointer: coarse)').matches &&
                     window.innerWidth <= 820;
 
-                const responsivePixel = phone ? pixelSize * 0.5 : pixelSize * dpr;
-                const responsiveIntensity = phone ? intensity * 0.15 : intensity;
+                const responsivePixel = phone
+                    ? (strongOnMobile ? pixelSize * dpr : pixelSize * 0.5)
+                    : pixelSize * dpr;
+
+                const responsiveIntensity = phone
+                    ? (strongOnMobile ? intensity * 0.9 : intensity * 0.15)
+                    : intensity;
+
                 const responsiveMouseReactive = phone ? (mouseReactive ? 0.4 : 0.0) : (mouseReactive ? 1.0 : 0.0);
 
                 const videoAspect = (video.videoWidth / video.videoHeight) || 1;
@@ -265,7 +273,7 @@ const DitherVideo = ({
             cancelAnimationFrame(raf);
             window.removeEventListener('resize', resize);
         };
-    }, [pixelSize, intensity, cutout, mouseReactive]);
+    }, [pixelSize, intensity, cutout, mouseReactive, strongOnMobile]);
 
     return (
         <div className={`dither-video ${className}`}>
@@ -277,6 +285,7 @@ const DitherVideo = ({
                 loop
                 playsInline
                 autoPlay
+                crossOrigin="anonymous"
             />
             <canvas ref={canvasRef} className="dither-video__canvas" />
         </div>
