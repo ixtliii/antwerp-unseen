@@ -43,7 +43,13 @@ const ContactPage = () => {
                 </div>
 
                 <h2 className="contact-page__wordmark">
-                    <span className="contact-page__wordmark-pixel">A</span>NTWERP&nbsp;UNSEE<span className="contact-page__wordmark-pixel">N</span><span className="contact-page__wordmark-dot">.</span>
+                    <span>
+                        <span className="contact-page__wordmark-pixel">A</span>NTWERP
+                    </span>
+                    <span>
+                        UNSEE<span className="contact-page__wordmark-pixel">N</span>
+                        <span className="contact-page__wordmark-dot">.</span>
+                    </span>
                 </h2>
 
                 <span className="contact-page__year">2026 ©</span>
