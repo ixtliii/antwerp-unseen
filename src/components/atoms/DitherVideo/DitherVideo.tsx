@@ -175,10 +175,25 @@ const DitherVideo = ({
         const uVideoAspect = gl.getUniformLocation(program, 'u_videoAspect');
         const uCanvasAspect = gl.getUniformLocation(program, 'u_canvasAspect');
 
+        const isPhone = () =>
+            window.matchMedia('(hover: none) and (pointer: coarse)').matches &&
+            window.innerWidth <= 820;
+
         const resize = () => {
             const dpr = Math.min(window.devicePixelRatio, 1.5);
-            canvas.width = canvas.clientWidth * dpr;
-            canvas.height = canvas.clientHeight * dpr;
+            if (isPhone()) {
+                // On real phones the high DPR inflates the backing-store resolution,
+                // which makes the dither far denser than on desktop / DevTools.
+                // Cap the backing width so dot density stays low and readable,
+                // independent of the device's actual pixel ratio.
+                const targetW = Math.min(canvas.clientWidth, 480);
+                const ratio = canvas.clientHeight / Math.max(canvas.clientWidth, 1);
+                canvas.width = targetW;
+                canvas.height = Math.round(targetW * ratio);
+            } else {
+                canvas.width = canvas.clientWidth * dpr;
+                canvas.height = canvas.clientHeight * dpr;
+            }
             gl.viewport(0, 0, canvas.width, canvas.height);
         };
         resize();
@@ -199,13 +214,15 @@ const DitherVideo = ({
                 gl.clear(gl.COLOR_BUFFER_BIT);
 
                 const dpr = Math.min(window.devicePixelRatio, 1.5);
-                const isMobile = canvas.clientWidth <= 768;
+                const phone =
+                    window.matchMedia('(hover: none) and (pointer: coarse)').matches &&
+                    window.innerWidth <= 820;
 
-                // On mobile the effect is overwhelming, so tone the WHOLE thing down:
-                // larger/softer dots (bigger pixelSize) + much lower intensity, so it
-                // reads as a faint texture rather than a dense unreadable field.
-                const responsivePixel = (isMobile ? pixelSize * 1.6 : pixelSize) * dpr;
-                const responsiveIntensity = isMobile ? intensity * 0.45 : intensity;
+                // On phones the canvas backing store is capped low (see resize),
+                // so dots are already large relative to it — don't multiply by DPR,
+                // and drop the intensity so the whole effect reads as a faint texture.
+                const responsivePixel = phone ? pixelSize : pixelSize * dpr;
+                const responsiveIntensity = phone ? intensity * 0.5 : intensity;
 
                 const videoAspect = (video.videoWidth / video.videoHeight) || 1;
                 const canvasAspect = (canvas.width / canvas.height) || 1;
