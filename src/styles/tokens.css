@@ -1,12 +1,4 @@
-/* ============================================================================
-   tokens.css — Antwerp Unseen design system
-   Mirrors the Figma token architecture:
-     1. PRIMITIVES  — raw values (colour ramps, spacing, type scale)
-     2. SEMANTICS   — meaning-based aliases that components should use
-     3. TYPOGRAPHY  — font families + named text styles
-     4. BRIDGE      — legacy variable names mapped onto the new system so
-                      existing components keep working during migration
-   ============================================================================ */
+
 
 :root {
 
