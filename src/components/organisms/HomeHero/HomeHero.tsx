@@ -4,6 +4,7 @@ import { LoadingContext } from '../../../App';
 import gsap from 'gsap';
 import './homeHero.css';
 import {Link, useNavigate} from "react-router-dom";
+import DitherVideo from "../../atoms/DitherVideo/DitherVideo";
 
 const SCRAMBLE_CHARS = '!<>-_\\/[]{}—=+*^?#_';
 
@@ -221,6 +222,16 @@ const HomeHero = () => {
 
     return (
         <section className="home-hero" ref={heroRef}>
+            <DitherVideo
+                src="/videos/hero.mp4"
+                pixelSize={6}
+                intensity={0.3}
+                cutout
+                playbackRate={0.5}
+                mouseReactive
+                className="home-hero__bg"
+            />
+
             <div className="home-hero__frame" aria-hidden>
                 <span className="home-hero__corner home-hero__corner--tl" />
                 <span className="home-hero__corner home-hero__corner--tr" />
