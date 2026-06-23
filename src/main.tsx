@@ -4,6 +4,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import App from './App.tsx';
 import './styles/reset.css';
 import './styles/tokens.css';
+import './styles/fonts.css'
 
 const allowed = ['/', '/submit', '/installation'];
 if (!allowed.includes(window.location.pathname)) {

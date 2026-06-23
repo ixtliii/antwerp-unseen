@@ -1,7 +1,5 @@
-/* archive.css — full file, original styles + ADD YOUR STORY button */
-
 .scene {
-    background-color: var(--bg-dark, #040404);
+    background-color: var(--color-bg-canvas);
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -29,7 +27,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: var(--primitive-white, #fff);
+    background-color: var(--primary-white);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,20 +49,17 @@
     z-index: 1;
 }
 
-/* ── ADD YOUR STORY button ────────────────────────────────────────────────── */
-/* Mobile: sits above the FilterBottomSheet trigger tab (~3.5rem tall)        */
-
 .archive__add-story {
     position: fixed;
     left: 1.5rem;
     right: 1.5rem;
     bottom: 4rem;
     z-index: 20;
-    background: var(--bg-dark, #080808);
-    border: 1px solid var(--primitive-white);
-    color: var(--primitive-white);
+    background: var(--color-bg-canvas);
+    border: 1px solid var(--color-text-primary);
+    color: var(--color-text-primary);
     font-family: var(--font-display);
-    font-size: 1rem;
+    font-size: var(--font-size-16);
     letter-spacing: 0.14em;
     padding: 1em 2em;
     cursor: pointer;
@@ -72,11 +67,10 @@
 }
 
 .archive__add-story:hover {
-    background: var(--primitive-white);
-    color: var(--bg-dark);
+    background: var(--color-text-primary);
+    color: var(--color-bg-canvas);
 }
 
-/* Desktop: no filter tab below it, so drop to 2rem from bottom */
 @media (min-width: 48em) {
     .archive__add-story {
         left: 50%;

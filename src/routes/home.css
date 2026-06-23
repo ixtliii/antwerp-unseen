@@ -1,10 +1,9 @@
 .home-page {
     min-height: 100vh;
-    background: var(--bg-dark);
-    color: var(--text-dark);
+    background: var(--color-bg-canvas);
+    color: var(--color-text-primary);
 }
 
-/* Pad main content below fixed navbar */
 .home-page main {
-    padding-top: 0; /* hero is full-viewport so starts at top */
+    padding-top: 0;
 }

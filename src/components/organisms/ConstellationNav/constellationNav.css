@@ -2,9 +2,9 @@
     position: relative;
     width: 100vw;
     height: 100vh;
-    background: var(--bg-dark, #040404);
+    background: var(--color-bg-canvas);
     overflow: hidden;
-    color: #fff;
+    color: var(--primary-white);
 }
 
 .const-bg-text {
@@ -21,7 +21,7 @@
 }
 
 .const-bg-word {
-    font-family: var(--font-display, sans-serif);
+    font-family: var(--font-display);
     font-size: clamp(6rem, 18vw, 24rem);
     line-height: 0.8;
     color: rgba(255, 255, 255, 0.03);
@@ -41,7 +41,7 @@
 }
 
 .const-bg-word-pixel {
-    font-family: var(--font-pixel, monospace);
+    font-family: var(--font-pixel);
 }
 
 .const-svg {
@@ -97,9 +97,9 @@
     top: clamp(1.5rem, 4vh, 3rem);
     left: 50%;
     transform: translateX(-50%);
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    color: #fff;
+    font-family: var(--font-body);
+    font-size: var(--font-size-12);
+    color: var(--primary-white);
     text-transform: uppercase;
     letter-spacing: 0.2em;
     z-index: 100;
@@ -136,22 +136,22 @@
 .const-node-square {
     width: 12px;
     height: 12px;
-    background-color: #666;
+    background-color: var(--neutral-600);
     z-index: 2;
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 .const-node.is-interactive:hover .const-node-square {
     transform: scale(1.5) rotate(45deg);
-    background-color: #fff;
+    background-color: var(--primary-white);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
 }
 
 .const-node-label {
     position: absolute;
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    color: #888;
+    font-family: var(--font-body);
+    font-size: var(--font-size-12);
+    color: var(--color-text-muted);
     letter-spacing: 0.4em;
     transition: color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     white-space: nowrap;
@@ -160,7 +160,7 @@
 }
 
 .const-node.is-interactive:hover .const-node-label {
-    color: #fff;
+    color: var(--primary-white);
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     transform: scale(1.1);
 }

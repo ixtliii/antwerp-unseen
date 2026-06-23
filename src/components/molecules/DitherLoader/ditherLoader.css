@@ -2,7 +2,7 @@
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: var(--bg-dark, #080808);
+    background: var(--color-bg-canvas);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -20,7 +20,6 @@
     clip-path: inset(50% 50% 50% 50%);
 }
 
-/* almost-fullscreen video stage --------------------------- */
 .dither-loader__stage {
     position: relative;
     width: 100%;
@@ -47,7 +46,6 @@
     display: block;
 }
 
-/* progress bar under the video ---------------------------- */
 .dither-loader__bar {
     width: 100%;
     display: flex;
@@ -60,29 +58,29 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    font-family: var(--font-mono, monospace);
-    font-size: 0.6rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-10);
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: rgba(240, 237, 232, 0.5);
+    color: rgba(219, 227, 238, 0.5);
 }
 
 .dither-loader__pct {
     font-variant-numeric: tabular-nums;
-    color: rgba(240, 237, 232, 0.9);
+    color: rgba(219, 227, 238, 0.9);
 }
 
 .dither-loader__track {
     width: 100%;
     height: 1px;
-    background: rgba(240, 237, 232, 0.15);
+    background: rgba(219, 227, 238, 0.15);
     overflow: hidden;
 }
 
 .dither-loader__fill {
     width: 100%;
     height: 100%;
-    background: var(--primitive-white, #f0ede8);
+    background: var(--color-text-primary);
     transform-origin: left;
     transform: scaleX(0);
     will-change: transform;

@@ -1,7 +1,3 @@
-/* FilterBottomSheet — slides up from bottom */
-/* Hidden on desktop (≥48em) — FilterMenu handles that breakpoint */
-
-/* ── Desktop hide ── */
 @media (min-width: 48em) {
     .filter-sheet__trigger,
     .filter-sheet,
@@ -10,43 +6,40 @@
     }
 }
 
-/* Backdrop */
 .filter-sheet__backdrop {
     position: fixed;
     inset: 0;
     z-index: 39;
-    background: rgba(8, 8, 8, 0.6);
+    background: rgba(29, 30, 32, 0.6);
 }
 
-/* ── Sheet panel ── */
 .filter-sheet {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 40;
-    background: #0f0f0f;
-    border-top: 1px solid rgba(240, 237, 232, 0.12);
+    background: var(--color-bg-btn);
+    border-top: 1px solid rgba(219, 227, 238, 0.12);
     border-radius: 1rem 1rem 0 0;
     max-height: 88vh;
     overflow-y: auto;
     scrollbar-width: none;
-    transform: translateY(100%); /* GSAP overrides this */
+    transform: translateY(100%);
 }
 
 .filter-sheet::-webkit-scrollbar { display: none; }
 
-/* Header */
 .filter-sheet__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1.5rem 0.75rem;
     cursor: pointer;
-    border-bottom: 1px solid rgba(240, 237, 232, 0.06);
+    border-bottom: 1px solid rgba(219, 227, 238, 0.06);
     position: sticky;
     top: 0;
-    background: #0f0f0f;
+    background: var(--color-bg-btn);
     z-index: 1;
     flex-direction: column;
     gap: 0.6rem;
@@ -56,7 +49,7 @@
     width: 2.5rem;
     height: 3px;
     border-radius: 2px;
-    background: rgba(240, 237, 232, 0.2);
+    background: rgba(219, 227, 238, 0.2);
     display: block;
 }
 
@@ -64,10 +57,10 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-13);
     letter-spacing: 0.06em;
-    color: var(--primitive-white);
+    color: var(--color-text-primary);
     width: 100%;
     justify-content: space-between;
 }
@@ -78,7 +71,6 @@
     gap: 0.5rem;
 }
 
-/* Body */
 .filter-sheet__body {
     padding: 1.25rem 1.5rem 2rem;
     display: flex;
@@ -86,7 +78,6 @@
     gap: 1.25rem;
 }
 
-/* All row */
 .filter-sheet__all {
     display: flex;
     align-items: baseline;
@@ -94,23 +85,21 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    color: rgba(240, 237, 232, 0.35);
+    font-family: var(--font-body);
+    font-size: var(--font-size-20);
+    color: var(--color-text-primary-dark);
     padding: 0;
     transition: color 0.2s;
 }
 
-.filter-sheet__all:hover { color: rgba(240, 237, 232, 0.7); }
-.filter-sheet__all.is-active { color: var(--primitive-green, #00e676); }
+.filter-sheet__all:hover { color: var(--color-text-secondary); }
+.filter-sheet__all.is-active { color: var(--color-text-accent); }
 
 .filter-sheet__count {
-    font-size: 0.68rem;
-    opacity: 0.45;
-    letter-spacing: 0.04em;
+    font-size: var(--font-size-14);
+    color: var(--color-text-muted);
 }
 
-/* 2-column category grid */
 .filter-sheet__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -130,14 +119,10 @@
     margin-bottom: 0.25rem;
 }
 
-/* Category labels are non-interactive HEADINGS — dimmed so they don't read
-   as selected filters. (This was the bug: they were full white.) */
 .filter-sheet__cat-label {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: rgba(240, 237, 232, 0.4);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-family: var(--font-body);
+    font-size: var(--font-size-20);
+    color: var(--color-text-primary-dark);
 }
 
 .filter-sheet__items {
@@ -154,19 +139,17 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: rgba(240, 237, 232, 0.3);
+    font-family: var(--font-body);
+    font-size: var(--font-size-16);
+    color: var(--color-text-muted);
     padding: 0;
     text-align: left;
-    letter-spacing: 0.02em;
     transition: color 0.2s;
 }
 
-.filter-sheet__item:hover { color: rgba(240, 237, 232, 0.65); }
+.filter-sheet__item:hover { color: var(--color-text-secondary); }
 
-/* Active item: green text + small filled green square before the label */
-.filter-sheet__item.is-active { color: var(--primitive-green, #00e676); }
+.filter-sheet__item.is-active { color: var(--color-text-accent); }
 
 .filter-sheet__item::before {
     content: '';
@@ -179,11 +162,10 @@
 }
 
 .filter-sheet__item.is-active::before {
-    background: var(--primitive-green, #00e676);
-    border-color: var(--primitive-green, #00e676);
+    background: var(--color-bg-accent);
+    border-color: var(--color-bg-accent);
 }
 
-/* Action buttons */
 .filter-sheet__actions {
     display: flex;
     flex-direction: column;
@@ -195,48 +177,49 @@
     width: 100%;
     padding: 0.85em;
     font-family: var(--font-display);
-    font-size: 0.85rem;
+    font-weight: var(--font-weight-display);
+    font-size: var(--font-size-14);
     letter-spacing: 0.12em;
-    border: 1px solid rgba(240, 237, 232, 0.18);
+    border: 1px solid rgba(219, 227, 238, 0.18);
     background: transparent;
-    color: rgba(240, 237, 232, 0.35);
+    color: var(--color-text-muted);
     cursor: pointer;
     transition: opacity 0.2s;
 }
 
 .filter-sheet__reset:disabled { opacity: 0.3; cursor: not-allowed; }
 .filter-sheet__reset:not(:disabled):hover {
-    color: var(--primitive-white);
-    border-color: rgba(240, 237, 232, 0.5);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-default);
 }
 
 .filter-sheet__apply {
     width: 100%;
     padding: 0.9em;
     font-family: var(--font-display);
-    font-size: 0.9rem;
+    font-weight: var(--font-weight-display);
+    font-size: var(--font-size-14);
     letter-spacing: 0.12em;
-    border: 1px solid var(--primitive-white);
-    background: var(--primitive-white);
-    color: var(--bg-dark);
+    border: 1px solid var(--color-text-primary);
+    background: var(--color-text-primary);
+    color: var(--color-bg-canvas);
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
 }
 
 .filter-sheet__apply:hover {
     background: transparent;
-    color: var(--primitive-white);
+    color: var(--color-text-primary);
 }
 
-/* ── Trigger tab (closed state) ── */
 .filter-sheet__trigger {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 30;
-    background: #0f0f0f;
-    border-top: 1px solid rgba(240, 237, 232, 0.12);
+    background: var(--color-bg-btn);
+    border-top: 1px solid rgba(219, 227, 238, 0.12);
     cursor: pointer;
     padding: 0;
 }
@@ -246,10 +229,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-13);
     letter-spacing: 0.06em;
-    color: var(--primitive-white);
+    color: var(--color-text-primary);
 }
 
 .filter-sheet__trigger-left {
@@ -262,6 +245,6 @@
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: var(--primitive-green);
+    background: var(--color-bg-accent);
     display: inline-block;
 }

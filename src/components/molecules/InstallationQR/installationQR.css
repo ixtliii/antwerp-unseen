@@ -1,18 +1,14 @@
-/* ── Append to installation.css — refined QR presentation ──────────────── */
-/* Replaces the bare placeholder with a framed, scanning, corner-marked QR.   */
-
 .installation__qr-frame {
     position: relative;
     padding: 0.9rem;
-    background: rgba(8, 8, 8, 0.55);
+    background: rgba(29, 30, 32, 0.55);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    border: 1px solid rgba(240, 237, 232, 0.12);
+    border: 1px solid rgba(219, 227, 238, 0.12);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    /* Reveal animation when the screen becomes active */
     animation: qr-reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -21,7 +17,6 @@
     to   { opacity: 1; transform: scale(1);    clip-path: inset(0 0 0% 0); }
 }
 
-/* Sweeping scan line over the QR — subtle "it's live" cue */
 .installation__qr-scanline {
     position: absolute;
     left: 0.9rem;
@@ -30,7 +25,7 @@
     background: linear-gradient(
             90deg,
             transparent,
-            var(--primitive-green, #02d77b),
+            var(--color-text-accent),
             transparent
     );
     opacity: 0.7;
@@ -46,12 +41,11 @@
     60%       { opacity: 0; }
 }
 
-/* Corner brackets — viewfinder framing */
 .installation__qr-corner {
     position: absolute;
     width: 12px;
     height: 12px;
-    border: 1.5px solid var(--primitive-green, #02d77b);
+    border: 1.5px solid var(--color-text-accent);
     pointer-events: none;
 }
 
@@ -63,11 +57,11 @@
 .installation__qr-label {
     display: block;
     margin-top: 0.7rem;
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-10);
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: rgba(240, 237, 232, 0.55);
+    color: var(--color-text-muted);
     text-align: center;
     line-height: 1.5;
 }

@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    color: var(--primitive-white, #f0ede8);
+    color: var(--color-text-primary);
 }
 
 .artwork-detail__top-bar {
@@ -14,12 +14,11 @@
     justify-content: flex-start;
 }
 
-/* RESTORED: Back Button Styling */
 .artwork-detail__back-btn {
     background: none;
     border: none;
-    color: var(--primitive-white, #f0ede8);
-    font-size: 2rem;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-32);
     cursor: pointer;
     padding: 0;
     transition: transform 0.2s ease;
@@ -46,7 +45,7 @@
 }
 
 .artwork-detail__artist-name {
-    font-family: var(--font-display, sans-serif);
+    font-family: var(--font-display);
     font-size: clamp(2rem, 4vw, 3rem);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -54,10 +53,10 @@
 }
 
 .artwork-detail__artist-role {
-    font-family: var(--font-mono, sans-serif);
-    color: rgba(240, 237, 232, 0.6);
+    font-family: var(--font-body);
+    color: var(--color-text-secondary);
     margin: 0;
-    font-size: 0.9rem;
+    font-size: var(--font-size-14);
 }
 
 .artwork-detail__hero {
@@ -75,7 +74,6 @@
     object-fit: contain;
     max-height: 60vh;
     box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    /* Essential for Framer Motion to not distort the image while traveling */
     border-radius: 0;
 }
 
@@ -83,8 +81,8 @@
     position: absolute;
     width: 20px;
     height: 20px;
-    background-color: #00e676;
-    z-index: -1; /* Ensures it stays slightly behind the image if they overlap */
+    background-color: var(--color-bg-accent);
+    z-index: -1;
 }
 
 .square-top-right {
@@ -110,8 +108,8 @@
 }
 
 .artwork-detail__title {
-    font-family: var(--font-display, sans-serif);
-    font-size: 1.25rem;
+    font-family: var(--font-display);
+    font-size: var(--font-size-20);
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -120,20 +118,20 @@
 .artwork-detail__line {
     flex: 1;
     height: 1px;
-    background-color: rgba(240, 237, 232, 0.3);
+    background-color: rgba(219, 227, 238, 0.3);
 }
 
 .artwork-detail__year {
-    font-family: var(--font-mono, sans-serif);
-    font-size: 0.9rem;
-    color: rgba(240, 237, 232, 0.8);
+    font-family: var(--font-body);
+    font-size: var(--font-size-14);
+    color: var(--color-text-secondary);
 }
 
 .artwork-detail__description {
-    font-family: var(--font-mono, sans-serif);
-    font-size: 0.95rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-16);
     line-height: 1.6;
-    color: rgba(240, 237, 232, 0.8);
+    color: var(--color-text-secondary);
     max-width: 600px;
     margin-bottom: 3rem;
 }
@@ -145,9 +143,9 @@
 }
 
 .artwork-detail__socials-label {
-    font-family: var(--font-mono, sans-serif);
-    font-size: 0.75rem;
-    color: rgba(240, 237, 232, 0.5);
+    font-family: var(--font-body);
+    font-size: var(--font-size-12);
+    color: var(--color-text-muted);
     letter-spacing: 0.05em;
 }
 
@@ -157,17 +155,17 @@
 }
 
 .artwork-detail__socials-links a {
-    color: var(--primitive-white, #f0ede8);
+    color: var(--color-text-primary);
     text-decoration: none;
-    font-family: var(--font-mono, sans-serif);
-    font-size: 0.85rem;
-    border-bottom: 1px solid rgba(240, 237, 232, 0.3);
+    font-family: var(--font-body);
+    font-size: var(--font-size-14);
+    border-bottom: 1px solid rgba(219, 227, 238, 0.3);
     padding-bottom: 2px;
     transition: border-color 0.2s ease;
 }
 
 .artwork-detail__socials-links a:hover {
-    border-color: #00e676;
+    border-color: var(--color-bg-accent);
 }
 
 @media (max-width: 48em) {
