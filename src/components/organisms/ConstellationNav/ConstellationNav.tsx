@@ -12,9 +12,6 @@ interface NodePosState {
     finalX: number; finalY: number;
 }
 
-interface CustomWindow extends Window {
-    webkitAudioContext?: typeof AudioContext;
-}
 
 const NODES = [
     { id: 'window', label: 'WINDOWS', type: 'link', x: 25, y: 25, pos: 'top', path: '/windows' },
@@ -36,17 +33,12 @@ const EDGES = [
     ['window', 'artist'],
 ];
 
-let audioCtx: AudioContext | null = null;
-
 const initAudio = () => {
-    if (!audioCtx) {
-        const Ctx = window.AudioContext || (window as unknown as CustomWindow).webkitAudioContext;
-        if (Ctx) {
-            audioCtx = new Ctx();
-        }
-    }
-    if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume().catch(() => {});
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    let audioCtx: AudioContext | null = null;
+
+    if (AudioContextClass) {
+        audioCtx = new AudioContextClass();
     }
     return audioCtx;
 };
