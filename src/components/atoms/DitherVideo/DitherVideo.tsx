@@ -30,6 +30,8 @@ const fragmentShader = `
     uniform float u_cutout;
     uniform float u_mouseReactive;
     uniform float u_time;
+    uniform float u_videoAspect;
+    uniform float u_canvasAspect;
     varying vec2 v_uv;
 
     float bayer(vec2 p) {
@@ -48,16 +50,26 @@ const fragmentShader = `
         return (v + 0.5) / 16.0;
     }
 
+    // remap uv so the video covers the canvas without stretching (object-fit: cover)
+    vec2 coverUv(vec2 uv) {
+        vec2 c = uv - 0.5;
+        if (u_canvasAspect > u_videoAspect) {
+            c.y *= u_videoAspect / u_canvasAspect;
+        } else {
+            c.x *= u_canvasAspect / u_videoAspect;
+        }
+        return c + 0.5;
+    }
+
     void main() {
-        // distance from cursor (0 at cursor, ~1 at far corner)
         float dist = distance(v_uv, u_mouse);
         float influence = smoothstep(0.5, 0.0, dist) * u_mouseReactive;
 
-        // pixel size: finer near cursor, chunkier farther — so the dither "focuses"
         float dynamicPixelSize = mix(u_pixelSize, u_pixelSize * 0.55, influence);
 
         vec2 px = u_resolution / dynamicPixelSize;
-        vec2 uv = floor(v_uv * px) / px;
+        vec2 snapped = floor(v_uv * px) / px;
+        vec2 uv = coverUv(snapped);
 
         vec3 c = texture2D(u_video, uv).rgb;
         float lum = dot(c, vec3(0.299, 0.587, 0.114));
@@ -70,7 +82,6 @@ const fragmentShader = `
         float threshold = bayer(screenPos);
         float bw = lum > threshold ? 1.0 : 0.0;
 
-        // brighten near cursor for a "reveal" feel
         float dynamicIntensity = u_intensity + influence * 0.25;
 
         float alpha = mix(dynamicIntensity, bw * dynamicIntensity, u_cutout);
@@ -161,6 +172,8 @@ const DitherVideo = ({
         const uCutout = gl.getUniformLocation(program, 'u_cutout');
         const uMouseReactive = gl.getUniformLocation(program, 'u_mouseReactive');
         const uTime = gl.getUniformLocation(program, 'u_time');
+        const uVideoAspect = gl.getUniformLocation(program, 'u_videoAspect');
+        const uCanvasAspect = gl.getUniformLocation(program, 'u_canvasAspect');
 
         const resize = () => {
             const dpr = Math.min(window.devicePixelRatio, 1.5);
@@ -185,16 +198,28 @@ const DitherVideo = ({
                 gl.clearColor(0, 0, 0, 0);
                 gl.clear(gl.COLOR_BUFFER_BIT);
 
+                const dpr = Math.min(window.devicePixelRatio, 1.5);
+                // responsive dot size: scale relative to a 1440px baseline so the
+                // dither stays the same visual density across screen sizes, instead
+                // of becoming giant unreadable blocks on small screens.
+                const widthScale = Math.min(canvas.clientWidth / 1440, 1);
+                const responsivePixel = Math.max(pixelSize * widthScale, 1.5) * dpr;
+
+                const videoAspect = (video.videoWidth / video.videoHeight) || 1;
+                const canvasAspect = (canvas.width / canvas.height) || 1;
+
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video);
                 gl.uniform1i(uVideo, 0);
                 gl.uniform2f(uResolution, canvas.width, canvas.height);
                 gl.uniform2f(uMouse, m.x, m.y);
-                gl.uniform1f(uPixelSize, pixelSize * Math.min(window.devicePixelRatio, 1.5));
+                gl.uniform1f(uPixelSize, responsivePixel);
                 gl.uniform1f(uIntensity, intensity);
                 gl.uniform1f(uCutout, cutout ? 1.0 : 0.0);
                 gl.uniform1f(uMouseReactive, mouseReactive ? 1.0 : 0.0);
                 gl.uniform1f(uTime, t);
+                gl.uniform1f(uVideoAspect, videoAspect);
+                gl.uniform1f(uCanvasAspect, canvasAspect);
                 gl.drawArrays(gl.TRIANGLES, 0, 6);
             }
             raf = requestAnimationFrame(render);

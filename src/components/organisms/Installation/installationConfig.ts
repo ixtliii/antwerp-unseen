@@ -1,6 +1,8 @@
 // ── installationConfig.ts ───────────────────────────────────────────────────
 // Per-installation config + visual settings types/persistence.
 
+import { transformedImageUrl } from '../../../lib/supabaseImage';
+
 export const PUBLIC_BASE_URL = 'https://antwerp-unseen.vercel.app';
 
 export const INSTALLATION_PROMPTS: Record<number, string> = {
@@ -53,6 +55,37 @@ export const MOCK_CONTRIBUTIONS: Contribution[] = [
     { id: 7, type: 'voice', text: '"We used to sit here every Sunday. All of us."', author: 'Anonymous', time: '06:00PM', date: '20/04/2026' },
 ];
 
+// --- Map a DB submission row -> Contribution shape -------------------------
+// Installation shows only voice / text / photo. 'image' -> 'photo'; 'video'
+// (and anything unknown) is skipped by returning null.
+export const mapSubmission = (s: any, index: number): Contribution | null => {
+    const typeMap: Record<string, Contribution['type']> = {
+        voice: 'voice',
+        text:  'text',
+        image: 'photo',
+    };
+    const type = typeMap[s?.format];
+    if (!type) return null;
+
+    const created = s?.created_at ? new Date(s.created_at) : new Date();
+    const time = created
+        .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+        .replace(' ', '');
+    const date = created.toLocaleDateString('en-GB');
+
+    return {
+        id: index + 1,
+        type,
+        text: s?.content_text ? `"${s.content_text}"` : '',
+        author: s?.location ? `A local, ${s.location}` : 'Anonymous',
+        time,
+        date,
+        imgUrl: type === 'photo' && s?.file_url
+            ? transformedImageUrl(s.file_url, { width: 240, height: 180, quality: 60, resize: 'cover' })
+            : undefined,
+    };
+};
+
 // --- Visual settings (persisted, Shift+D) ---
 export type VisualMode = 'light-on-dark' | 'dark-on-light';
 export type DitherStyle = 'none' | 'bayer-dots' | 'cross-hatch' | 'blocky';
@@ -74,17 +107,17 @@ export interface VisualSettings {
 const SETTINGS_KEY = 'antwerp-unseen-visual-settings';
 
 export const DEFAULT_SETTINGS: VisualSettings = {
-    mode: 'light-on-dark',
+    mode: 'dark-on-light',
     ditherStyle: 'bayer-dots',
-    ditherScale: 7,
-    depth: 0.6,
-    dotGrow: 0.7,
+    ditherScale: 2,
+    depth: 0.0,
+    dotGrow: 1.0,
     breathe: 0.4,
-    smoothing: 0.7,
-    glitch: 0.25,
+    smoothing: 1.0,
+    glitch: 0.1,
     warp: 0.5,
-    decay: 0.05,
-    grain: 0.05,
+    decay: 0.005,
+    grain: 0.0,
 };
 
 export const loadSettings = (): VisualSettings => {

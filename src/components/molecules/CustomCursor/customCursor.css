@@ -13,7 +13,7 @@ a, button, [role="button"], input, select, textarea {
     pointer-events: none;
     z-index: 99999;
     mix-blend-mode: difference;
-    color: var(--primary-white);
+    color: #ffffff;
 }
 
 .global-custom-cursor {
@@ -37,7 +37,7 @@ a, button, [role="button"], input, select, textarea {
 .global-custom-cursor svg {
     opacity: 0;
     transition: opacity 0.2s ease;
-    color: var(--primary-black);
+    color: #000000;
 }
 
 .global-custom-cursor.hovered svg {
@@ -46,7 +46,16 @@ a, button, [role="button"], input, select, textarea {
 body.dither-active .global-custom-cursor {
     width: 60px;
     height: 60px;
-    background: var(--color-bg-accent);
-    border-color: var(--color-bg-accent);
+    background: var(--primitive-green, #02d77b);
+    border-color: var(--primitive-green, #02d77b);
     mix-blend-mode: normal;
+}
+@media (hover: none) and (pointer: coarse) {
+    body,
+    a, button, [role="button"], input, select, textarea {
+        cursor: auto;
+    }
+    .global-custom-cursor-wrapper {
+        display: none !important;
+    }
 }

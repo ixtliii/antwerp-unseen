@@ -168,7 +168,8 @@
 
 .contribution__card--photo img {
     width: 100%;
-    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
     display: block;
     filter: grayscale(30%) brightness(0.75);
     margin-bottom: 0.2rem;
@@ -471,4 +472,34 @@
         height: min(100vw * 16/9, 100vh);
         aspect-ratio: 9/16;
     }
+}
+
+/* ── Responsive — small screens ─────────────────────────────────────────── */
+@media (max-width: 48em) {
+    .installation__prompt {
+        white-space: normal;
+        width: min(90vw, 28rem);
+    }
+    .installation__prompt p {
+        font-size: clamp(1.4rem, 6vw, 2.2rem);
+    }
+    .contribution__card {
+        max-width: clamp(108px, 42vw, 150px);
+    }
+    .contribution__featured {
+        max-width: clamp(150px, 58vw, 210px);
+    }
+    .installation__qr {
+        bottom: 3.5%;
+        transform: translateX(-50%) scale(0.82);
+    }
+    .installation__controls {
+        bottom: 0.75rem;
+        right: 0.75rem;
+    }
+}
+
+@media (max-width: 30em) {
+    .contribution__card { max-width: clamp(96px, 46vw, 130px); }
+    .installation__qr { transform: translateX(-50%) scale(0.7); }
 }
