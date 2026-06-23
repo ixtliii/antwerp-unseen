@@ -4,6 +4,7 @@ import DitherVideo from '../../atoms/DitherVideo/DitherVideo';
 import ArtistCard from "../../molecules/ArtistCard/ArtistCard.tsx";
 import SearchBar from "../../molecules/SearchBar/SearchBar.tsx";
 import ArtworkDetail from "../../organisms/ArtworkDetail/ArtworkDetail.tsx";
+import ArtistSubmitModal from "../../organisms/ArtistSubmitModal/ArtistSubmitModal.tsx";
 import { supabase } from '../../../lib/supabaseClient';
 import './artistsArchive.css';
 import { AnimatePresence } from 'framer-motion';
@@ -21,6 +22,7 @@ const ArtistsArchive = () => {
     const [artworks, setArtworks] = useState<Artwork[]>([]);
     const [colCount, setColCount] = useState(3);
     const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
+    const [submitOpen, setSubmitOpen] = useState(false);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const colRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
@@ -196,6 +198,13 @@ const ArtistsArchive = () => {
                             explore their artistic scene today by<br />
                             checking out their amazing artworks!
                         </p>
+                        <button
+                            type="button"
+                            className="artists-sidebar__submit"
+                            onClick={() => setSubmitOpen(true)}
+                        >
+                            Submit your work →
+                        </button>
                     </div>
                 </div>
             </aside>
@@ -220,6 +229,7 @@ const ArtistsArchive = () => {
                 </div>
             </div>
 
+            {/* Mobile: submit button lives in the bottom bar alongside search */}
             <div className="artists-mobile-search">
                 <SearchBar
                     search={search}
@@ -228,13 +238,25 @@ const ArtistsArchive = () => {
                     placeholder="Search artist or work..."
                     transparentBackground={true}
                 />
+                <button
+                    type="button"
+                    className="artists-mobile-submit"
+                    onClick={() => setSubmitOpen(true)}
+                    aria-label="Submit your work"
+                >
+                    +
+                </button>
             </div>
-            <AnimatePresence >
+
+            <AnimatePresence>
                 {selectedArtwork && (
                     <ArtworkDetail
                         artwork={selectedArtwork}
                         onClose={() => setSelectedArtwork(null)}
                     />
+                )}
+                {submitOpen && (
+                    <ArtistSubmitModal onClose={() => setSubmitOpen(false)} />
                 )}
             </AnimatePresence>
         </div>

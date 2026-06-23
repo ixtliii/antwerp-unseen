@@ -1,19 +1,79 @@
-.effect-toggle { display: flex; align-items: center; gap: var(--space-3); }
+.effect-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.effect-toggle__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.2;
+    user-select: none;
+}
+
 .effect-toggle__label {
     font-family: var(--font-mono);
-    font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
-    color: rgba(240, 237, 232, 0.55);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--primitive-white, #f0ede8);   /* full white — was 55% opacity */
 }
+
+.effect-toggle__state {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(240, 237, 232, 0.45);
+    transition: color 0.25s ease;
+}
+
+
+body.dither-active .effect-toggle__state {
+    color: var(--primitive-green, #02d77b);
+}
+
 .effect-toggle__switch {
-    position: relative; width: 54px; height: 26px;
-    background: var(--bg-dark, #080808); border: 1px solid #444;
-    cursor: pointer; padding: 0; transition: border-color 0.3s ease; flex-shrink: 0;
+    position: relative;
+    width: 56px;
+    height: 28px;
+    background: var(--bg-dark, #080808);
+    border: 1px solid rgba(240, 237, 232, 0.5);
+    cursor: pointer;
+    padding: 0;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    flex-shrink: 0;
 }
-.effect-toggle__switch.is-on { border-color: var(--primitive-green, #02d77b); }
-.effect-toggle__knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: #555; }
-.effect-toggle__switch.is-mounted .effect-toggle__knob { transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s ease; }
-.effect-toggle__switch.is-on .effect-toggle__knob { transform: translateX(28px); background: var(--primitive-green, #02d77b); }
+
+.effect-toggle__switch:hover {
+    border-color: var(--primitive-white, #f0ede8);
+}
+
+.effect-toggle__switch.is-on {
+    border-color: var(--primitive-green, #02d77b);
+    box-shadow: 0 0 12px rgba(2, 215, 123, 0.35);   /* glow draws the eye when active */
+}
+
+.effect-toggle__knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    background: rgba(240, 237, 232, 0.7);
+}
+
+.effect-toggle__switch.is-mounted .effect-toggle__knob {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+}
+
+.effect-toggle__switch.is-on .effect-toggle__knob {
+    transform: translateX(28px);
+    background: var(--primitive-green, #02d77b);
+}
 
 @media (max-width: 48em) {
-    .effect-toggle__label { font-size: 0.62rem; }
+    .effect-toggle__label { font-size: 0.64rem; }
+    .effect-toggle__state { font-size: 0.54rem; }
 }

@@ -22,7 +22,7 @@
 
 .window-carousel__track {
     position: absolute;
-    top: 50%;
+    top: calc(50% + clamp(2.5rem, 7vh, 5rem));
     left: 50%;
     width: 0;
     height: 0;
@@ -31,4 +31,7 @@
 }
 @media (max-width: 48em) {
     .window-carousel__stage { perspective: 1200px; }
+    .window-carousel__track {
+        top: calc(50% + clamp(3.5rem, 10vh, 6rem));
+    }
 }

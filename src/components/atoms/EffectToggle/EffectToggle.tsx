@@ -26,7 +26,10 @@ const EffectToggle = ({ enabled, onChange }: EffectToggleProps) => {
 
     return (
         <div className="effect-toggle">
-            <span className="effect-toggle__label">Dither · {enabled ? 'On' : 'Off'}</span>
+            <span className="effect-toggle__text">
+                <span className="effect-toggle__label">Dither effect</span>
+                <span className="effect-toggle__state">{enabled ? 'On' : 'Off'}</span>
+            </span>
             <button
                 type="button"
                 role="switch"
