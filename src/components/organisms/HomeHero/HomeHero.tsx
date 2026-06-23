@@ -5,7 +5,6 @@ import gsap from 'gsap';
 import './homeHero.css';
 import {Link, useNavigate} from "react-router-dom";
 
-
 const SCRAMBLE_CHARS = '!<>-_\\/[]{}—=+*^?#_';
 
 const WHISPERS = [
@@ -133,10 +132,7 @@ const HomeHero = () => {
                     { opacity: 0 },
                     { opacity: 1, duration: 0.4 },
                     '-=0.2'
-                )
-                .to('.home-hero__cursor', {
-                    opacity: 0, repeat: -1, yoyo: true, duration: 0.5, ease: 'steps(1)',
-                });
+                );
 
             gsap.to('.home-hero__float', {
                 y: 'random(-6, 6)',
@@ -201,7 +197,6 @@ const HomeHero = () => {
 
             const exitTl = gsap.timeline({
                 onComplete: () => {
-                    // 3. Trigger the actual navigation AFTER the animation
                     navigate(targetPath);
                 }
             });
@@ -271,7 +266,9 @@ const HomeHero = () => {
                     className="home-hero__cta"
                 >
                     <span className="home-hero__cta-label">Step closer</span>
-                    <span className="home-hero__cursor" aria-hidden>_</span>
+                    <svg viewBox="0 0 40 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="home-hero__cta-icon" aria-hidden="true">
+                        <path d="M0 6H39M39 6L34 1M39 6L34 11" stroke="currentColor" strokeWidth="1.5"/>
+                    </svg>
                 </Link>
             </div>
 
