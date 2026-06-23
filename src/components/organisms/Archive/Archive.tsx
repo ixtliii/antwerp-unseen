@@ -184,16 +184,41 @@ const Archive = ({ submissions, activeId, onActiveChange, onOpenDetail }: SceneP
 
         const handleMouseUp = () => { isDragging.current = false; };
 
+        const handleTouchStart = (e: TouchEvent) => {
+            initAudio();
+            isDragging.current = true;
+            lastX.current = e.touches[0].clientX;
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            if (!isDragging.current) return;
+            e.preventDefault();
+            const x       = e.touches[0].clientX;
+            const delta   = (x - lastX.current) * 0.012;
+            lastX.current = x;
+            const clamped = Math.max(0, Math.min(offsetRef.current - delta, getTotal()));
+            offsetRef.current = clamped;
+            advance(clamped);
+        };
+
+        const handleTouchEnd = () => { isDragging.current = false; };
+
         window.addEventListener('wheel',     handleWheel,     { passive: false });
         window.addEventListener('mousedown', handleMouseDown);
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup',   handleMouseUp);
+        window.addEventListener('touchstart', handleTouchStart, { passive: false });
+        window.addEventListener('touchmove',  handleTouchMove,  { passive: false });
+        window.addEventListener('touchend',   handleTouchEnd);
 
         return () => {
             window.removeEventListener('wheel',     handleWheel);
             window.removeEventListener('mousedown', handleMouseDown);
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup',   handleMouseUp);
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove',  handleTouchMove);
+            window.removeEventListener('touchend',   handleTouchEnd);
         };
     }, [submissions, onActiveChange]);
 
@@ -220,7 +245,11 @@ const Archive = ({ submissions, activeId, onActiveChange, onOpenDetail }: SceneP
 
             <Canvas
                 className="scene-canvas"
-                camera={{ position: [-5.47, 7.02, 6.76], rotation: [-0.80, -0.51, -0.47], fov: 50 }}
+                camera={{
+                    position: [-5.47, 7.02, 6.76],
+                    rotation: [-0.80, -0.51, -0.47],
+                    fov: typeof window !== 'undefined' && window.innerWidth <= 768 ? 78 : 50,
+                }}
             >
                 <ambientLight intensity={1} />
                 <Rail

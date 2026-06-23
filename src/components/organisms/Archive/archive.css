@@ -1,9 +1,13 @@
+/* archive.css — full file, original styles + ADD YOUR STORY button */
+
 .scene {
-    background-color: var(--color-bg-canvas);
+    background-color: var(--color-bg-canvas, #1d1e20);
     position: relative;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
+    touch-action: none;
 }
 
 .archive-bg-video {
@@ -27,7 +31,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: var(--primary-white);
+    background-color: var(--primitive-white, #fff);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,9 +49,12 @@
     position: absolute !important;
     inset: 0;
     width: 100vw !important;
-    height: 100vh !important;
+    height: 100dvh !important;
     z-index: 1;
 }
+
+/* ── ADD YOUR STORY button ────────────────────────────────────────────────── */
+/* Mobile: sits above the FilterBottomSheet trigger tab (~3.5rem tall)        */
 
 .archive__add-story {
     position: fixed;
@@ -55,11 +62,11 @@
     right: 1.5rem;
     bottom: 4rem;
     z-index: 20;
-    background: var(--color-bg-canvas);
-    border: 1px solid var(--color-text-primary);
-    color: var(--color-text-primary);
+    background: var(--bg-dark, #080808);
+    border: 1px solid var(--primitive-white);
+    color: var(--primitive-white);
     font-family: var(--font-display);
-    font-size: var(--font-size-16);
+    font-size: 1rem;
     letter-spacing: 0.14em;
     padding: 1em 2em;
     cursor: pointer;
@@ -67,8 +74,8 @@
 }
 
 .archive__add-story:hover {
-    background: var(--color-text-primary);
-    color: var(--color-bg-canvas);
+    background: var(--primitive-white);
+    color: var(--bg-dark);
 }
 
 @media (min-width: 48em) {
