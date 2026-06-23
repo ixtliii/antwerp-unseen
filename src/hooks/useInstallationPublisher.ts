@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
 const CHANNEL = 'installation-stream';
-const ICE_SERVERS = [{ urls: 'stun:stun.l.google.com:19302' }];
+const FRAME_INTERVAL = 1000;
+const FRAME_WIDTH = 480;
+const JPEG_QUALITY = 0.5;
 
 interface PublisherState {
     status: 'idle' | 'requesting' | 'live' | 'error';
@@ -14,115 +16,61 @@ export const useInstallationPublisher = (
     location: string
 ): PublisherState => {
     const [state, setState] = useState<PublisherState>({ status: 'idle', error: null });
-    const streamRef = useRef<MediaStream | null>(null);
-    const pcRef = useRef<RTCPeerConnection | null>(null);
-    const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
     useEffect(() => {
         if (!enabled) return;
 
         let cancelled = false;
+        let stream: MediaStream | null = null;
+        let frameTimer: ReturnType<typeof setInterval> | null = null;
+
         setState({ status: 'requesting', error: null });
 
         const channel = supabase.channel(CHANNEL, {
             config: { broadcast: { self: false } },
         });
-        channelRef.current = channel;
 
-        const createPeer = (stream: MediaStream) => {
-            const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
-            stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+        const video = document.createElement('video');
+        video.muted = true;
+        video.playsInline = true;
 
-            pc.onicecandidate = (e) => {
-                if (e.candidate) {
-                    channel.send({
-                        type: 'broadcast',
-                        event: 'ice-publisher',
-                        payload: { candidate: e.candidate },
-                    });
-                }
-            };
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
-            pc.onconnectionstatechange = () => {
-                if (pc.connectionState === 'connected') {
-                    if (!cancelled) setState({ status: 'live', error: null });
-                }
-                if (
-                    pc.connectionState === 'failed' ||
-                    pc.connectionState === 'disconnected'
-                ) {
-                    if (!cancelled) setState({ status: 'requesting', error: null });
-                }
-            };
-
-            return pc;
+        const sendFrame = () => {
+            if (!ctx || video.readyState < 2) return;
+            const ratio = video.videoHeight / video.videoWidth || 0.75;
+            canvas.width = FRAME_WIDTH;
+            canvas.height = Math.round(FRAME_WIDTH * ratio);
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/jpeg', JPEG_QUALITY);
+            channel.send({
+                type: 'broadcast',
+                event: 'frame',
+                payload: { img: dataUrl, location },
+            });
         };
 
         const start = async () => {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { width: 1280, height: 720 },
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 640, height: 480 },
                     audio: false,
                 });
                 if (cancelled) {
                     stream.getTracks().forEach((t) => t.stop());
                     return;
                 }
-                streamRef.current = stream;
+                video.srcObject = stream;
+                await video.play();
 
-                channel
-                    .on('broadcast', { event: 'viewer-ready' }, async () => {
-                        const pc = createPeer(stream);
-                        pcRef.current = pc;
-                        const offer = await pc.createOffer();
-                        await pc.setLocalDescription(offer);
-                        channel.send({
-                            type: 'broadcast',
-                            event: 'offer',
-                            payload: { sdp: offer },
-                        });
-                    })
-                    .on('broadcast', { event: 'answer' }, async (msg) => {
-                        const pc = pcRef.current;
-                        if (pc && !pc.currentRemoteDescription) {
-                            await pc.setRemoteDescription(
-                                new RTCSessionDescription(msg.payload.sdp)
-                            );
-                        }
-                    })
-                    .on('broadcast', { event: 'ice-viewer' }, async (msg) => {
-                        const pc = pcRef.current;
-                        if (pc && msg.payload.candidate) {
-                            try {
-                                await pc.addIceCandidate(msg.payload.candidate);
-                            } catch {
-                                /* ignore late candidates */
-                            }
-                        }
-                    })
-                    .subscribe((status) => {
-                        if (status === 'SUBSCRIBED') {
-                            // announce presence; viewers waiting will react
-                            channel.send({
-                                type: 'broadcast',
-                                event: 'publisher-online',
-                                payload: { location },
-                            });
-                            if (!cancelled) setState({ status: 'requesting', error: null });
-                        }
-                    });
-
-                // heartbeat so viewers know we're alive even if they join later
-                const heartbeat = setInterval(() => {
-                    channel.send({
-                        type: 'broadcast',
-                        event: 'publisher-online',
-                        payload: { location },
-                    });
-                }, 3000);
-
-                // store for cleanup
-                (channel as any).__heartbeat = heartbeat;
+                channel.subscribe((status) => {
+                    if (status === 'SUBSCRIBED' && !cancelled) {
+                        setState({ status: 'live', error: null });
+                        sendFrame();
+                        frameTimer = setInterval(sendFrame, FRAME_INTERVAL);
+                    }
+                });
             } catch (err) {
                 if (!cancelled) {
                     setState({
@@ -137,18 +85,11 @@ export const useInstallationPublisher = (
 
         return () => {
             cancelled = true;
-            const hb = (channelRef.current as any)?.__heartbeat;
-            if (hb) clearInterval(hb);
-            if (channelRef.current) {
-                channelRef.current.send({
-                    type: 'broadcast',
-                    event: 'publisher-offline',
-                    payload: {},
-                });
-                supabase.removeChannel(channelRef.current);
-            }
-            if (pcRef.current) pcRef.current.close();
-            if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop());
+            if (frameTimer) clearInterval(frameTimer);
+            channel.send({ type: 'broadcast', event: 'publisher-offline', payload: {} });
+            supabase.removeChannel(channel);
+            if (stream) stream.getTracks().forEach((t) => t.stop());
+            video.srcObject = null;
             setState({ status: 'idle', error: null });
         };
     }, [enabled, location]);

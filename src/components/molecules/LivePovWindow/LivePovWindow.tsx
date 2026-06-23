@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { useInstallationViewer } from '../../../hooks/useInstallationViewer';
 import './livePovWindow.css';
 
@@ -7,35 +6,16 @@ interface LivePovWindowProps {
 }
 
 const LivePovWindow = ({ placeholderSrc }: LivePovWindowProps) => {
-    const { isLive, location, stream } = useInstallationViewer();
-    const videoRef = useRef<HTMLVideoElement>(null);
-
-    useEffect(() => {
-        const el = videoRef.current;
-        if (!el) return;
-        if (stream) {
-            el.srcObject = stream;
-            el.play().catch(() => {});
-        } else {
-            el.srcObject = null;
-        }
-    }, [stream]);
-
-    const showingLive = isLive && stream;
+    const { isLive, location, frame } = useInstallationViewer();
+    const showingLive = isLive && frame;
 
     return (
         <div className="live-pov">
             {showingLive ? (
-                <video
-                    ref={videoRef}
-                    className="live-pov__video"
-                    autoPlay
-                    muted
-                    playsInline
-                />
+                <img className="live-pov__media" src={frame} alt="Live installation feed" />
             ) : (
                 <video
-                    className="live-pov__video"
+                    className="live-pov__media"
                     src={placeholderSrc}
                     autoPlay
                     muted
