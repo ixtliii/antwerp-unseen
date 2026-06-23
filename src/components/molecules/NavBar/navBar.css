@@ -29,23 +29,32 @@ body.is-immersive .navbar {
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
+/* ── Replace the existing .navbar__logo block in navBar.css with this ───────── */
+/* The logo is now an <img>, so the text-specific font rules are gone and we    */
+/* size the SVG instead. Keep this block; delete the old font-based one.        */
+
 .navbar__logo {
     pointer-events: auto;
     background: none;
     border: none;
     padding: 0;
     cursor: pointer;
-    text-align: left;
-    font-family: var(--font-display, 'Bebas Neue', sans-serif);
-    font-size: 1rem;
-    line-height: 1.05;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--primitive-white, #f0ede8);
+    display: block;
+    line-height: 0;
     transition: opacity 0.2s ease;
 }
+
 .navbar__logo:hover { opacity: 0.55; }
-.navbar--light .navbar__logo { color: var(--text-light, #111010); }
+
+.navbar__logo-img {
+    display: block;
+    height: 2.4rem;
+    width: auto;
+}
+
+.navbar--light .navbar__logo-img {
+    filter: invert(1);
+}
 .navbar__lang {
     pointer-events: auto;
     position: absolute;
