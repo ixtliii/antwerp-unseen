@@ -199,11 +199,13 @@ const DitherVideo = ({
                 gl.clear(gl.COLOR_BUFFER_BIT);
 
                 const dpr = Math.min(window.devicePixelRatio, 1.5);
-                // responsive dot size: scale relative to a 1440px baseline so the
-                // dither stays the same visual density across screen sizes, instead
-                // of becoming giant unreadable blocks on small screens.
-                const widthScale = Math.min(canvas.clientWidth / 1440, 1);
-                const responsivePixel = Math.max(pixelSize * widthScale, 1.5) * dpr;
+                const isMobile = canvas.clientWidth <= 768;
+
+                // On mobile the effect is overwhelming, so tone the WHOLE thing down:
+                // larger/softer dots (bigger pixelSize) + much lower intensity, so it
+                // reads as a faint texture rather than a dense unreadable field.
+                const responsivePixel = (isMobile ? pixelSize * 1.6 : pixelSize) * dpr;
+                const responsiveIntensity = isMobile ? intensity * 0.45 : intensity;
 
                 const videoAspect = (video.videoWidth / video.videoHeight) || 1;
                 const canvasAspect = (canvas.width / canvas.height) || 1;
@@ -214,7 +216,7 @@ const DitherVideo = ({
                 gl.uniform2f(uResolution, canvas.width, canvas.height);
                 gl.uniform2f(uMouse, m.x, m.y);
                 gl.uniform1f(uPixelSize, responsivePixel);
-                gl.uniform1f(uIntensity, intensity);
+                gl.uniform1f(uIntensity, responsiveIntensity);
                 gl.uniform1f(uCutout, cutout ? 1.0 : 0.0);
                 gl.uniform1f(uMouseReactive, mouseReactive ? 1.0 : 0.0);
                 gl.uniform1f(uTime, t);

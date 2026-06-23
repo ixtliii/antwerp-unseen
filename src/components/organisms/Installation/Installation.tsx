@@ -70,11 +70,21 @@ const Installation = () => {
     const { videoRef, displayCanvasRef, started, startCamera } =
         useInstallationRender({ settingsRef });
 
+    // --- Auto-start the camera on mount (installation runs unattended) ---
+    useEffect(() => {
+        startCamera();
+    }, [startCamera]);
+
     // --- Voice playback ---
     const { playVoice, stopVoice } = useVoicePlayback();
 
     // --- Active state ---
     const [isActive, setIsActive] = useState(false);
+
+    // --- Auto-activate once the camera is running ---
+    useEffect(() => {
+        if (started) setIsActive(true);
+    }, [started]);
 
     useEffect(() => {
         if (!isActive) { stopVoice(); return; }

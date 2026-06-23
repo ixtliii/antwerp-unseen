@@ -455,9 +455,9 @@
 .contribution__card--photo {
     background: rgba(8, 8, 8, 0.62);
 }
-@media (min-aspect-ratio: 9/16) and (min-width: 600px) {
+@media (min-aspect-ratio: 9/16) and (min-width: 600px) and (orientation: portrait) {
     .installation {
-        background: var(--primitive-black);
+        background: var(--color-bg-canvas, #1d1e20);
     }
 
     .installation__camera,
