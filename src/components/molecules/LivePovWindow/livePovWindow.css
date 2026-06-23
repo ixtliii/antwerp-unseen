@@ -1,0 +1,53 @@
+.live-pov {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: var(--color-bg-canvas);
+}
+
+.live-pov__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.live-pov__badge {
+    position: absolute;
+    top: var(--spacing-space-3);
+    left: var(--spacing-space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-space-2);
+    padding: var(--spacing-space-1) var(--spacing-space-3);
+    background: rgba(29, 30, 32, 0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    font-family: var(--font-body);
+    font-size: var(--font-size-11);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.live-pov__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+    flex-shrink: 0;
+}
+
+.live-pov__badge.is-live {
+    color: var(--color-text-accent);
+}
+
+.live-pov__badge.is-live .live-pov__dot {
+    background: var(--color-bg-accent);
+    animation: live-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+}

@@ -52,5 +52,5 @@ export interface WindowMemory {
     slug: string;
     location: string;
     videoSrc: string;
-    poster?: string;
+    isLive?: boolean;
 }
