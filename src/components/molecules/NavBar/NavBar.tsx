@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { useLanguage } from '../../../context/LanguageContext';
 import { triggerPageTransition } from '../../globals/PixelTransition/triggerTransition';
+import logoUrl from '../../../assets/logo.svg';
 import './navBar.css';
 import NavItem from "../../atoms/NavItem/NavItem.tsx";
 
@@ -105,9 +106,10 @@ const NavBar = ({ light = false }: NavBarProps) => {
         triggerPageTransition(() => navigate(route));
     };
 
+    // Logo → the menu page (ConstellationNav), bypassing the home loading screen.
     const handleLogoClick = () => {
         setOpen(false);
-        triggerPageTransition(() => navigate('/'));
+        triggerPageTransition(() => navigate('/constellation'));
     };
 
     return (
@@ -123,9 +125,9 @@ const NavBar = ({ light = false }: NavBarProps) => {
                     type="button"
                     className="navbar__logo"
                     onClick={handleLogoClick}
-                    aria-label="Antwerp Unseen"
+                    aria-label="Antwerp Unseen — menu"
                 >
-                    ANTWERP<br />UNSEEN.
+                    <img src={logoUrl} alt="Antwerp Unseen" className="navbar__logo-img" />
                 </button>
 
                 <button
