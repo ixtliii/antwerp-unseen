@@ -530,9 +530,9 @@ const SubmissionCard = ({
     const props = useSpring({
         from: { scale: 0, yLift: -0.5, grayscaleWeight: 1 },
         to: {
-            scale:           isActive ? 1.3 : 1,
-            yLift:           isActive ? 0.4 : 0,
-            grayscaleWeight: isActive ? 0   : 1,
+            scale:           isActive ? 1.5 : 1.15,
+            yLift:           isActive ? 0.4   : 0,
+            grayscaleWeight: isActive ? 0     : 1,
         },
         config: { tension: 160, friction: 20 },
     });

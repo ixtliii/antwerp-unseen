@@ -45,7 +45,7 @@
 
 .filter-menu__all.is-active,
 .filter-menu__all.is-active .filter-menu__count {
-    color: var(--primitive-white);
+    color: var(--primitive-green, #00e676);
     opacity: 1;
 }
 
@@ -65,10 +65,13 @@
     gap: var(--space-2);
 }
 
+/* Category labels are non-interactive HEADINGS — dimmed so they don't read
+   as selected filters. (This was the bug: they were full white.) */
 .filter-menu__cat-label {
-    font-size: 0.875rem;
-    color: var(--primitive-white);
-    letter-spacing: 0.02em;
+    font-size: 0.7rem;
+    color: rgba(240, 237, 232, 0.4);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
 .filter-menu__count {
@@ -87,6 +90,9 @@
 }
 
 .filter-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -99,5 +105,27 @@
     transition: color 0.2s;
 }
 
-.filter-menu__item:hover   { color: rgba(240, 237, 232, 0.65); }
-.filter-menu__item.is-active { color: var(--primitive-white); }
+.filter-menu__item:hover { color: rgba(240, 237, 232, 0.65); }
+
+/* Active item: green text + a small filled green square before the label */
+.filter-menu__item.is-active {
+    color: var(--primitive-green, #00e676);
+}
+
+/* The square marker — transparent by default, green+filled when active.
+   order:-1 keeps the square before the label even in the right-aligned panel. */
+.filter-menu__item::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    order: -1;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.filter-menu__item.is-active::before {
+    background: var(--primitive-green, #00e676);
+    border-color: var(--primitive-green, #00e676);
+}
