@@ -1,0 +1,90 @@
+.location-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-space-4);
+}
+
+.location-panel__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(29, 30, 32, 0.62);   /* no backdrop-filter: blurring a live WebGL canvas every frame is costly */
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.location-panel__card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    background: rgba(12, 13, 16, 0.92);
+    display: flex;
+    flex-direction: column;
+    will-change: transform, opacity;
+}
+
+.location-panel__close {
+    align-self: flex-end;
+    margin: var(--spacing-space-3) var(--spacing-space-3) 0;
+    background: none; border: none; cursor: pointer;
+    font-family: var(--font-body);
+    font-size: var(--font-size-11); letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.location-panel__media {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    margin-top: var(--spacing-space-2);
+    padding: 0 var(--spacing-space-6);
+}
+
+.location-panel__img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    filter: grayscale(1) contrast(1.15) brightness(0.85);
+}
+
+.location-panel__body {
+    padding: var(--spacing-space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-3);
+}
+
+.location-panel__coord {
+    font-family: var(--font-body); font-size: var(--font-size-10); letter-spacing: 0.16em;
+    color: rgba(2, 215, 123, 0.8);
+}
+
+.location-panel__name {
+    font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem);
+    letter-spacing: 0.02em; text-transform: uppercase; color: var(--color-text-primary); margin: 0;
+}
+
+.location-panel__desc {
+    font-family: var(--font-body); font-size: var(--font-size-14); line-height: 1.55;
+    color: var(--color-text-secondary); margin: 0;
+}
+
+.location-panel__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-3);
+    margin-top: var(--spacing-space-3);
+}
+
+.location-panel__btn {
+    padding: var(--spacing-space-4);
+    font-family: var(--font-body); font-size: var(--font-size-12); letter-spacing: 0.14em; text-transform: uppercase;
+    background: none; border: 1px solid var(--color-border-muted); color: var(--color-text-primary);
+    cursor: pointer; text-decoration: none;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+.location-panel__btn:hover { border-color: var(--color-text-accent); color: var(--color-text-accent); }
+.location-panel__btn--primary { background: var(--color-bg-accent); color: var(--color-bg-black); border-color: var(--color-bg-accent); }
+.location-panel__btn--primary:hover { background: transparent; color: var(--color-text-accent); }

@@ -1,0 +1,16 @@
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 534px;
+    padding: 0.2rem 0;
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: var(--font-size-14);
+    color: var(--color-text-primary);
+    transition: color 0.3s ease;
+}
+.social-link:hover { color: var(--color-text-accent); }
+.social-link__arrow { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.social-link:hover .social-link__arrow { transform: translate(3px, -3px); }

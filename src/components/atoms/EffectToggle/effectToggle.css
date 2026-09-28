@@ -1,0 +1,78 @@
+.effect-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-space-3);             /* was --space-3 */
+}
+
+.effect-toggle__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.2;
+    user-select: none;
+}
+
+.effect-toggle__label {
+    font-family: var(--font-body);           /* was --font-mono */
+    font-size: var(--font-size-12);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);        /* was --primitive-white / #f0ede8 */
+}
+
+.effect-toggle__state {
+    font-family: var(--font-body);           /* was --font-mono */
+    font-size: var(--font-size-9);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);          /* was rgba(240,237,232,0.45) ≈ --neutral-400 */
+    transition: color 0.25s ease;
+}
+
+body.dither-active .effect-toggle__state {
+    color: var(--color-text-accent);         /* was --primitive-green */
+}
+
+.effect-toggle__switch {
+    position: relative;
+    width: 56px;
+    height: 28px;
+    background: var(--color-bg-canvas);      /* was --bg-dark / #080808 */
+    border: 1px solid var(--color-border-default); /* was rgba(240,237,232,0.5) ≈ brand-200 */
+    cursor: pointer;
+    padding: 0;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    flex-shrink: 0;
+}
+
+.effect-toggle__switch:hover {
+    border-color: var(--color-text-primary); /* was --primitive-white */
+}
+
+.effect-toggle__switch.is-on {
+    border-color: var(--color-text-accent);  /* was --primitive-green */
+    box-shadow: 0 0 12px rgba(2, 215, 123, 0.35); /* green glow — kept as-is, no opacity token */
+}
+
+.effect-toggle__knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    background: var(--brand-300);            /* was rgba(240,237,232,0.7) ≈ brand-300 #c8d4e6 */
+}
+
+.effect-toggle__switch.is-mounted .effect-toggle__knob {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+}
+
+.effect-toggle__switch.is-on .effect-toggle__knob {
+    transform: translateX(28px);
+    background: var(--color-text-accent);    /* was --primitive-green */
+}
+
+@media (max-width: 48em) {
+    .effect-toggle__label { font-size: var(--font-size-10); }
+    .effect-toggle__state { font-size: var(--font-size-9); }
+}

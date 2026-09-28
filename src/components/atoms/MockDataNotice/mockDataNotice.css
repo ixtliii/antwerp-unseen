@@ -1,0 +1,52 @@
+.mock-data-notice {
+    position: fixed;
+    left: 50%;
+    bottom: 8.5rem;
+    transform: translateX(-50%);
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    max-width: calc(100vw - 3rem);
+    padding: 0.55rem 0.9rem;
+    background: rgba(8, 8, 8, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: var(--primitive-white, #fff);
+    font-family: var(--font-body);
+    font-size: var(--font-size-11, 0.6875rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.35;
+    pointer-events: none;
+    backdrop-filter: blur(6px);
+}
+
+.mock-data-notice__dot {
+    flex: none;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: #e8a33d;
+}
+
+@media (min-width: 48em) {
+    .mock-data-notice {
+        bottom: 5.75rem;
+        font-size: var(--font-size-12, 0.75rem);
+        white-space: nowrap;
+    }
+}
+
+/* Top-centre variant (artists page, where the bottom is taken by the mobile search bar) */
+.mock-data-notice--top {
+    top: 4.75rem;
+    bottom: auto;
+}
+
+@media (min-width: 48em) {
+    .mock-data-notice--top {
+        top: 1.5rem;
+        bottom: auto;
+    }
+}

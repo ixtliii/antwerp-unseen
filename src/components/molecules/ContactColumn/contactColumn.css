@@ -1,0 +1,26 @@
+.contact-column__title {
+    font-family: var(--font-display);
+    font-weight: var(--font-weight-display);
+    font-size: var(--font-size-32);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-space-6);
+}
+.contact-column__row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-space-2);
+    margin-bottom: var(--spacing-space-4);
+    font-family: var(--font-body);
+    font-size: var(--font-size-14);
+    line-height: 1.5;
+}
+.contact-column__icon {
+    width: 24px; height: 24px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: var(--font-size-20);
+    color: var(--color-text-body);
+}
+.contact-column__value { color: var(--color-text-primary); text-decoration: none; }
+a.contact-column__value:hover { color: var(--color-text-accent); }

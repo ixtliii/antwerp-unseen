@@ -1,0 +1,4 @@
+.territory-map { position: fixed; inset: 0; }
+.territory-map__canvas { position: absolute; inset: 0; }
+.territory-map__labels { position: fixed; inset: 0; pointer-events: none; z-index: 5; }
+.territory-map__labels .map-pin-label { pointer-events: auto; }

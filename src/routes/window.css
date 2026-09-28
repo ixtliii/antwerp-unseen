@@ -1,0 +1,32 @@
+.window-page { position: relative; width: 100vw; height: 100vh; overflow: hidden; background-color: var(--color-bg-canvas)}
+
+.window-page__prompt {
+    position: absolute;
+    top: clamp(5rem, 12vh, 8rem); left: 50%; transform: translateX(-50%);
+    z-index: 20; text-align: center; max-width: 60ch;
+    font-family: var(--font-body);
+    font-size: clamp(0.8rem, 1.5vw, 1.05rem);
+    letter-spacing: 0.06em; line-height: 1.5;
+    color: var(--color-text-primary); text-transform: uppercase;
+    padding: 0 1.5rem;
+}
+.window-page__prompt em { font-style: italic; font-weight: var(--font-weight-bold); }
+
+.window-page__arrows {
+    position: fixed; bottom: clamp(1.5rem, 4vh, 2.5rem); left: 0; right: 0; z-index: 30;
+    display: flex; justify-content: space-between;
+    padding: 0 clamp(1.5rem, 5vw, 3rem); pointer-events: none;
+}
+.window-page__arrow {
+    pointer-events: auto; background: none; border: none; cursor: pointer;
+    color: var(--color-text-primary); font-family: var(--font-body);
+    font-size: var(--font-size-14); letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0.8; transition: opacity 0.3s ease;
+}
+.window-page__arrow:hover { opacity: 1; }
+
+@media (max-width: 48em) {
+    .window-page__prompt { top: clamp(7rem, 16vh, 10rem); font-size: clamp(1rem, 4.5vw, 1.3rem); width: 88%; }
+    .window-page__arrow { font-size: var(--font-size-12); letter-spacing: 0.12em; }
+    .window-page__arrows { bottom: 1.2rem; padding: 0 1.2rem; }
+}

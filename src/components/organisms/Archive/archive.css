@@ -1,0 +1,89 @@
+/* archive.css — full file, original styles + ADD YOUR STORY button */
+
+.scene {
+    background-color: var(--color-bg-canvas, #1d1e20);
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    touch-action: none;
+}
+
+.archive-bg-video {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 1;
+    pointer-events: none;
+}
+
+.custom-cursor-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+}
+
+.custom-cursor {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primitive-white, #fff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: scale(0);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-left: -20px;
+    margin-top: -20px;
+}
+
+.custom-cursor.hovered {
+    transform: scale(1);
+}
+
+.scene-canvas {
+    position: absolute !important;
+    inset: 0;
+    width: 100vw !important;
+    height: 100dvh !important;
+    z-index: 1;
+}
+
+/* ── ADD YOUR STORY button ────────────────────────────────────────────────── */
+/* Mobile: sits above the FilterBottomSheet trigger tab (~3.5rem tall)        */
+
+.archive__add-story {
+    position: fixed;
+    left: 1.5rem;
+    right: 1.5rem;
+    bottom: 4rem;
+    z-index: 20;
+    background: var(--bg-dark, #080808);
+    border: 1px solid var(--primitive-white);
+    color: var(--primitive-white);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    padding: 1em 2em;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.archive__add-story:hover {
+    background: var(--primitive-white);
+    color: var(--bg-dark);
+}
+
+@media (min-width: 48em) {
+    .archive__add-story {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        width: clamp(16rem, 30vw, 26rem);
+        bottom: 2rem;
+    }
+}

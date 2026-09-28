@@ -1,0 +1,16 @@
+.blur-text {
+    display: inline;
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(8px);
+    transition:
+        opacity   var(--blur-duration, 1100ms) ease,
+        filter    var(--blur-duration, 1100ms) ease,
+        transform var(--blur-duration, 1100ms) ease;
+}
+
+.blur-text--visible {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+}

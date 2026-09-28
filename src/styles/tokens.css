@@ -1,0 +1,199 @@
+
+
+:root {
+
+    /* ── 1. PRIMITIVES ──────────────────────────────────────────────────── */
+
+    /* primary */
+    --primary-black:        #000000;
+    --primary-black-50:     #00000080;
+    --primary-white:        #ffffff;
+    --primary-white-50:     #ffffff80;
+    --primary-accent:       #02d77b;
+
+    /* brand (blue-grey) */
+    --brand-100: #edf1f7;
+    --brand-200: #dbe3ee;
+    --brand-300: #c8d4e6;
+    --brand-400: #b6c6dd;
+    --brand-500: #a4b8d5;
+    --brand-600: #8393aa;
+    --brand-700: #626e80;
+    --brand-800: #424a55;
+    --brand-900: #21252b;
+
+    /* neutral */
+    --neutral-100: #e9eaec;
+    --neutral-200: #d4d5da;
+    --neutral-300: #bec1c7;
+    --neutral-400: #a9acb5;
+    --neutral-500: #9397a2;
+    --neutral-600: #767982;
+    --neutral-700: #585b61;
+    --neutral-800: #3b3c41;
+    --neutral-900: #0f0f10;
+
+
+    --grey-100: #fafafb;
+    --grey-200: #f4f5f7;
+    --grey-300: #eff1f3;
+    --grey-400: #e9ecef;
+    --grey-500: #e4e7eb;
+    --grey-600: #b6b9bc;
+    --grey-700: #898b8d;
+    --grey-800: #5b5c5e;
+    --grey-900: #2e2e2f;
+
+    /* dark */
+    --dark-100: #d8d9dc;
+    --dark-200: #b2b3b8;
+    --dark-300: #8b8d95;
+    --dark-400: #656771;
+    --dark-500: #3e414e;
+    --dark-600: #32343e;
+    --dark-700: #25272f;
+    --dark-800: #191a1f;
+    --dark-900: #0c0d10;
+
+    /* orange (secondary accent) */
+    --orange-100: #f7e3d2;
+    --orange-200: #efc8a5;
+    --orange-300: #e8ac78;
+    --orange-400: #e0914b;
+    --orange-500: #d8751e;
+    --orange-600: #ad5e18;
+    --orange-700: #824612;
+    --orange-800: #562f0c;
+    --orange-900: #2b1706;
+
+    /* red */
+    --red-100: #f3dbdb;
+    --red-200: #e7b7b7;
+    --red-300: #db9494;
+    --red-400: #cf7070;
+    --red-500: #c34c4c;
+    --red-600: #9c3d3d;
+    --red-700: #752e2e;
+    --red-800: #4e1e1e;
+    --red-900: #270f0f;
+
+    /* green */
+    --green-100: #e2f3e1;
+    --green-200: #c5e8c3;
+    --green-300: #a7dca4;
+    --green-400: #8ad186;
+    --green-500: #6dc568;
+    --green-600: #579e53;
+    --green-700: #41763e;
+    --green-800: #2c4f2a;
+    --green-900: #162715;
+
+    /* spacing scale (rem; values are the design-system px ÷ 16) */
+    --spacing-space-1: 0.25rem;   /* 4px  */
+    --spacing-space-2: 0.5rem;    /* 8px  */
+    --spacing-space-3: 0.75rem;   /* 12px */
+    --spacing-space-4: 1rem;      /* 16px */
+    --spacing-space-5: 1.25rem;   /* 20px */
+    --spacing-space-6: 1.5rem;    /* 24px */
+    --spacing-space-7: 2.25rem;   /* 36px */
+    --spacing-space-8: 3rem;      /* 48px */
+
+    /* type scale (rem; design-system sizes ÷ 16, plus UI micro-sizes marked *) */
+    --font-size-9:  0.5625rem;  /* 9px  * UI micro (not in Figma, added for UI density) */
+    --font-size-10: 0.625rem;   /* 10px * UI micro */
+    --font-size-11: 0.6875rem;  /* 11px * UI micro */
+    --font-size-12: 0.75rem;    /* 12px * UI micro */
+    --font-size-13: 0.8125rem;  /* 13px * UI micro */
+    --font-size-14: 0.875rem;   /* 14px   Figma */
+    --font-size-16: 1rem;       /* 16px   Figma */
+    --font-size-18: 1.125rem;   /* 18px * UI (between Figma 16 and 20) */
+    --font-size-20: 1.25rem;    /* 20px   Figma */
+    --font-size-24: 1.5rem;     /* 24px   Figma */
+    --font-size-32: 2rem;       /* 32px   Figma */
+    --font-size-36: 2.25rem;    /* 36px   Figma */
+    --font-size-40: 2.5rem;     /* 40px   Figma */
+    --font-size-48: 3rem;       /* 48px   Figma */
+    --font-size-64: 4rem;       /* 64px   Figma */
+    --font-size-96: 6rem;       /* 96px   Figma */
+
+    /* font weights — mapped to the actual static font files in public/fonts.
+       (The Figma system expresses these as variable-font axis numbers
+       450/550/650/750; since you have static weight files, these map to the
+       conventional CSS weights the @font-face rules declare.) */
+    --font-weight-light:   350;
+    --font-weight-regular: 400;
+    --font-weight-medium:  500;
+    --font-weight-bold:    700;
+
+    --font-weight-display: 700;
+
+
+    /* ── 2. SEMANTICS ───────────────────────────────────────────────────── */
+    /* Components should reference THESE, not the primitives above. */
+
+    /* backgrounds */
+    --color-bg-canvas:              var(--neutral-900);   /* #1d1e20 main bg */
+    --color-bg-surface:             var(--brand-100);     /* #edf1f7 light surface */
+    --color-bg-brand:               var(--grey-400);
+    --color-bg-brand-hover:         var(--brand-600);
+    --color-bg-success:             var(--green-100);
+    --color-bg-error:               var(--red-100);
+    --color-bg-black:               var(--primary-black);
+    --color-bg-white:               var(--primary-white);
+    --color-bg-btn:                 var(--dark-900);      /* #0c0d10 button bg */
+    --color-bg-accent:              var(--primary-accent);
+    --color-bg-accent-second:       var(--orange-500);
+    --color-bg-accent-second-light: var(--orange-400);
+    --color-bg-accent-second-muted: var(--orange-200);
+
+    /* text */
+    --color-text-primary:        var(--brand-200);    /* #dbe3ee */
+    --color-text-primary-dark:   var(--brand-800);    /* #424a55 */
+    --color-text-secondary:      var(--brand-400);
+    --color-text-secondary-dark: var(--brand-600);
+    --color-text-body:           var(--brand-200);
+    --color-text-muted:          var(--neutral-400);  /* #a9acb5 */
+    --color-text-accent:         var(--primary-accent);
+    --color-text-success:        var(--green-700);
+    --color-text-error:          var(--red-700);
+
+    /* borders */
+    --color-border-default: var(--brand-200);
+    --color-border-muted:   var(--neutral-300);
+
+    /* semantic spacing aliases */
+    --space-gap-s: var(--spacing-space-4);  /* 16px */
+    --space-gap-m: var(--spacing-space-5);  /* 20px */
+
+    --font-label: var(--font-size-16);
+
+
+    /* ── 3. TYPOGRAPHY ──────────────────────────────────────────────────── */
+
+    --font-display: 'SunAntwerpen', sans-serif;                 /* headings / wordmark */
+    --font-body:    'Neue Haas Grotesk Display Pro', sans-serif;/* body + UI text */
+    --font-pixel:   'ArbanePixel', monospace;                   /* logo accent letters only */
+
+
+    /* ── 4. BRIDGE (legacy names → new system) ──────────────────────────── */
+
+
+    --primitive-green: var(--primary-accent);     /* was #02d77b — unchanged */
+    --primitive-white: var(--color-text-primary); /* was warm #f0ede8 → cool #dbe3ee */
+    --bg-dark:         var(--color-bg-canvas);     /* was #080808 → #1d1e20 */
+
+    /* old --font-mono pointed at DM Mono; the new body font replaces it.
+       Name kept so existing references resolve; it is no longer monospace. */
+    --font-mono: var(--font-body);
+
+    /* legacy spacing names (your components used --space-2 … --space-4) */
+    --space-1: var(--spacing-space-1);
+    --space-2: var(--spacing-space-2);
+    --space-3: var(--spacing-space-3);
+    --space-4: var(--spacing-space-4);
+    --space-5: var(--spacing-space-5);
+    --space-6: var(--spacing-space-6);
+
+    /* legacy text-light token used on --light page variants */
+    --text-light: var(--brand-900);
+}

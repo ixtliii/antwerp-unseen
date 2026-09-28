@@ -1,0 +1,31 @@
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-space-2);             /* was --space-2 (bridge still works; prefer explicit) */
+    font-family: var(--font-body);           /* was --font-mono */
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
+    line-height: 1;
+}
+
+.btn--sm { font-size: var(--font-size-9); padding: 0.38rem 0.75rem; }
+.btn--md { font-size: var(--font-size-10); padding: 0.52rem 1.1rem;  }
+.btn--lg { font-size: var(--font-size-12); padding: 0.68rem 1.4rem;  }
+
+/* Primary — surface fill */
+.btn--primary       { background: var(--color-text-primary); color: var(--color-bg-canvas); border: 1px solid var(--color-text-primary); }
+.btn--primary:hover { background: var(--brand-300); border-color: var(--brand-300); } /* slightly lighter on hover */
+
+/* Ghost — transparent with border */
+.btn--ghost         { background: transparent; color: var(--color-text-secondary); border: 1px solid rgba(219,227,238,0.18); } /* brand-200 at 18% */
+.btn--ghost:hover   { border-color: rgba(219,227,238,0.45); color: var(--color-text-primary); }
+
+/* Text — no border, just label */
+.btn--text          { background: transparent; color: var(--color-text-muted); border: none; padding-inline: 0; }
+.btn--text:hover    { color: var(--color-text-primary); }
+
+.btn:disabled       { opacity: 0.3; cursor: not-allowed; pointer-events: none; }

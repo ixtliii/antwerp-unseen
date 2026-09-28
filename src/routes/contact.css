@@ -1,0 +1,121 @@
+.contact-page {
+    position: relative;
+    z-index: 0;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        'contact  socials'
+        'news     .'
+        'wordmark wordmark';
+    column-gap: clamp(2rem, 6vw, 6rem);
+    row-gap: clamp(3rem, 9vh, 7rem);
+    padding: clamp(7rem, 16vh, 10.5rem) clamp(1.5rem, 4vw, 2.25rem) clamp(2rem, 5vh, 3rem);
+    box-sizing: border-box;
+    background-color: var(--color-bg-canvas);
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.contact-page > *:not(.dither-video) { position: relative; z-index: 1; }
+
+.dither-video--bg {
+    position: fixed;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.contact-page__contact { grid-area: contact; }
+
+.contact-page__socials {
+    grid-area: socials;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-5);
+}
+.socials__container{
+    display: flex;
+    gap: var(--space-4);
+    flex-direction: column;
+}
+
+.contact-page__socials .contact-page__heading { margin-bottom: var(--spacing-space-1); }
+
+.contact-page__news {
+    grid-area: news;
+    align-self: end;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-6);
+    width: 100%;
+    max-width: 660px;
+}
+
+.contact-page__wordmark {
+    grid-area: wordmark;
+    align-self: end;
+    font-family: var(--font-display);
+    font-weight: var(--font-weight-display);
+    font-size: clamp(2.5rem, 11.5vw, 13rem);
+    line-height: 0.82;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+    margin: 0;
+    word-break: normal;
+    hyphens: none;
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-6);
+    white-space: normal;
+}
+
+.contact-page__wordmark-pixel {
+    font-family: var(--font-pixel);
+    text-transform: none;
+}
+
+.contact-page__wordmark-dot { margin-left: 0.02em; }
+
+.contact-page__heading {
+    font-family: var(--font-display);
+    font-weight: var(--font-weight-display);
+    font-size: var(--font-size-32);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-space-6);
+}
+
+
+@media (max-width: 48em) {
+    .contact-page {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto;
+        grid-template-areas:
+            'contact'
+            'socials'
+            'news'
+            'wordmark';
+        row-gap: var(--spacing-space-8);
+        padding: 6rem var(--spacing-space-5) var(--spacing-space-5);
+        width: 100vw;
+    }
+
+    .contact-page__heading {
+        margin-bottom: var(--spacing-space-3);
+    }
+
+    .contact-page__wordmark {
+        font-size: clamp(5.5rem, 16vw, 6rem);
+        line-height: 0.5;
+        max-width: 100%;
+        margin-top: var(--spacing-space-8);
+        flex-direction: column;
+    }
+
+    .contact-page__year {
+        display: none;
+    }
+}
